@@ -1,0 +1,452 @@
+TINY ROBOT RESCUE
+GAME DESIGN & TECHNICAL SPECIFICATION (TXT)
+Version: 1.0
+Date: 2026-11-13
+Status: MVP implementation specification
+
+============================================================
+1. PRODUCT SUMMARY
+============================================================
+Working title: Tiny Robot Rescue (verify name availability before release)
+Genre: 2D physics / logic puzzle; draw-to-rescue
+Platform: Android phones, portrait orientation (9:16 target)
+Core mode: Fully playable offline
+Monetization: Optional rewarded ads, limited interstitial ads after natural breaks, optional IAP
+Game engine: Godot 4.x stable, GDScript
+Development: GitHub-hosted AI coding agent + GitHub Actions; no local IDE/engine required
+Backend: None for MVP
+Target hardware: Low-end Android, including 2 GB RAM devices
+Audience: General casual puzzle players; configure accurate Play Console target age and content declarations
+Visual identity: Original, playful, clean 2D mechanical world with friendly small robots
+
+One-sentence pitch:
+"Draw one clever line to shield, guide, or rescue a tiny robot from unpredictable machines."
+
+Core player fantasy:
+Understand the danger instantly, sketch one solution, watch physics unfold, and enjoy a funny or surprising result.
+
+Distinctive feature:
+A single continuous line serves multiple purposes: a shield, bridge, ramp, lever, or trigger; victory often requires more than surviving.
+
+Originality requirements:
+Do not reproduce Doge Rescue or any other game's characters, art, levels, music, UI, branding, or exact arrangements. Standard draw-and-physics mechanics are permissible as concepts, but levels, audiovisual expression, and progression must be original. Verify naming, asset rights, and Play policy compliance before publishing.
+
+============================================================
+2. SUCCESS CRITERIA & SCOPE
+============================================================
+VERTICAL SLICE (FIRST):
+- 10 handcrafted, fully playable levels.
+- Stable single-stroke drawing with physics collisions.
+- Clear success/failure evaluation, restart, next-level flow.
+- Complete tutorial and local progress saving.
+- Simple, original placeholder/final art and audio.
+- Automated headless checks and downloadable debug APK.
+- No actual advertising or IAP required to play this slice.
+
+PUBLISHABLE MVP (SECOND):
+- Expand to 60 handcrafted levels only after the vertical slice is validated.
+- Integrate and test optional AdMob rewarded/interstitial ads.
+- Integrate and test Google Play Billing for a non-consumable remove-interstitial-ads product; optional cosmetics deferred unless validated.
+- Secure release signing; produce signed AAB through CI.
+- Publish privacy policy, complete Data safety/ads/content declarations, test on real Android devices.
+
+POST-LAUNCH (NOT REQUIRED):
+- Additional levels, cosmetic robot skins, daily challenge, advanced obstacles, localization, and optional cloud save.
+- No multiplayer, user accounts, leaderboards, or backend in MVP.
+
+UX TARGETS (HYPOTHESES TO TEST):
+- Players understand the basic goal in < 5 seconds.
+- First successful draw/physics interaction within 15 seconds.
+- Typical level duration: 10-40 seconds; complex late levels may take longer.
+- Retry in <= 2 taps, ideally 1.
+- Tutorial completion target >= 80% (test cohort metric, not industry fact).
+- Crash-free sessions target >= 99.5%.
+
+============================================================
+3. CORE GAMEPLAY RULES
+============================================================
+3.1 LEVEL STATES
+READY -> DRAWING -> SIMULATING -> WON or LOST -> RETRY/NEXT
+Optionally PAUSED while in READY/SIMULATING.
+Only one drawing attempt can be active per run.
+
+3.2 PLAYER ACTION
+- Touch and drag on the screen to sketch ONE continuous polyline.
+- On release, convert the sampled line into a stationary collision body.
+- Prevent drawing through solid non-drawable geometry or inside a robot's collision body.
+- Enforce a per-level maximum stroke length, measured in game-world units.
+- Line segments have a configurable minimum thickness; collisions must be stable.
+- Show visual feedback for remaining ink/length while drawing.
+- If line is invalid (too short, self-intersects destructively, placed in forbidden area), reject it with feedback; do not silently consume attempt.
+- Line stays fixed for MVP; optional physically dynamic beams are future content.
+- No erase/second stroke after simulation begins; retry resets level instantly.
+
+3.3 PHYSICS
+- Use Godot 2D physics.
+- Fixed physics update step; cap excessively fast object motion and use suitable continuous collision detection for small fast hazards.
+- Use physics layers/masks for robot, line, hazard, terrain, trigger, and goal.
+- Hazards include rigid-body falling objects and optionally kinematic movers; behavior must be deterministic enough for level testing.
+- Clamp polyline vertex count and simplify touch input to avoid many tiny collision segments.
+- Prevent unstable self-colliding or zero-length segments; avoid excessive physics bodies.
+- Use configurable physics material parameters: friction, bounce, density/gravity.
+
+3.4 WIN & LOSS
+- Survival levels: after the hazard phase and countdown (default 8 seconds), all required robots are alive.
+- Exit levels: all required robots reach a marked charging station and survive.
+- Switch levels: activate required switch(es) and protect/reach designated goal.
+- Lose when a required robot touches a lethal hazard, falls out of bounds, or a required objective becomes impossible.
+- Each level explicitly defines its victory condition and time limit.
+- Countdowns start when the stroke is released, not while the player is planning.
+- Player can retry immediately; no energy system, forced waiting, or mandatory ads.
+
+3.5 GAME FEEL
+- Use quick anticipation, collision impact, robot emotion, success burst, and light haptic feedback (optional).
+- Make failures entertaining but legible: replay highlights what struck the robot.
+- Display victory within <= 1 second after objective completion.
+- Provide mute toggles for music/SFX, reduced motion option, and clear accessibility contrast.
+
+============================================================
+4. LEVEL DESIGN
+============================================================
+4.1 DATA MODEL
+Each level is defined as data (resource/JSON), separated from core logic.
+Required fields:
+  id, title, hint, background_id, world_bounds,
+  spawn_objects[], draw_zones[], forbidden_zones[],
+  max_stroke_length, simulation_duration, objective,
+  tutorial_steps[], difficulty_tag, expected_solution_tags[]
+
+Each object definition:
+  object_type, position, rotation, scale,
+  physics_properties, optional patrol_path, trigger_action
+
+4.2 LEVELS 01-10 (MUST IMPLEMENT FIRST)
+01. First Shield: Draw a simple roof against one falling gear. Tutorial: drag, release, observe.
+02. Side Impact: Falling block plus side gap; draw a sloped protective wall.
+03. Bouncy Surprise: Ball bounces off terrain; create a deflector.
+04. Narrow Shelter: Save the robot using limited ink under a low ceiling.
+05. Two Robots: Save both characters with one continuous stroke.
+06. Broken Bridge: Draw a bridge from robot platform to charger; reaching charger wins.
+07. Spring Launch: Redirect a spring-propelled object away from the robot.
+08. Gear Conveyor: Moving gear on a fixed route; draw a ramp to redirect it.
+09. Switch Rescue: Deflect a ball onto a switch to open a safe exit.
+10. One-Line Finale: Protect a robot AND activate a switch with one line.
+
+For each level define at least one proven solution in test metadata while allowing other valid solutions.
+Automated solvability checks are helpful but cannot replace manual playtesting.
+
+4.3 LEVELS 11-60 (PUBLISHABLE MVP CONTENT PLAN)
+11-20: Moving hazards, bouncing balls, speed/timing variation.
+21-30: Gaps, bridges, ramps, multiple terrain elevations.
+31-40: Fans, springs, moving platforms, more complex trajectories.
+41-50: Two/three robots, switches, gates, multi-objective levels.
+51-60: Creative combinations of earlier mechanics, final challenges.
+All 60 levels must be original, fair, winnable, and curated individually.
+
+4.4 DIFFICULTY BALANCING
+- Teach one new hazard or interaction at a time.
+- Avoid hidden hitboxes, pixel-perfect drawings, and random unavoidable failures.
+- Favor predictable physics; if randomized, seed per attempt and ensure fairness.
+- Provide optional earned hint after repeated failures; rewarded hint is supplemental, never the sole way to proceed.
+- No hard fail limits or lives in MVP.
+
+============================================================
+5. GAME SCREENS / UX
+============================================================
+A. SPLASH / LOAD: Fast loading, original game logo, offline-capable.
+B. HOME: Play, Level Select, Settings, optional Skins/Shop.
+C. LEVEL SELECT: Unlocked levels, stars/medals optional; always show next playable level.
+D. GAMEPLAY HUD: Level name, ink meter, optional timer, Pause, Retry.
+E. RESULT WON: Clear success, Next Level, Replay, optional reward prompt.
+F. RESULT LOST: Cause/failure animation, Retry, optional hint.
+G. SETTINGS: Sound/music, vibration, reduced motion, privacy link, credits, restore purchases.
+H. SHOP: Optional IAP items with transparent pricing; never blocks base game.
+
+Touch standards:
+- Large comfortable buttons and safe-area handling for cutouts/navigation bars.
+- Responsive portrait layout across common aspect ratios.
+- No mandatory account creation or internet access for core play.
+- Use short localized text strings (English first; optional Vietnamese later).
+
+============================================================
+6. PROGRESSION & RETENTION
+============================================================
+- Unlock the next level on successful completion.
+- Save best score or stars, number of attempts, and discovered cosmetic variants.
+- Optional 3-star criteria: survival, used ink <= threshold, completion time.
+- Star performance should not gate mandatory main progression in MVP.
+- Small celebratory cosmetic unlocks every 10 levels (no paid dependency).
+- Preserve player's last selected level and settings.
+- Encourage replay via multiple solutions and improved ink efficiency.
+- Avoid fake countdowns, manipulative scarcity, or daily login requirements.
+
+============================================================
+7. MONETIZATION
+============================================================
+7.1 PRINCIPLES
+- Entire base game and all standard levels remain playable offline without payment.
+- No ads during drawing or in mid-physics simulation.
+- No forced rewarded ads.
+- Ad requests and purchases only when connectivity and consent/legal requirements allow.
+- Monetization code must gracefully fail offline.
+- Frequency caps must be configurable remotely only if a remote service is later introduced; for MVP use local configuration.
+
+7.2 REWARDED ADS (PREFERRED)
+Placement A: Player explicitly selects "Watch ad for a hint."
+Placement B: Optional bonus cosmetic currency after a successful level.
+All rewarded payouts apply only after SDK confirms completed reward and must be idempotent.
+Offline fallback: Free basic hint after e.g. 3 failed attempts (no ad dependency).
+
+7.3 INTERSTITIAL ADS (OPTIONAL)
+- Display only after natural breaks, e.g. result screen after level completion.
+- Initial experiment: maximum 1 interstitial every 3-5 completed levels, minimum time gap configurable.
+- Never show during tutorial levels 1-3, on retry, on app resume, or unexpectedly during gameplay.
+- Honor remove-ads entitlement; comply with current Google Play and AdMob policies.
+- When no ad is available, continue instantly.
+
+7.4 IAP
+Initial non-consumable product: remove_interstitial_ads (illustrative price $1.99-$2.99; regional prices configured in Play Console).
+Optional later product: cosmetic_robot_pack_01.
+NOTE: "Remove ads" must state clearly which ads it removes (interstitials; optionally optional rewarded placements if specifically implemented). If the MVP has no interstitial ads, do not sell an ambiguous remove-ads item.
+Use Google Play Billing for in-app digital content where applicable.
+Validate purchases using the Billing API and robust idempotent entitlement logic; restore purchases on reconnect. For stronger purchase integrity, add a secure backend later (not part of offline-only MVP).
+Never trust unverified client UI presses as proof of purchase.
+
+7.5 REVENUE MEASUREMENT
+Track locally: attempts, completed levels, voluntary ad opt-in, ad reward fulfillment, purchase restoration, crashes/performance.
+Upload analytics only after an explicit privacy decision and when online; disable by default if analytics implementation is postponed.
+Measure by cohort: D1/D7 retention, level completion, ads per active user, revenue per acquired player, organic install conversion, and LTV versus CAC.
+Do not treat short-video views as revenue or install forecasts.
+
+============================================================
+8. OFFLINE SAVES & DATA
+============================================================
+- Store all gameplay progress locally; no sign-in required.
+- Version save schema and provide migrations.
+- Atomic write (temporary file then replace) and backup last good save.
+- Validate loaded data; recover from corruption without crashing.
+- Save on winning, leaving level, app pause/background, and settings changes.
+- Persist unlocked level, level stars/best ink, settings, cosmetics and verified cached entitlements.
+- Do not collect personal information unless necessary.
+- Clearing app data or uninstalling may remove offline progress; disclose this limitation.
+- After successful online purchase, restore permanent entitlements when Play Billing can reconnect.
+
+============================================================
+9. ART, AUDIO & CONTENT RIGHTS
+============================================================
+Style: bright 2D vector/cartoon with clean silhouettes and friendly expressive robots.
+Palette: soft pastel backgrounds, high-contrast hazards, bright success color.
+Minimum original assets:
+- 1 robot family with 3 expressions (idle, scared, happy).
+- 6 hazard families (gear, rock, ball, spring, fan, laser or moving block).
+- 4 environment assets (platform, wall, gap, charger/goal).
+- 1 drawn line material + collision impact particles.
+- UI icons for Play, Pause, Retry, Hint, Mute, Shop.
+- Short original SFX and optional lightweight background loop.
+
+Use original assets or documented commercial-use licenses.
+Do not copy screenshots, sound effects, logos, characters or recognizable designs from competing games.
+Provide ATTRIBUTION.txt listing third-party assets, their licenses, and source URLs.
+No use of trademarked names in listing keywords in ways that imply affiliation.
+
+============================================================
+10. PERFORMANCE / DEVICE REQUIREMENTS
+============================================================
+- Target smooth 60 FPS on typical devices; degrade gracefully to stable 30 FPS on weak 2 GB RAM Android devices.
+- Avoid hundreds of active physics bodies; pool hazard objects where useful.
+- Simplify drawn polylines and cap max vertices/line length.
+- Use 2D assets and texture atlases; avoid heavyweight shaders/3D.
+- Profile memory, level reload time, and long-session stability on real hardware.
+- Respect notch, aspect ratio, lifecycle events and audio focus.
+- Support current Google Play target API requirements: for new standard phone apps as of Nov 2026, target API level 36 or higher; check policy again before submission.
+- Package release as signed AAB, debugging as APK.
+
+============================================================
+11. GODOT IMPLEMENTATION ARCHITECTURE
+============================================================
+Suggested modules:
+- GameManager: Global state and scene transitions.
+- LevelLoader: Loads and validates level definitions.
+- DrawController: Touch capture, smoothing, line length, placement validity.
+- StrokePhysicsBuilder: Converts stroke polyline to colliders.
+- PhysicsWorld: Hazards and collision layers.
+- ObjectiveEvaluator: Survival, rescue-to-goal, switch conditions.
+- RobotController: Animations, death/goal detection.
+- HintSystem: Lightweight authored hints and retries.
+- ProgressSave: Versioned local saves, migrations and backup.
+- AdsAdapter: Test-mode rewarded/interstitial logic; offline no-op.
+- BillingAdapter: Play Billing, restore purchases, entitlement cache.
+- ConsentManager: Handles region-relevant consent and privacy preference before ad/analytics requests.
+- UIManager: Home, level selection, gameplay overlays, settings, results.
+
+Suggested repo layout:
+  .github/workflows/validate.yml
+  .github/workflows/android-debug.yml
+  .github/workflows/android-release.yml
+  project.godot
+  scenes/home.tscn
+  scenes/gameplay.tscn
+  scenes/level_select.tscn
+  scenes/ui/result.tscn
+  scenes/entities/robot.tscn
+  scenes/entities/hazard.tscn
+  scripts/game_manager.gd
+  scripts/level_loader.gd
+  scripts/draw_controller.gd
+  scripts/stroke_physics_builder.gd
+  scripts/objective_evaluator.gd
+  scripts/progress_save.gd
+  scripts/ads_adapter.gd
+  scripts/billing_adapter.gd
+  data/levels/level_001.json ... level_060.json
+  assets/sprites/
+  assets/audio/
+  tests/
+  README.md
+  PRIVACY_CHECKLIST.md
+  ATTRIBUTION.txt
+
+============================================================
+12. CLOUD-ONLY WORKFLOW / CI-CD
+============================================================
+Development must be possible from GitHub web UI or cloud agent without locally installing Godot, Java, Android Studio, or Android SDK.
+
+A. On each pull request:
+- Install/pin known-good Godot 4 stable version and matching export templates.
+- Run formatting/lint/static validation as available.
+- Run headless unit/integration tests on merge-less draw physics rules, level schemas, objective logic, and save/load.
+- Run Godot headless import/parse to catch missing scenes/assets/scripts.
+
+B. Debug Android build:
+- Install appropriate JDK, Android command-line SDK/build tools and dependencies in GitHub runner.
+- Export debug APK, preserving build logs and APK as GitHub Actions artifacts.
+- Verify expected package ID, min/target SDK, manifest permissions and orientation.
+
+C. Release Android build:
+- Enable Android custom/Gradle build only if required by current ads/billing plugin integrations.
+- Load keystore and passwords ONLY from protected GitHub Actions secrets or environment.
+- Generate signed release AAB as an artifact, run package validation and record versionCode/versionName.
+- Never commit keystore, service-account credentials, ad secrets, or billing credentials.
+- Do not automatically publish production without explicit owner approval.
+
+D. Optional review:
+- Provide a web build preview for gameplay, understanding that Android-native ads and billing cannot be verified in web preview.
+- Download debug APK to a physical Android phone to test real touch/physics/performance.
+
+============================================================
+13. QUALITY ASSURANCE / TEST MATRIX
+============================================================
+Automated:
+- Stroke is rejected when it exceeds length or enters forbidden zone.
+- Stroke vertices are finite; no empty or zero-length collision segments.
+- Correct transitions READY/DRAWING/SIMULATING/WON/LOST.
+- All 10 first-release levels load and contain valid goals, colliders, and hints.
+- Objective evaluation correctly handles multiple robots and switches.
+- Restart resets physics, timers, input and hazard state.
+- Save/load and migration survive interruption/corruption.
+- Ads unavailable or player offline does not block game progression.
+- Reward callback cannot grant same benefit twice.
+- Purchase restoration is idempotent; no entitlement on failed purchase.
+
+Manual on real device:
+- Multi-resolution portrait screens, notches, gesture navigation.
+- Slow/fast drawing and touch cancel; finger exits screen.
+- Low-end 2 GB RAM device play session 30+ minutes.
+- Pause/resume/background/rotation/orientation lock behavior.
+- Airplane mode: full game works and no infinite loading.
+- Rewarded ad fully watched, canceled, unavailable and network drop.
+- Test purchase, cancel purchase, restore after reinstall, offline cached entitlement.
+- Privacy/consent flow and purchase policy compliance.
+
+Acceptance gate for vertical slice:
+1. 10/10 authored levels finishable by human testers.
+2. Retry, win/loss, and level unlock work.
+3. Debug APK generated by GitHub Actions and playable on Android.
+4. No blocking network calls or forced ads.
+5. At least one tested real device with no critical crash.
+
+Acceptance gate for production:
+1. 60 polished, winnable, original levels (or explicitly reduce release scope based on tests).
+2. Signed AAB, compatible target SDK, correct package metadata.
+3. Ad SDK and Billing tested on appropriate Play testing tracks.
+4. Privacy policy and Play Console Data safety/ads/target-audience declarations accurately completed.
+5. All required Google Play testing/review and developer verification requirements met.
+6. Core game remains functional without network.
+
+============================================================
+14. GOOGLE PLAY PUBLISHING & POLICY CHECKLIST
+============================================================
+- Verify unique package name and app title; prepare original icon, screenshots and descriptions.
+- Ensure current target SDK/API, AAB, versioning, 64-bit/native dependency compliance where applicable.
+- Use Play App Signing/upload signing correctly.
+- Publish accessible privacy policy URL and provide in-app link; verify SDK data practices.
+- Complete Data safety, content rating, ads declaration and target audience fields truthfully.
+- Check current rules for children and families if targeting them.
+- Review Google Play policies on repetitive content, IP, intrusive ads, deceptive behavior and payments.
+- For affected new personal Play Console accounts, satisfy required closed testing (commonly 12 testers opted-in for 14 continuous days) and production access review; verify current account-specific applicability.
+- Use internal/closed test tracks for purchases and ad behavior before production.
+- Ensure application does not impersonate or imply association with Doge Rescue or any competing title.
+- Confirm current policy/SDK requirements again on submission date; this file is not a guarantee of Play approval.
+
+============================================================
+15. SHORT-VIDEO CONTENT / DISTRIBUTION
+============================================================
+Primary hook: "Save the robot with one line."
+Content formats:
+- Simple puzzle with unexpectedly funny failure.
+- One-line save that almost fails.
+- Two robots, one bridge, three hazards.
+- Audience challenge: pause before drawing and predict a solution.
+- Multiple valid solutions: compare creative paths.
+
+Capture format: Vertical 9:16, original gameplay, no misleading fake gameplay.
+Suggested clip structure: 0-2 sec obvious danger; 2-4 sec draw; 4-8 sec physics drama; 8-12 sec result.
+Test 10-level vertical slice with 15-20 different clips rather than endlessly reposting a single template.
+Track views, retention, profile clicks, attributed installs, user retention, and revenue per 1,000 video views.
+Organic reach and conversion are uncertain; do not assume virality.
+
+============================================================
+16. DEVELOPMENT MILESTONES / ORDER OF IMPLEMENTATION
+============================================================
+M0. Create Godot repository, fixed engine version, CI validation and debug APK export.
+M1. Implement touch drawing and physical stroke collisions on one test level.
+M2. Add hazard simulation, objective states, restart and pause.
+M3. Build 10 unique levels, tutorial, polished first-session UX.
+M4. Implement level select, save/load, settings, performance tuning.
+M5. Playtest, record gameplay clips, fix physics and usability problems.
+M6. Only if validation positive: expand toward 60 curated levels.
+M7. Integrate AdMob and Billing with test-mode validation and consent/privacy.
+M8. Release signing, Play testing, store assets, compliance, production rollout.
+
+AI AGENT OPERATING RULES:
+- Deliver working commits per milestone, not a giant untested code dump.
+- Run validation and post build/test outputs in pull request descriptions.
+- Keep game logic data-driven, modular and testable.
+- Never fake test passes, screenshots, Play approval, ad impressions or purchase verification.
+- If Android SDK/plugin integration blocks CI, report exact error and provide minimal reproducible fix.
+- Favor reliable, polished mechanics over excess content.
+
+============================================================
+17. OUT OF SCOPE FOR INITIAL MVP
+============================================================
+- Multiplayer, social chat, accounts and cloud saves.
+- Real-time servers and leaderboards.
+- Procedural generation without human-curated solvability.
+- Advanced fluid physics or full destructible worlds.
+- Gacha, gambling-like purchases, loot boxes, pay-to-win unlocks.
+- Mandatory ads, daily streak punishment or artificial wait timers.
+- Complex 3D assets and advanced skeletal animation.
+
+============================================================
+18. FINAL DELIVERABLES
+============================================================
+- Complete original Godot 4 source repository.
+- 10-level vertical slice with tests; 60 curated levels only after validation.
+- Cloud CI workflows producing debug APK and signed release AAB.
+- Playable offline Android package.
+- Ads/Billing adapters with verified test integration for production phase.
+- Privacy/data/third-party licensing documentation and Play release checklist.
+- README with zero-local-install developer instructions.
+- Original marketing screenshots and genuine game video capture.
+
+END OF SPECIFICATION

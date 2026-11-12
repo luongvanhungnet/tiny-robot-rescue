@@ -1,0 +1,8 @@
+{
+  "appId": "com.tinyrobot.rescue.web",
+  "appName": "Tiny Robot Rescue",
+  "webDir": "dist",
+  "backgroundColor": "#0b1726",
+  "android": { "allowMixedContent": false },
+  "server": { "androidScheme": "https" }
+}

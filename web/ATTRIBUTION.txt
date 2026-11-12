@@ -1,0 +1,15 @@
+Tiny Robot Rescue — web edition
+All workshop layouts, Pip robot illustrations, hazard graphics, UI artwork, icon, and synthesized audio were created for this project in source code. No Doge Rescue characters, layouts, images, audio, UI, or branding are included.
+
+Third-party runtime software:
+Phaser 3.90.0 — MIT — https://github.com/phaserjs/phaser
+Matter.js 0.20.0 — MIT — https://github.com/liabru/matter-js
+Capacitor 7 and official plugins — MIT — https://github.com/ionic-team/capacitor
+
+Tooling:
+Vite — MIT — https://github.com/vitejs/vite
+Playwright — Apache-2.0 — https://github.com/microsoft/playwright
+Prettier — MIT — https://github.com/prettier/prettier
+
+System fonts only. No external font, art, music, or analytics requests.
+Dependencies include their full license text in node_modules. Verify all rights and naming before store publication.

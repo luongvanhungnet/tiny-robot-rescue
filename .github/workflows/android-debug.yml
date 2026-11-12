@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.3
+    defaults:
+      run:
+        working-directory: android
     steps:
       - uses: actions/checkout@v4
       - name: Setup Export Templates & Debug Keystore
@@ -35,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tiny-robot-rescue-debug-apk
-          path: build/android/tiny-robot-rescue-debug.apk
+          path: android/build/android/tiny-robot-rescue-debug.apk

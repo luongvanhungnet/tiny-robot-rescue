@@ -1,0 +1,33 @@
+{
+  "name": "tiny-robot-rescue-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "playwright test",
+    "android:sync": "npm run build && cap sync android",
+    "android:debug": "npm run android:sync && cd android && ./gradlew assembleDebug",
+    "test:offline": "npm run build && node tests/offline.mjs",
+    "format": "prettier --write src tests *.js *.json index.html",
+    "format:check": "prettier --check src tests *.js *.json index.html"
+  },
+  "dependencies": {
+    "@capacitor/android": "7.4.3",
+    "@capacitor/app": "7.1.0",
+    "@capacitor/core": "7.4.3",
+    "@capacitor/haptics": "7.0.2",
+    "@capacitor/status-bar": "7.0.3",
+    "matter-js": "0.20.0",
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "7.4.3",
+    "@playwright/test": "1.56.1",
+    "prettier": "^3.6.2",
+    "vite": "6.4.1"
+  }
+}

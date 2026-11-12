@@ -3,3 +3,13 @@ build/
 *.import
 *.tmp
 *.bak
+node_modules/
+dist/
+playwright-report/
+test-results/
+.gradle/
+local.properties
+*.keystore
+*.jks
+web/android/app/build/
+web/android/build/

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tiny Robot Rescue</string>
+    <string name="title_activity_main">Tiny Robot Rescue</string>
+    <string name="package_name">com.tinyrobot.rescue.web</string>
+    <string name="custom_url_scheme">com.tinyrobot.rescue.web</string>
+</resources>

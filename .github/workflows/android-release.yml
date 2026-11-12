@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.3
+    defaults:
+      run:
+        working-directory: android
     steps:
       - uses: actions/checkout@v4
       - name: Setup Export Directory
@@ -41,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tiny-robot-rescue-release-aab
-          path: build/android/tiny-robot-rescue-release.aab
+          path: android/build/android/tiny-robot-rescue-release.aab

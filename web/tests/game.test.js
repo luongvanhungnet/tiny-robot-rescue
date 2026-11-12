@@ -1,0 +1,195 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { levels, validateLevel } from "../src/levels.js";
+import { Simulation } from "../src/simulation.js";
+import { validateStroke, length, simplify } from "../src/stroke.js";
+import { Progress, SAVE_KEY } from "../src/save.js";
+import { ads, billing } from "../src/services.js";
+const run = (s) => {
+  for (let i = 0; i < 1000 && s.state === "SIMULATING"; i++) s.step(1000 / 60);
+};
+for (const level of levels)
+  test(`Level ${level.id}: authored solution wins in real Matter.js physics`, () => {
+    assert.ok(validateLevel(level));
+    const s = new Simulation(level);
+    assert.equal(s.start(level.solution), null);
+    assert.equal(s.state, "SIMULATING");
+    run(s);
+    assert.equal(s.state, "WON", s.reason);
+    assert.ok(s.elapsed > 0);
+    if (level.objective.type === "switch") assert.equal(s.activated.size, 1);
+    if (level.objective.type === "exit") assert.equal(s.goals.size, 1);
+    s.destroy();
+  });
+test("Unprotected robots are hit: failure is real, not an automatic countdown win", () => {
+  for (const id of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+    const s = new Simulation(levels[id - 1]);
+    assert.equal(
+      s.start([
+        [50, 400],
+        [100, 400],
+      ]),
+      null,
+    );
+    run(s);
+    assert.equal(s.state, "LOST", `Level ${id} should lose`);
+    assert.match(s.reason, /Hit|fell/);
+    s.destroy();
+  }
+});
+test("Drawing rejects short, infinite, duplicate, self-crossing, out-of-ink and forbidden strokes", () => {
+  const l = levels[0];
+  for (const pts of [
+    [],
+    [[200, 500]],
+    [
+      [200, 500],
+      [200, 500],
+    ],
+    [
+      [200, 500],
+      [Infinity, 600],
+    ],
+    [
+      [0, 300],
+      [20, 400],
+    ],
+    [
+      [330, 1018],
+      [390, 1018],
+    ],
+    [
+      [100, 1050],
+      [600, 1050],
+    ],
+    [
+      [50, 500],
+      [650, 500],
+    ],
+    [
+      [200, 500],
+      [400, 700],
+      [200, 700],
+      [400, 500],
+    ],
+  ])
+    assert.ok(validateStroke(pts, l));
+  assert.ok(
+    validateStroke(
+      [
+        [100, 500],
+        [200, 500],
+      ],
+      { ...l, forbidden_zones: [[150, 480, 10, 40]] },
+    ),
+  );
+  assert.ok(
+    validateStroke(
+      [
+        [100, 500],
+        [200, 500],
+      ],
+      { ...l, objects: [{ type: "platform", x: 150, y: 500, w: 2, h: 100 }] },
+    ),
+  );
+  assert.equal(validateStroke(l.solution, l), null);
+});
+test("Simplification preserves corners and endpoints, removes redundant touch samples", () => {
+  const pts = [
+    [0, 0],
+    [1, 0],
+    [2, 0],
+    [50, 0],
+    [50, 40],
+  ];
+  assert.deepEqual(simplify(pts), [
+    [0, 0],
+    [50, 0],
+    [50, 40],
+  ]);
+  assert.equal(length(simplify(pts)), 90);
+});
+test("Planning and pauses do not consume the simulation timer; second stroke rejected; restart resets", () => {
+  const s = new Simulation(levels[0]);
+  s.step(10000);
+  assert.equal(s.elapsed, 0);
+  s.state = "DRAWING";
+  s.step(10000);
+  assert.equal(s.elapsed, 0);
+  s.start(s.level.solution);
+  assert.ok(s.start(s.level.solution));
+  s.step(1000 / 60);
+  assert.ok(s.elapsed > 0);
+  s.destroy();
+  const fresh = new Simulation(levels[0]);
+  assert.equal(fresh.state, "READY");
+  assert.equal(fresh.elapsed, 0);
+  assert.equal(fresh.stroke.length, 0);
+  assert.equal(fresh.activated.size, 0);
+  fresh.destroy();
+});
+const memory = () => {
+  const m = new Map();
+  return {
+    getItem: (k) => m.get(k) ?? null,
+    setItem: (k, v) => m.set(k, v),
+    removeItem: (k) => m.delete(k),
+  };
+};
+test("Winning unlocks progress; retries preserve best stars/ink; settings and attempts persist", () => {
+  const store = memory(),
+    p = new Progress(store);
+  p.attempt(1);
+  assert.equal(p.win(1, 200, 480), 3);
+  p.win(1, 450, 480);
+  p.data.settings.sound = false;
+  p.save();
+  const next = new Progress(store);
+  assert.equal(next.data.unlocked, 2);
+  assert.equal(next.data.stars[1], 3);
+  assert.equal(next.data.bestInk[1], 200);
+  assert.equal(next.data.attempts[1], 1);
+  assert.equal(next.data.settings.sound, false);
+});
+test("Corrupt/interrupted writes recover from backup, migrate and sanitize invalid data", () => {
+  const store = memory(),
+    p = new Progress(store);
+  p.win(1, 200, 480);
+  p.save();
+  store.setItem(SAVE_KEY, "{broken");
+  store.setItem(SAVE_KEY + ".pending", "{partial");
+  assert.equal(new Progress(store).data.unlocked, 2);
+  store.setItem(
+    SAVE_KEY,
+    JSON.stringify({
+      unlocked_level: 4,
+      last_selected_level: 3,
+      stars: { 1: 999 },
+      settings: { sound: "bad" },
+    }),
+  );
+  const migrated = new Progress(store);
+  assert.equal(migrated.data.unlocked, 4);
+  assert.equal(migrated.data.stars[1], 3);
+  assert.equal(migrated.data.settings.sound, true);
+});
+test("Denied storage never crashes gameplay", () => {
+  const p = new Progress({
+    getItem() {
+      throw Error("blocked");
+    },
+    setItem() {
+      throw Error("quota");
+    },
+    removeItem() {},
+  });
+  p.win(1, 200, 480);
+  assert.equal(p.persistent, false);
+  assert.equal(p.data.unlocked, 2);
+});
+test("No monetization path invents purchases or blocks play offline", async () => {
+  assert.equal((await ads.showRewarded()).rewarded, false);
+  assert.equal(await ads.showInterstitial(), false);
+  assert.equal((await billing.purchase()).purchased, false);
+  assert.deepEqual(await billing.restore(), []);
+});

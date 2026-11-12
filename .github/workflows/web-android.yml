@@ -1,0 +1,80 @@
+name: Web game Android packages
+on:
+  push:
+    paths: ['web/**', '.github/workflows/web-android.yml']
+  workflow_dispatch:
+    inputs:
+      build:
+        description: Package type (release requires signing secrets)
+        type: choice
+        options: [debug, release]
+        default: debug
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - run: npm ci
+      - run: npm test
+      - run: npm run android:sync
+      - name: Debug APK
+        if: inputs.build != 'release'
+        run: cd android && ./gradlew assembleDebug --no-daemon
+      - name: Verify debug package
+        if: inputs.build != 'release'
+        run: |
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | tee android-package.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('android-package.txt').read_text()
+          assert "name='com.tinyrobot.rescue.web'" in text
+          assert "targetSdkVersion:'36'" in text
+          assert "sdkVersion:'23'" in text
+          assert "uses-permission: name='android.permission.INTERNET'" in text
+          assert 'android.permission.CAMERA' not in text
+          assert 'android.permission.ACCESS_FINE_LOCATION' not in text
+          PY
+      - name: Signed release AAB
+        if: inputs.build == 'release'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.WEB_ANDROID_KEYSTORE_BASE64 }}
+          WEB_ANDROID_KEYSTORE_ALIAS: ${{ secrets.WEB_ANDROID_KEYSTORE_ALIAS }}
+          WEB_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.WEB_ANDROID_KEYSTORE_PASSWORD }}
+          WEB_ANDROID_KEY_PASSWORD: ${{ secrets.WEB_ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$KEYSTORE_BASE64"
+          test -n "$WEB_ANDROID_KEYSTORE_ALIAS"
+          test -n "$WEB_ANDROID_KEYSTORE_PASSWORD"
+          test -n "$WEB_ANDROID_KEY_PASSWORD"
+          export WEB_ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/tiny-robot-web-release.jks"
+          trap 'rm -f "$WEB_ANDROID_KEYSTORE_PATH"' EXIT
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$WEB_ANDROID_KEYSTORE_PATH"
+          cd android
+          ./gradlew bundleRelease --no-daemon
+          jarsigner -verify app/build/outputs/bundle/release/app-release.aab
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tiny-robot-rescue-capacitor-${{ inputs.build || 'debug' }}
+          path: |
+            web/android/app/build/outputs/apk/debug/*.apk
+            web/android/app/build/outputs/bundle/release/*.aab
+            web/android-package.txt
+          if-no-files-found: error
