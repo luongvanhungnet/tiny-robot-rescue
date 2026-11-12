@@ -51,16 +51,16 @@
       "object_type": "conveyor_gear",
       "position": [
         120,
-        860
+        885
       ],
       "patrol_path": [
         [
           120,
-          860
+          885
         ],
         [
           560,
-          860
+          885
         ]
       ],
       "physics_properties": {

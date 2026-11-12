@@ -56,7 +56,7 @@
       "physics_properties": {
         "radius": 26,
         "initial_velocity": [
-          115,
+          -20,
           0
         ]
       }

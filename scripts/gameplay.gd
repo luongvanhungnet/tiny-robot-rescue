@@ -59,9 +59,14 @@ func _load_current_level() -> void:
 	level_title_lbl.text = str(level_data["title"])
 	var max_ink := float(level_data["max_stroke_length"])
 	draw_controller.max_stroke_length = max_ink
+	draw_controller.draw_zones.clear()
+	for dz in level_data.get("draw_zones", []):
+		draw_controller.draw_zones.append(Rect2(dz["x"], dz["y"], dz["w"], dz["h"]))
 	draw_controller.forbidden_rects.clear()
 	for fz in level_data["forbidden_zones"]:
 		draw_controller.forbidden_rects.append(Rect2(fz["x"], fz["y"], fz["w"], fz["h"]))
+	pause_btn.disabled = false
+	pause_btn.text = "PAUSE"
 	
 	var switch_count := 0
 	var r_positions: Array[Vector2] = []
@@ -107,6 +112,15 @@ func _load_current_level() -> void:
 	state = ObjectiveEvaluator.State.READY
 	ProgressSave.record_level_attempt(GameManager.current_level_id)
 
+func _add_world_rect(parent: Node, sz: Vector2, col_val: Color) -> ColorRect:
+	var rect := ColorRect.new()
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.size = sz
+	rect.position = -sz * 0.5
+	rect.color = col_val
+	parent.add_child(rect)
+	return rect
+
 func _spawn_platform(pos: Vector2, sz: Vector2) -> void:
 	var body := StaticBody2D.new()
 	body.position = pos
@@ -117,12 +131,7 @@ func _spawn_platform(pos: Vector2, sz: Vector2) -> void:
 	shape.size = sz
 	col.shape = shape
 	body.add_child(col)
-	
-	var rect := ColorRect.new()
-	rect.size = sz
-	rect.position = -sz * 0.5
-	rect.color = Color("#475569")
-	body.add_child(rect)
+	_add_world_rect(body, sz, Color("#475569"))
 	world_root.add_child(body)
 
 func _spawn_robot(pos: Vector2, props: Dictionary) -> RobotController:
@@ -173,12 +182,7 @@ func _spawn_charger(pos: Vector2) -> void:
 	shape.size = Vector2(64, 64)
 	col.shape = shape
 	area.add_child(col)
-	
-	var rect := ColorRect.new()
-	rect.size = Vector2(64, 64)
-	rect.position = Vector2(-32, -32)
-	rect.color = Color("#10b981", 0.75)
-	area.add_child(rect)
+	_add_world_rect(area, Vector2(64, 64), Color("#10b981", 0.75))
 	
 	area.body_entered.connect(func(body: Node):
 		if body is RobotController:
@@ -196,12 +200,7 @@ func _spawn_switch(pos: Vector2) -> void:
 	shape.size = Vector2(56, 30)
 	col.shape = shape
 	area.add_child(col)
-	
-	var rect := ColorRect.new()
-	rect.size = Vector2(56, 30)
-	rect.position = Vector2(-28, -15)
-	rect.color = Color("#3b82f6")
-	area.add_child(rect)
+	var rect := _add_world_rect(area, Vector2(56, 30), Color("#3b82f6"))
 	
 	var activated := false
 	area.body_entered.connect(func(_body: Node):
@@ -224,6 +223,8 @@ func _on_stroke_rejected(reason: String) -> void:
 		hint_lbl.text = "Line too short! Draw a longer line."
 	elif reason == "forbidden_zone":
 		hint_lbl.text = "Cannot draw inside robots or forbidden zones!"
+	elif reason == "outside_draw_zone":
+		hint_lbl.text = "Draw inside the play area!"
 	state = ObjectiveEvaluator.State.READY
 
 func _on_stroke_completed(points: PackedVector2Array, used_len: float) -> void:
@@ -263,7 +264,7 @@ func _on_robot_reached_goal() -> void:
 func _on_win() -> void:
 	state = ObjectiveEvaluator.State.WON
 	for r in robots:
-		r.set_expression(RobotController.Expression.HAPPY)
+		r.set_expression(RobotController.RobotExpression.HAPPY)
 	GameManager.play_tone(880.0, 0.25, -8.0)
 	
 	var max_ink := float(level_data["max_stroke_length"])
@@ -272,6 +273,8 @@ func _on_win() -> void:
 	AdsAdapter.record_level_completed()
 	AdsAdapter.show_interstitial_if_ready(GameManager.current_level_id)
 	
+	hint_lbl.text = "Level Complete!"
+	pause_btn.disabled = true
 	result_title.text = "RESCUED! (%d/3 Stars)" % stars
 	result_desc.text = "Ink used: %.0f / %.0f" % [used_ink, max_ink]
 	next_btn.visible = GameManager.current_level_id < GameManager.TOTAL_VERTICAL_SLICE_LEVELS
@@ -280,6 +283,8 @@ func _on_win() -> void:
 
 func _on_loss(reason: String) -> void:
 	state = ObjectiveEvaluator.State.LOST
+	hint_lbl.text = "Try again!"
+	pause_btn.disabled = true
 	result_title.text = "OOPS!"
 	result_desc.text = reason
 	next_btn.visible = false
@@ -301,3 +306,8 @@ func _retry_level() -> void:
 func _next_level() -> void:
 	get_tree().paused = false
 	GameManager.start_level(GameManager.current_level_id + 1)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		get_tree().paused = false
+		GameManager.go_level_select()

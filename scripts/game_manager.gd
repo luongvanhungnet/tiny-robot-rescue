@@ -6,19 +6,20 @@ var current_level_id: int = 1
 var _sfx_player: AudioStreamPlayer
 
 func _ready() -> void:
+	get_tree().set_quit_on_go_back(false)
 	current_level_id = clampi(int(ProgressSave.data.get("last_selected_level", 1)), 1, TOTAL_VERTICAL_SLICE_LEVELS)
 	_sfx_player = AudioStreamPlayer.new()
 	add_child(_sfx_player)
 
 func start_level(level_id: int) -> void:
 	current_level_id = clampi(level_id, 1, TOTAL_VERTICAL_SLICE_LEVELS)
-	get_tree().change_scene_to_file("res://scenes/gameplay.tscn")
+	get_tree().call_deferred("change_scene_to_file", "res://scenes/gameplay.tscn")
 
 func go_home() -> void:
-	get_tree().change_scene_to_file("res://scenes/home.tscn")
+	get_tree().call_deferred("change_scene_to_file", "res://scenes/home.tscn")
 
 func go_level_select() -> void:
-	get_tree().change_scene_to_file("res://scenes/level_select.tscn")
+	get_tree().call_deferred("change_scene_to_file", "res://scenes/level_select.tscn")
 
 func play_tone(freq_hz: float, duration_sec: float = 0.12, volume_db: float = -10.0) -> void:
 	if not bool(ProgressSave.data["settings"].get("sound_enabled", true)):

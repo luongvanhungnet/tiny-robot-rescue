@@ -9,15 +9,35 @@ var patrol_points: Array[Vector2] = []
 var patrol_speed: float = 120.0
 var _patrol_idx: int = 0
 
+func get_display_name() -> String:
+	match hazard_type:
+		"gear":
+			return "Spinning Gear"
+		"conveyor_gear":
+			return "Patrol Gear"
+		"block":
+			return "Heavy Block"
+		"ball":
+			return "Bouncing Ball"
+		"spring_ball":
+			return "Spring Ball"
+		_:
+			return "Hazard"
+
 func _ready() -> void:
 	add_to_group("hazard")
 	collision_layer = 8 # hazard
 	collision_mask = 1 | 2 | 4 | 8 | 16 # terrain, robot, line, hazard, trigger
 	continuous_cd = RigidBody2D.CCD_MODE_CAST_RAY
 	
-	if hazard_type == "ball" or hazard_type == "spring_ball":
+	if hazard_type == "ball":
 		var mat := PhysicsMaterial.new()
-		mat.bounce = 0.78
+		mat.bounce = 0.48
+		mat.friction = 0.1
+		physics_material_override = mat
+	elif hazard_type == "spring_ball":
+		var mat := PhysicsMaterial.new()
+		mat.bounce = 0.72
 		mat.friction = 0.1
 		physics_material_override = mat
 	elif hazard_type == "conveyor_gear":

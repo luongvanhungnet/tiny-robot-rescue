@@ -22,3 +22,7 @@ func _populate_levels() -> void:
 			btn.text = "Level %d\n(Locked)" % i
 			btn.disabled = true
 		grid.add_child(btn)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		GameManager.go_home()

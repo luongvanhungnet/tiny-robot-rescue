@@ -1,7 +1,7 @@
 {
   "id": 30,
   "title": "30. Bridge Crossing 10",
-  "hint": "Build a sturdy bridge to guide the robot to the green charger!",
+  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
   "background_id": "workshop_day",
   "world_bounds": {
     "x": 0,
@@ -33,7 +33,7 @@
       "object_type": "platform",
       "position": [
         140,
-        880
+        820
       ],
       "scale": [
         200,
@@ -43,11 +43,11 @@
     {
       "object_type": "platform",
       "position": [
-        550,
-        880
+        560,
+        940
       ],
       "scale": [
-        220,
+        180,
         40
       ]
     },
@@ -55,18 +55,18 @@
       "object_type": "robot",
       "position": [
         120,
-        820
+        760
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 550
+        "goal_x": 560
       }
     },
     {
       "object_type": "charger",
       "position": [
-        550,
-        825
+        560,
+        885
       ]
     },
     {
@@ -76,7 +76,11 @@
         260
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 26,
+        "initial_velocity": [
+          90,
+          0
+        ]
       }
     }
   ]

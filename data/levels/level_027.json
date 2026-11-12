@@ -1,7 +1,7 @@
 {
   "id": 27,
   "title": "27. Bridge Crossing 7",
-  "hint": "Build a sturdy bridge to guide the robot to the green charger!",
+  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
   "background_id": "workshop_day",
   "world_bounds": {
     "x": 0,
@@ -33,7 +33,7 @@
       "object_type": "platform",
       "position": [
         140,
-        880
+        820
       ],
       "scale": [
         200,
@@ -43,11 +43,11 @@
     {
       "object_type": "platform",
       "position": [
-        580,
-        880
+        555,
+        940
       ],
       "scale": [
-        220,
+        180,
         40
       ]
     },
@@ -55,18 +55,18 @@
       "object_type": "robot",
       "position": [
         120,
-        820
+        760
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 580
+        "goal_x": 555
       }
     },
     {
       "object_type": "charger",
       "position": [
-        580,
-        825
+        555,
+        885
       ]
     },
     {
@@ -76,7 +76,11 @@
         260
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 26,
+        "initial_velocity": [
+          60,
+          0
+        ]
       }
     }
   ]

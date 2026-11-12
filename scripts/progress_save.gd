@@ -59,16 +59,30 @@ func _try_read_json(path: String) -> Dictionary:
 		return {}
 	var text := file.get_as_text()
 	file.close()
-	var parsed = JSON.parse_string(text)
-	if typeof(parsed) != TYPE_DICTIONARY:
+	var json := JSON.new()
+	if json.parse(text) != OK:
 		return {}
-	return parsed
+	if typeof(json.data) != TYPE_DICTIONARY:
+		return {}
+	return json.data
+
+func _is_compatible_type(loaded_val: Variant, base_val: Variant) -> bool:
+	var lt := typeof(loaded_val)
+	var bt := typeof(base_val)
+	if lt == bt:
+		return true
+	# JSON.parse deserializes all JSON numbers as TYPE_FLOAT.
+	if (bt == TYPE_INT or bt == TYPE_FLOAT) and (lt == TYPE_INT or lt == TYPE_FLOAT):
+		return true
+	return false
 
 func _migrate_and_validate(loaded: Dictionary) -> Dictionary:
 	var base := default_data()
 	for key in base.keys():
-		if not loaded.has(key) or typeof(loaded[key]) != typeof(base[key]):
+		if not loaded.has(key) or not _is_compatible_type(loaded[key], base[key]):
 			loaded[key] = base[key]
+		elif typeof(base[key]) == TYPE_INT:
+			loaded[key] = int(loaded[key])
 	
 	for s_key in base["settings"].keys():
 		if not loaded["settings"].has(s_key):
@@ -77,13 +91,27 @@ func _migrate_and_validate(loaded: Dictionary) -> Dictionary:
 	for c_key in base["cosmetics"].keys():
 		if not loaded["cosmetics"].has(c_key):
 			loaded["cosmetics"][c_key] = base["cosmetics"][c_key]
+	loaded["cosmetics"]["bolts"] = int(loaded["cosmetics"].get("bolts", 0))
 			
 	for e_key in base["entitlements"].keys():
 		if not loaded["entitlements"].has(e_key):
 			loaded["entitlements"][e_key] = base["entitlements"][e_key]
-			
+
+	for a_key in base["analytics_local"].keys():
+		if not loaded["analytics_local"].has(a_key):
+			loaded["analytics_local"][a_key] = base["analytics_local"][a_key]
+		else:
+			loaded["analytics_local"][a_key] = int(loaded["analytics_local"][a_key])
+
+	var min_unlocked := 1
+	var levels_dict: Dictionary = loaded["levels"]
+	for lvl_key in levels_dict.keys():
+		var entry = levels_dict[lvl_key]
+		if typeof(entry) == TYPE_DICTIONARY and bool(entry.get("completed", false)):
+			min_unlocked = max(min_unlocked, int(lvl_key) + 1)
+
 	loaded["schema_version"] = SCHEMA_VERSION
-	loaded["unlocked_level"] = max(1, int(loaded["unlocked_level"]))
+	loaded["unlocked_level"] = max(min_unlocked, max(1, int(loaded["unlocked_level"])))
 	loaded["last_selected_level"] = clampi(int(loaded["last_selected_level"]), 1, loaded["unlocked_level"])
 	return loaded
 

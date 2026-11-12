@@ -7,12 +7,21 @@ signal purchases_restored(entitlements: Array)
 const PRODUCT_REMOVE_ADS := "remove_interstitial_ads"
 
 var _processed_tokens: Dictionary = {}
+var progress_save_override: Node = null
+
+func _get_progress_save() -> Node:
+	if progress_save_override != null:
+		return progress_save_override
+	if is_inside_tree():
+		return get_node_or_null("/root/ProgressSave")
+	return null
 
 func is_billing_available() -> bool:
 	return Engine.has_singleton("GodotGooglePlayBilling")
 
 func purchase_remove_ads() -> void:
-	if ProgressSave.has_remove_ads():
+	var ps := _get_progress_save()
+	if ps != null and ps.has_remove_ads():
 		purchase_succeeded.emit(PRODUCT_REMOVE_ADS)
 		return
 	if not is_billing_available():
@@ -27,7 +36,9 @@ func verify_and_grant_purchase(product_id: String, purchase_token: String) -> bo
 		return false
 	_processed_tokens[purchase_token] = true
 	if product_id == PRODUCT_REMOVE_ADS:
-		ProgressSave.set_remove_ads(true)
+		var ps := _get_progress_save()
+		if ps != null:
+			ps.set_remove_ads(true)
 		purchase_succeeded.emit(product_id)
 		return true
 	return false
@@ -38,6 +49,7 @@ func restore_purchases() -> void:
 		return
 	# Real Play Billing queryPurchases hooks here in M7
 	var restored: Array = []
-	if ProgressSave.has_remove_ads():
+	var ps := _get_progress_save()
+	if ps != null and ps.has_remove_ads():
 		restored.append(PRODUCT_REMOVE_ADS)
 	purchases_restored.emit(restored)

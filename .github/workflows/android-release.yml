@@ -11,7 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup Export Directory
-        run: mkdir -p build/android
+        run: |
+          mkdir -p build/android
+          mkdir -p "$HOME/.local/share/godot"
+          if [ ! -e "$HOME/.local/share/godot/export_templates" ] && [ -d "/root/.local/share/godot/export_templates" ]; then
+            ln -s /root/.local/share/godot/export_templates "$HOME/.local/share/godot/export_templates"
+          fi
       - name: Decode Release Keystore
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}

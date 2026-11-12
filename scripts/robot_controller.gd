@@ -4,9 +4,9 @@ extends RigidBody2D
 signal robot_died(reason: String)
 signal robot_reached_goal
 
-enum Expression { IDLE, SCARED, HAPPY }
+enum RobotExpression { IDLE, SCARED, HAPPY }
 
-var current_expression: Expression = Expression.IDLE
+var current_expression: RobotExpression = RobotExpression.IDLE
 var is_alive: bool = true
 var at_goal: bool = false
 var move_toward_goal: bool = false
@@ -18,6 +18,12 @@ func _ready() -> void:
 	lock_rotation = true
 	contact_monitor = true
 	max_contacts_reported = 6
+	if move_toward_goal:
+		can_sleep = false
+		var mat := PhysicsMaterial.new()
+		mat.friction = 0.05
+		mat.bounce = 0.0
+		physics_material_override = mat
 	body_entered.connect(_on_body_entered)
 
 func _physics_process(_delta: float) -> void:
@@ -29,34 +35,42 @@ func _physics_process(_delta: float) -> void:
 	if move_toward_goal and not at_goal and not freeze:
 		var dir := signf(goal_x - global_position.x)
 		if absf(goal_x - global_position.x) > 12.0:
-			linear_velocity.x = lerpf(linear_velocity.x, dir * 130.0, 0.08)
+			linear_velocity.x = lerpf(linear_velocity.x, dir * 150.0, 0.25)
 
-func set_expression(expr: Expression) -> void:
+func set_expression(expr: RobotExpression) -> void:
 	if current_expression != expr:
 		current_expression = expr
 		queue_redraw()
+
+func _play_tone(freq_hz: float, duration_sec: float, volume_db: float) -> void:
+	if not is_inside_tree():
+		return
+	var gm := get_node_or_null("/root/GameManager")
+	if gm != null:
+		gm.play_tone(freq_hz, duration_sec, volume_db)
 
 func die(reason: String) -> void:
 	if not is_alive:
 		return
 	is_alive = false
-	set_expression(Expression.SCARED)
-	GameManager.play_tone(160.0, 0.22, -6.0)
+	set_expression(RobotExpression.SCARED)
+	_play_tone(160.0, 0.22, -6.0)
 	robot_died.emit(reason)
 
 func reach_goal() -> void:
 	if not is_alive or at_goal:
 		return
 	at_goal = true
-	set_expression(Expression.HAPPY)
-	GameManager.play_tone(660.0, 0.15, -8.0)
+	set_expression(RobotExpression.HAPPY)
+	_play_tone(660.0, 0.15, -8.0)
 	robot_reached_goal.emit()
 
 func _on_body_entered(body: Node) -> void:
 	if not is_alive:
 		return
 	if body.is_in_group("hazard"):
-		die("Hit by " + body.name + "!")
+		var label := str(body.call("get_display_name")) if body.has_method("get_display_name") else "Hazard"
+		die("Hit by " + label + "!")
 
 func _draw() -> void:
 	# Antenna
@@ -74,15 +88,15 @@ func _draw() -> void:
 	
 	# Eyes & Mouth based on expression
 	match current_expression:
-		Expression.IDLE:
+		RobotExpression.IDLE:
 			draw_circle(Vector2(-9, -6), 4.5, Color("#0ea5e9"))
 			draw_circle(Vector2(9, -6), 4.5, Color("#0ea5e9"))
 			draw_arc(Vector2(0, 6), 7.0, 0.2, PI - 0.2, 12, Color("#0f172a"), 2.5)
-		Expression.SCARED:
+		RobotExpression.SCARED:
 			draw_circle(Vector2(-9, -6), 6.0, Color("#ef4444"))
 			draw_circle(Vector2(9, -6), 6.0, Color("#ef4444"))
 			draw_circle(Vector2(0, 9), 5.0, Color("#0f172a"))
-		Expression.HAPPY:
+		RobotExpression.HAPPY:
 			draw_arc(Vector2(-9, -5), 5.0, PI, TAU, 10, Color("#10b981"), 3.0)
 			draw_arc(Vector2(9, -5), 5.0, PI, TAU, 10, Color("#10b981"), 3.0)
 			draw_arc(Vector2(0, 5), 9.0, 0.1, PI - 0.1, 14, Color("#10b981"), 3.0)

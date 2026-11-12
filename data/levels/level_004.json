@@ -9,7 +9,7 @@
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 200,
+  "max_stroke_length": 240,
   "simulation_duration": 6.0,
   "objective": {
     "type": "survival"
@@ -68,13 +68,13 @@
     {
       "object_type": "gear",
       "position": [
-        220,
-        260
+        280,
+        630
       ],
       "physics_properties": {
         "radius": 28,
         "initial_velocity": [
-          90,
+          80,
           0
         ]
       }
@@ -82,13 +82,13 @@
     {
       "object_type": "gear",
       "position": [
-        500,
-        260
+        440,
+        630
       ],
       "physics_properties": {
         "radius": 28,
         "initial_velocity": [
-          -90,
+          -80,
           0
         ]
       }

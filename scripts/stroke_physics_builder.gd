@@ -17,7 +17,7 @@ static func build_stroke_body(points: PackedVector2Array) -> StaticBody2D:
 	
 	var mat := PhysicsMaterial.new()
 	mat.friction = 0.6
-	mat.bounce = 0.15
+	mat.bounce = 0.0
 	body.physics_material_override = mat
 	
 	for i in range(cleaned.size() - 1):
