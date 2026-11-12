@@ -1,0 +1,86 @@
+{
+  "id": 42,
+  "title": "42. Team Rescue 2",
+  "hint": "Protect all robots AND trigger the blue switch!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 500,
+  "simulation_duration": 8.0,
+  "objective": {
+    "type": "switch",
+    "required_switches": 1
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "hard",
+  "expected_solution_tags": [
+    "one_line"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        580,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        180,
+        900
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        360,
+        900
+      ]
+    },
+    {
+      "object_type": "switch",
+      "position": [
+        560,
+        915
+      ]
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        180,
+        260
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    },
+    {
+      "object_type": "ball",
+      "position": [
+        360,
+        260
+      ],
+      "physics_properties": {
+        "radius": 26
+      }
+    }
+  ]
+}

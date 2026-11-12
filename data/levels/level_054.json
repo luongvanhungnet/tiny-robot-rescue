@@ -1,0 +1,90 @@
+{
+  "id": 54,
+  "title": "54. Master Circuit 4",
+  "hint": "Use one clever line to shield, deflect, and win!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 502,
+  "simulation_duration": 8.5,
+  "objective": {
+    "type": "switch",
+    "required_switches": 1
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "hard",
+  "expected_solution_tags": [
+    "one_line"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        580,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        200,
+        900
+      ]
+    },
+    {
+      "object_type": "switch",
+      "position": [
+        560,
+        915
+      ]
+    },
+    {
+      "object_type": "conveyor_gear",
+      "position": [
+        120,
+        860
+      ],
+      "patrol_path": [
+        [
+          120,
+          860
+        ],
+        [
+          540,
+          860
+        ]
+      ],
+      "physics_properties": {
+        "radius": 26,
+        "patrol_speed": 165
+      }
+    },
+    {
+      "object_type": "ball",
+      "position": [
+        360,
+        240
+      ],
+      "physics_properties": {
+        "radius": 24
+      }
+    }
+  ]
+}

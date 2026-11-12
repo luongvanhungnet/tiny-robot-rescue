@@ -1,6 +1,6 @@
 extends Node
 
-const TOTAL_VERTICAL_SLICE_LEVELS := 10
+const TOTAL_VERTICAL_SLICE_LEVELS := 60
 
 var current_level_id: int = 1
 var _sfx_player: AudioStreamPlayer

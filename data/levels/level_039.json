@@ -1,0 +1,76 @@
+{
+  "id": 39,
+  "title": "39. Spring Storm 9",
+  "hint": "Shield against the spring-launched ball and falling blocks!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 400,
+  "simulation_duration": 7.5,
+  "objective": {
+    "type": "survival"
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "medium",
+  "expected_solution_tags": [
+    "one_line"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        520,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        480,
+        900
+      ]
+    },
+    {
+      "object_type": "spring_ball",
+      "position": [
+        140,
+        880
+      ],
+      "physics_properties": {
+        "radius": 24,
+        "initial_velocity": [
+          420,
+          -460
+        ]
+      }
+    },
+    {
+      "object_type": "block",
+      "position": [
+        480,
+        260
+      ],
+      "physics_properties": {
+        "w": 64,
+        "h": 64
+      }
+    }
+  ]
+}

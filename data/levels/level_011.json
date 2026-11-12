@@ -1,0 +1,75 @@
+{
+  "id": 11,
+  "title": "11. Bounce Gauntlet 1",
+  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 420,
+  "simulation_duration": 6.5,
+  "objective": {
+    "type": "survival"
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "medium",
+  "expected_solution_tags": [
+    "one_line"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        520,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        220,
+        900
+      ]
+    },
+    {
+      "object_type": "ball",
+      "position": [
+        140,
+        260
+      ],
+      "physics_properties": {
+        "radius": 26,
+        "initial_velocity": [
+          160,
+          0
+        ]
+      }
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        560,
+        300
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    }
+  ]
+}

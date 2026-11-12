@@ -21,7 +21,7 @@ func _assert(cond: bool, msg: String) -> void:
 		printerr("FAIL: " + msg)
 
 func _test_levels() -> void:
-	for i in range(1, 11):
+	for i in range(1, 61):
 		var lvl := LevelLoader.load_level(i)
 		_assert(not lvl.is_empty(), "Level %d should load and validate" % i)
 		_assert(int(lvl.get("id", 0)) == i, "Level %d id matches" % i)
