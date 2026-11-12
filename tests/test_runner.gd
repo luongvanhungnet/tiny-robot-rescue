@@ -56,7 +56,8 @@ func _test_objective_evaluator() -> void:
 
 func _test_save_recovery() -> void:
 	var test_path := "user://test_save_qa.json"
-	var ps := ProgressSave
+	var ProgressSaveScript := load("res://scripts/progress_save.gd")
+	var ps = ProgressSaveScript.new()
 	ps.data = ps.default_data()
 	ps.data["unlocked_level"] = 5
 	_assert(ps.save_now(test_path), "Atomic save succeeds")
@@ -68,9 +69,12 @@ func _test_save_recovery() -> void:
 	
 	ps.load_save(test_path)
 	_assert(ps.data["schema_version"] == ps.SCHEMA_VERSION, "Save recovers from corruption")
+	ps.free()
 
 func _test_monetization_idempotency() -> void:
-	var ba := BillingAdapter
+	var BillingScript := load("res://scripts/billing_adapter.gd")
+	var ba = BillingScript.new()
 	_assert(not ba.verify_and_grant_purchase("remove_interstitial_ads", ""), "Empty token rejected")
 	_assert(ba.verify_and_grant_purchase("remove_interstitial_ads", "tok_123"), "Valid token granted once")
 	_assert(not ba.verify_and_grant_purchase("remove_interstitial_ads", "tok_123"), "Duplicate token rejected")
+	ba.free()
