@@ -42,6 +42,13 @@ func _test_scenes_compile() -> void:
 		_assert(ResourceLoader.exists(path), "Scene exists: " + path)
 	var robot_res: Resource = ResourceLoader.load("res://scenes/entities/robot.tscn")
 	_assert(robot_res != null, "Entity scene loads cleanly: res://scenes/entities/robot.tscn")
+	var gp_scene: PackedScene = ResourceLoader.load("res://scenes/gameplay.tscn") as PackedScene
+	_assert(gp_scene != null, "Gameplay scene loads as PackedScene")
+	if gp_scene != null:
+		var gp_inst: Node = gp_scene.instantiate()
+		var hud_node: Node = gp_inst.get_node_or_null("HUD")
+		_assert(hud_node != null and hud_node.process_mode == Node.PROCESS_MODE_ALWAYS, "Gameplay HUD stays interactive when tree is paused")
+		gp_inst.free()
 
 func _test_stroke_builder() -> void:
 	var empty_body: StaticBody2D = StrokePhysicsBuilder.build_stroke_body(PackedVector2Array())
@@ -73,6 +80,57 @@ func _test_draw_controller() -> void:
 	_assert(not dc.is_segment_valid(Vector2(280, 900), Vector2(440, 900)), "Segment cutting across robot is rejected")
 	_assert(not dc.is_segment_valid(Vector2(200, 500), Vector2(200, 620)), "Segment cutting across forbidden zone is rejected")
 	_assert(dc.is_segment_valid(Vector2(200, 700), Vector2(500, 700)), "Valid bridge/roof segment is accepted")
+	
+	# Test single-finger touch + emulated mouse deduplication + cancel handling
+	dc.drawing_enabled = true
+	var counts: Dictionary = {"started": 0, "completed": 0, "rejected": ""}
+	dc.stroke_started.connect(func(): counts["started"] = int(counts["started"]) + 1)
+	dc.stroke_completed.connect(func(_pts: PackedVector2Array, _len: float): counts["completed"] = int(counts["completed"]) + 1)
+	dc.stroke_rejected.connect(func(r: String): counts["rejected"] = r)
+	
+	var t_down: InputEventScreenTouch = InputEventScreenTouch.new()
+	t_down.index = 0
+	t_down.pressed = true
+	t_down.position = Vector2(180, 700)
+	dc._unhandled_input(t_down)
+	
+	var mb_dup: InputEventMouseButton = InputEventMouseButton.new()
+	mb_dup.button_index = MOUSE_BUTTON_LEFT
+	mb_dup.pressed = true
+	mb_dup.position = Vector2(180, 700)
+	dc._unhandled_input(mb_dup)
+	_assert(int(counts["started"]) == 1, "Emulated mouse press does not double-start active touch stroke")
+	
+	var t_drag: InputEventScreenDrag = InputEventScreenDrag.new()
+	t_drag.index = 0
+	t_drag.position = Vector2(300, 700)
+	dc._unhandled_input(t_drag)
+	
+	var t2_up: InputEventScreenTouch = InputEventScreenTouch.new()
+	t2_up.index = 1
+	t2_up.pressed = false
+	t2_up.position = Vector2(400, 700)
+	dc._unhandled_input(t2_up)
+	_assert(int(counts["completed"]) == 0, "Secondary multi-touch lift does not end active stroke")
+	
+	var t_up: InputEventScreenTouch = InputEventScreenTouch.new()
+	t_up.index = 0
+	t_up.pressed = false
+	t_up.position = Vector2(300, 700)
+	dc._unhandled_input(t_up)
+	_assert(int(counts["completed"]) == 1, "Primary touch lift completes stroke once")
+	
+	# Canceled touch does not complete stroke
+	dc._unhandled_input(t_down)
+	dc._unhandled_input(t_drag)
+	var t_cancel: InputEventScreenTouch = InputEventScreenTouch.new()
+	t_cancel.index = 0
+	t_cancel.pressed = false
+	t_cancel.canceled = true
+	t_cancel.position = Vector2(300, 700)
+	dc._unhandled_input(t_cancel)
+	_assert(int(counts["completed"]) == 1 and str(counts["rejected"]) == "canceled", "Canceled touch resets stroke without completing")
+	
 	dc.free()
 
 func _test_robot_controller() -> void:

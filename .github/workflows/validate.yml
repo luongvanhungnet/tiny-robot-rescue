@@ -2,9 +2,9 @@ name: Validate Godot Project
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, gemini ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, gemini ]
 
 jobs:
   validate:

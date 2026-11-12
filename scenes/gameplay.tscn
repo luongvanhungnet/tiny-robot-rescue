@@ -61,6 +61,7 @@ color = Color(0.945, 0.961, 0.976, 1)
 script = ExtResource("2_draw")
 
 [node name="HUD" type="CanvasLayer" parent="."]
+process_mode = 3
 
 [node name="TopBar" type="HBoxContainer" parent="HUD"]
 anchors_preset = 10

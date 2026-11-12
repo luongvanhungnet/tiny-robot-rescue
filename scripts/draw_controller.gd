@@ -27,9 +27,14 @@ var show_hint_guide: bool = false:
 var drawing_enabled: bool = false:
 	set(v):
 		drawing_enabled = v
+		if not drawing_enabled:
+			_active_touch_index = -1
+			_active_mouse = false
 		queue_redraw()
 
 var _is_drawing: bool = false
+var _active_touch_index: int = -1
+var _active_mouse: bool = false
 var _points: PackedVector2Array = PackedVector2Array()
 var _current_length: float = 0.0
 var _preview_outline: Line2D
@@ -57,6 +62,10 @@ func _ready() -> void:
 	_preview_line.antialiased = true
 	add_child(_preview_line)
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
+		cancel_active_stroke()
+
 func _process(delta: float) -> void:
 	var needs_redraw := false
 	if (show_tutorial_guide or show_hint_guide) and drawing_enabled and not _is_drawing:
@@ -70,6 +79,8 @@ func _process(delta: float) -> void:
 
 func reset_stroke() -> void:
 	_is_drawing = false
+	_active_touch_index = -1
+	_active_mouse = false
 	_points = PackedVector2Array()
 	_current_length = 0.0
 	if _preview_outline != null:
@@ -80,23 +91,50 @@ func reset_stroke() -> void:
 	stroke_updated.emit(0.0, max_stroke_length)
 	queue_redraw()
 
+func cancel_active_stroke() -> void:
+	if _is_drawing or _active_touch_index != -1 or _active_mouse:
+		reset_stroke()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not drawing_enabled:
 		return
 	if event is InputEventScreenTouch:
-		if event.pressed:
-			_begin_stroke(event.position)
-		elif _is_drawing:
-			_end_stroke()
-	elif event is InputEventScreenDrag and _is_drawing:
-		_extend_stroke(event.position)
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			_begin_stroke(event.position)
-		elif _is_drawing:
-			_end_stroke()
-	elif event is InputEventMouseMotion and _is_drawing:
-		_extend_stroke(event.position)
+		var touch_evt: InputEventScreenTouch = event as InputEventScreenTouch
+		if touch_evt.pressed:
+			if not _is_drawing and _active_touch_index == -1 and not _active_mouse:
+				_active_touch_index = touch_evt.index
+				_begin_stroke(touch_evt.position)
+				if not _is_drawing:
+					_active_touch_index = -1
+		elif touch_evt.index == _active_touch_index:
+			_active_touch_index = -1
+			if _is_drawing:
+				if touch_evt.canceled:
+					reset_stroke()
+					stroke_rejected.emit("canceled")
+				else:
+					_end_stroke()
+	elif event is InputEventScreenDrag:
+		var drag_evt: InputEventScreenDrag = event as InputEventScreenDrag
+		if _is_drawing and drag_evt.index == _active_touch_index:
+			_extend_stroke(drag_evt.position)
+	elif event is InputEventMouseButton:
+		var mb_evt: InputEventMouseButton = event as InputEventMouseButton
+		if mb_evt.button_index == MOUSE_BUTTON_LEFT and _active_touch_index == -1:
+			if mb_evt.pressed:
+				if not _is_drawing and not _active_mouse:
+					_active_mouse = true
+					_begin_stroke(mb_evt.position)
+					if not _is_drawing:
+						_active_mouse = false
+			elif _active_mouse:
+				_active_mouse = false
+				if _is_drawing:
+					_end_stroke()
+	elif event is InputEventMouseMotion:
+		var mm_evt: InputEventMouseMotion = event as InputEventMouseMotion
+		if _is_drawing and _active_mouse and _active_touch_index == -1:
+			_extend_stroke(mm_evt.position)
 
 func _begin_stroke(pos: Vector2) -> void:
 	var reason := get_invalid_reason(pos)
@@ -154,15 +192,19 @@ func _update_preview_visuals() -> void:
 
 func _end_stroke() -> void:
 	_is_drawing = false
+	_active_touch_index = -1
+	_active_mouse = false
 	queue_redraw()
 	if _current_length < MIN_STROKE_LENGTH or _points.size() < 2:
 		reset_stroke()
 		stroke_rejected.emit("too_short")
 		return
-	var final_points := _points.duplicate()
-	var final_len := _current_length
-	_preview_outline.points = PackedVector2Array()
-	_preview_line.points = PackedVector2Array()
+	var final_points: PackedVector2Array = _points.duplicate()
+	var final_len: float = _current_length
+	if _preview_outline != null:
+		_preview_outline.points = PackedVector2Array()
+	if _preview_line != null:
+		_preview_line.points = PackedVector2Array()
 	stroke_completed.emit(final_points, final_len)
 
 func _is_in_draw_zones(pos: Vector2) -> bool:

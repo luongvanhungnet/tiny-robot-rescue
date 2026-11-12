@@ -616,6 +616,11 @@ func _on_draw_telegraphs() -> void:
 
 func _toggle_pause() -> void:
 	is_paused = not is_paused
+	if is_paused:
+		draw_controller.cancel_active_stroke()
+		if state == ObjectiveEvaluator.State.DRAWING:
+			state = ObjectiveEvaluator.State.READY
+			telegraph_layer.queue_redraw()
 	get_tree().paused = is_paused
 	pause_btn.text = "RESUME" if is_paused else "PAUSE"
 
