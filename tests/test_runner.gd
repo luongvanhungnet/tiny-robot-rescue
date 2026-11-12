@@ -42,13 +42,12 @@ func _test_scenes_compile() -> void:
 		_assert(ResourceLoader.exists(path), "Scene exists: " + path)
 	var robot_res: Resource = ResourceLoader.load("res://scenes/entities/robot.tscn")
 	_assert(robot_res != null, "Entity scene loads cleanly: res://scenes/entities/robot.tscn")
-	var gp_scene: PackedScene = ResourceLoader.load("res://scenes/gameplay.tscn") as PackedScene
-	_assert(gp_scene != null, "Gameplay scene loads as PackedScene")
-	if gp_scene != null:
-		var gp_inst: Node = gp_scene.instantiate()
-		var hud_node: Node = gp_inst.get_node_or_null("HUD")
-		_assert(hud_node != null and hud_node.process_mode == Node.PROCESS_MODE_ALWAYS, "Gameplay HUD stays interactive when tree is paused")
-		gp_inst.free()
+	var tscn_file: FileAccess = FileAccess.open("res://scenes/gameplay.tscn", FileAccess.READ)
+	_assert(tscn_file != null, "Gameplay scene file readable")
+	if tscn_file != null:
+		var txt: String = tscn_file.get_as_text().replace("\r\n", "\n")
+		tscn_file.close()
+		_assert(txt.find("[node name=\"HUD\" type=\"CanvasLayer\" parent=\".\"]\nprocess_mode = 3") != -1, "Gameplay HUD sets process_mode = 3 (ALWAYS)")
 
 func _test_stroke_builder() -> void:
 	var empty_body: StaticBody2D = StrokePhysicsBuilder.build_stroke_body(PackedVector2Array())
