@@ -13,9 +13,12 @@ jobs:
       - name: Setup Export Directory
         run: |
           mkdir -p build/android
-          mkdir -p "$HOME/.local/share/godot"
+          mkdir -p "$HOME/.local/share/godot" "$HOME/.config"
           if [ ! -e "$HOME/.local/share/godot/export_templates" ] && [ -d "/root/.local/share/godot/export_templates" ]; then
             ln -s /root/.local/share/godot/export_templates "$HOME/.local/share/godot/export_templates"
+          fi
+          if [ ! -e "$HOME/.config/godot" ] && [ -d "/root/.config/godot" ]; then
+            cp -r /root/.config/godot "$HOME/.config/godot"
           fi
       - name: Decode Release Keystore
         env:
