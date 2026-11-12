@@ -1,16 +1,16 @@
 {
   "id": 34,
-  "title": "34. Spring Storm 4",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "34. Cross Lasers",
+  "hint": "Two laser beams aim at the robot! Block BOTH beams with one line.",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 425,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 480,
+  "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
   },
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      330,
+      780
+    ],
+    [
+      490,
+      780
+    ],
+    [
+      330,
+      940
+    ]
   ],
   "draw_zones": [
     {
@@ -36,41 +50,44 @@
         960
       ],
       "scale": [
-        520,
+        500,
         40
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "laser",
       "position": [
-        480,
-        900
-      ]
-    },
-    {
-      "object_type": "spring_ball",
-      "position": [
-        140,
-        880
+        110,
+        895
       ],
       "physics_properties": {
-        "radius": 24,
-        "initial_velocity": [
-          370,
-          -460
-        ]
+        "direction": [
+          1,
+          0
+        ],
+        "max_length": 540
       }
     },
     {
-      "object_type": "block",
+      "object_type": "laser",
       "position": [
-        480,
+        360,
         260
       ],
       "physics_properties": {
-        "w": 64,
-        "h": 64
+        "direction": [
+          0,
+          1
+        ],
+        "max_length": 700
       }
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        460,
+        900
+      ]
     }
   ]
 }

@@ -1,23 +1,37 @@
 {
   "id": 26,
-  "title": "26. Bridge Crossing 6",
-  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
-  "background_id": "workshop_day",
+  "title": "26. Moving Ferry",
+  "hint": "Connect onto the moving ferry platform while dodging the falling gear!",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 410,
-  "simulation_duration": 10.0,
+  "max_stroke_length": 420,
+  "simulation_duration": 10.5,
   "objective": {
     "type": "exit"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      200,
+      845
+    ],
+    [
+      360,
+      855
+    ],
+    [
+      530,
+      882
+    ]
   ],
   "draw_zones": [
     {
@@ -32,19 +46,8 @@
     {
       "object_type": "platform",
       "position": [
-        140,
-        820
-      ],
-      "scale": [
-        200,
-        40
-      ]
-    },
-    {
-      "object_type": "platform",
-      "position": [
-        540,
-        940
+        130,
+        860
       ],
       "scale": [
         180,
@@ -52,35 +55,77 @@
       ]
     },
     {
+      "object_type": "moving_platform",
+      "position": [
+        300,
+        880
+      ],
+      "scale": [
+        140,
+        32
+      ],
+      "patrol_path": [
+        [
+          280,
+          880
+        ],
+        [
+          450,
+          880
+        ]
+      ],
+      "physics_properties": {
+        "speed": 95
+      }
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        600,
+        900
+      ],
+      "scale": [
+        180,
+        40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        360,
+        1100
+      ],
+      "scale": [
+        320,
+        22
+      ]
+    },
+    {
       "object_type": "robot",
       "position": [
-        120,
-        760
+        100,
+        800
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 540
+        "goal_x": 600
       }
     },
     {
       "object_type": "charger",
       "position": [
-        540,
-        885
+        600,
+        845
       ]
     },
     {
       "object_type": "gear",
       "position": [
-        360,
-        260
+        380,
+        240
       ],
       "physics_properties": {
-        "radius": 26,
-        "initial_velocity": [
-          50,
-          0
-        ]
+        "radius": 26
       }
     }
   ]

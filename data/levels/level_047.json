@@ -1,16 +1,16 @@
 {
   "id": 47,
-  "title": "47. Team Rescue 7",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "47. Spring Switch",
+  "hint": "Bounce the spring ball off an overhead backboard onto the raised switch!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 460,
+  "simulation_duration": 10.0,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,16 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      260,
+      430
+    ],
+    [
+      420,
+      520
+    ]
   ],
   "draw_zones": [
     {
@@ -42,44 +52,64 @@
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "platform",
       "position": [
-        180,
-        900
-      ]
-    },
-    {
-      "object_type": "robot",
-      "position": [
-        360,
-        900
+        400,
+        740
+      ],
+      "scale": [
+        130,
+        24
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        400,
+        713
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "robot",
       "position": [
-        180,
-        260
+        130,
+        900
       ],
       "physics_properties": {
-        "radius": 28
+        "move_toward_goal": true,
+        "goal_x": 580
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "gate",
       "position": [
-        360,
-        260
+        500,
+        875
+      ],
+      "scale": [
+        28,
+        130
+      ]
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        590,
+        905
+      ]
+    },
+    {
+      "object_type": "spring_ball",
+      "position": [
+        180,
+        880
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 24,
+        "initial_velocity": [
+          250,
+          -540
+        ]
       }
     }
   ]

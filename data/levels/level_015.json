@@ -1,15 +1,15 @@
 {
   "id": 15,
-  "title": "15. Bounce Gauntlet 5",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "15. Crossfire Canyon",
+  "hint": "Draw a slanted roof to bounce away both hazards from opposite sides!",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 388,
+  "max_stroke_length": 410,
   "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      240,
+      760
+    ],
+    [
+      360,
+      690
+    ],
+    [
+      480,
+      760
+    ]
   ],
   "draw_zones": [
     {
@@ -36,7 +50,7 @@
         960
       ],
       "scale": [
-        520,
+        460,
         40
       ]
     },
@@ -50,25 +64,29 @@
     {
       "object_type": "ball",
       "position": [
-        280,
-        260
+        130,
+        320
       ],
       "physics_properties": {
         "radius": 26,
         "initial_velocity": [
-          100,
+          210,
           0
         ]
       }
     },
     {
-      "object_type": "gear",
+      "object_type": "rock",
       "position": [
-        440,
+        580,
         300
       ],
       "physics_properties": {
-        "radius": 28
+        "radius": 30,
+        "initial_velocity": [
+          -180,
+          0
+        ]
       }
     }
   ]

@@ -1,16 +1,16 @@
 {
   "id": 48,
-  "title": "48. Team Rescue 8",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "48. Wind To Switch",
+  "hint": "A fan pushes the boulder right \u2014 guide it onto the switch while protecting the robot!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 460,
+  "simulation_duration": 10.0,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,20 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      160,
+      730
+    ],
+    [
+      320,
+      700
+    ],
+    [
+      500,
+      780
+    ]
   ],
   "draw_zones": [
     {
@@ -44,42 +58,41 @@
     {
       "object_type": "robot",
       "position": [
-        180,
+        220,
         900
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "fan",
       "position": [
-        360,
-        900
-      ]
+        90,
+        620
+      ],
+      "physics_properties": {
+        "direction": [
+          1,
+          0
+        ],
+        "range": 520,
+        "width": 140,
+        "strength": 880
+      }
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        540,
+        920
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "rock",
       "position": [
-        180,
+        220,
         260
       ],
       "physics_properties": {
         "radius": 28
-      }
-    },
-    {
-      "object_type": "ball",
-      "position": [
-        360,
-        260
-      ],
-      "physics_properties": {
-        "radius": 26
       }
     }
   ]

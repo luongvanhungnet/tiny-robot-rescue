@@ -1,23 +1,41 @@
 {
   "id": 38,
-  "title": "38. Spring Storm 8",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "38. Laser & Swarm",
+  "hint": "Shield the robot from 3 Spark-Drones AND block the top laser!",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 405,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 460,
+  "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      270,
+      935
+    ],
+    [
+      275,
+      800
+    ],
+    [
+      445,
+      800
+    ],
+    [
+      450,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -36,41 +54,40 @@
         960
       ],
       "scale": [
-        520,
+        500,
         40
       ]
     },
     {
+      "object_type": "laser",
+      "position": [
+        360,
+        240
+      ],
+      "physics_properties": {
+        "direction": [
+          0,
+          1
+        ],
+        "max_length": 720
+      }
+    },
+    {
+      "object_type": "drone_vent",
+      "position": [
+        160,
+        320
+      ],
+      "physics_properties": {
+        "drone_count": 3
+      }
+    },
+    {
       "object_type": "robot",
       "position": [
-        480,
+        360,
         900
       ]
-    },
-    {
-      "object_type": "spring_ball",
-      "position": [
-        140,
-        880
-      ],
-      "physics_properties": {
-        "radius": 24,
-        "initial_velocity": [
-          410,
-          -460
-        ]
-      }
-    },
-    {
-      "object_type": "block",
-      "position": [
-        480,
-        260
-      ],
-      "physics_properties": {
-        "w": 64,
-        "h": 64
-      }
     }
   ]
 }

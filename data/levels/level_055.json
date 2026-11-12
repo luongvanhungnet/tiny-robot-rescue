@@ -1,16 +1,16 @@
 {
   "id": 55,
-  "title": "55. Master Circuit 5",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "55. Boulder Pinball",
+  "hint": "Bounce the heavy boulder off the spring pad onto the switch!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 496,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 480,
+  "simulation_duration": 9.0,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,16 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      120,
+      680
+    ],
+    [
+      280,
+      780
+    ]
   ],
   "draw_zones": [
     {
@@ -44,46 +54,38 @@
     {
       "object_type": "robot",
       "position": [
-        200,
+        160,
         900
       ]
+    },
+    {
+      "object_type": "spring_pad",
+      "position": [
+        340,
+        934
+      ],
+      "physics_properties": {
+        "launch_velocity": [
+          260,
+          -560
+        ]
+      }
     },
     {
       "object_type": "switch",
       "position": [
         560,
-        915
+        920
       ]
     },
     {
-      "object_type": "conveyor_gear",
+      "object_type": "rock",
       "position": [
-        120,
-        885
-      ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+        160,
+        260
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 170
-      }
-    },
-    {
-      "object_type": "ball",
-      "position": [
-        360,
-        240
-      ],
-      "physics_properties": {
-        "radius": 24
+        "radius": 28
       }
     }
   ]

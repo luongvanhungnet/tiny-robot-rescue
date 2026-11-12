@@ -1,24 +1,34 @@
 {
   "id": 43,
-  "title": "43. Team Rescue 3",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "43. Switch Disarms Laser",
+  "hint": "Drop the boulder onto the high shelf switch to shut off the laser!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 420,
+  "simulation_duration": 10.0,
   "objective": {
     "type": "switch",
     "required_switches": 1
   },
   "tutorial_steps": [],
-  "difficulty_tag": "hard",
+  "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      130,
+      500
+    ],
+    [
+      300,
+      620
+    ]
   ],
   "draw_zones": [
     {
@@ -42,44 +52,63 @@
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "platform",
       "position": [
-        180,
-        900
-      ]
-    },
-    {
-      "object_type": "robot",
-      "position": [
-        360,
-        900
+        320,
+        740
+      ],
+      "scale": [
+        120,
+        24
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        320,
+        713
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "robot",
       "position": [
-        180,
+        120,
+        900
+      ],
+      "physics_properties": {
+        "move_toward_goal": true,
+        "goal_x": 580
+      }
+    },
+    {
+      "object_type": "laser",
+      "position": [
+        460,
+        560
+      ],
+      "physics_properties": {
+        "direction": [
+          0,
+          1
+        ],
+        "max_length": 400
+      }
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        580,
+        905
+      ]
+    },
+    {
+      "object_type": "rock",
+      "position": [
+        160,
         260
       ],
       "physics_properties": {
         "radius": 28
-      }
-    },
-    {
-      "object_type": "ball",
-      "position": [
-        360,
-        260
-      ],
-      "physics_properties": {
-        "radius": 26
       }
     }
   ]

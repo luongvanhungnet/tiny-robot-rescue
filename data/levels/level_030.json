@@ -1,23 +1,37 @@
 {
   "id": 30,
-  "title": "30. Bridge Crossing 10",
-  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
-  "background_id": "workshop_day",
+  "title": "30. Skybridge Finale",
+  "hint": "Downhill bridge past the patrol gear and spikes to reach the charger!",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 386,
-  "simulation_duration": 10.0,
+  "max_stroke_length": 450,
+  "simulation_duration": 10.5,
   "objective": {
     "type": "exit"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      205,
+      795
+    ],
+    [
+      380,
+      860
+    ],
+    [
+      500,
+      922
+    ]
   ],
   "draw_zones": [
     {
@@ -32,19 +46,8 @@
     {
       "object_type": "platform",
       "position": [
-        140,
-        820
-      ],
-      "scale": [
-        200,
-        40
-      ]
-    },
-    {
-      "object_type": "platform",
-      "position": [
-        560,
-        940
+        130,
+        810
       ],
       "scale": [
         180,
@@ -52,20 +55,42 @@
       ]
     },
     {
+      "object_type": "platform",
+      "position": [
+        580,
+        940
+      ],
+      "scale": [
+        200,
+        40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        360,
+        1100
+      ],
+      "scale": [
+        280,
+        22
+      ]
+    },
+    {
       "object_type": "robot",
       "position": [
-        120,
-        760
+        110,
+        750
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 560
+        "goal_x": 580
       }
     },
     {
       "object_type": "charger",
       "position": [
-        560,
+        580,
         885
       ]
     },
@@ -73,12 +98,12 @@
       "object_type": "gear",
       "position": [
         360,
-        260
+        250
       ],
       "physics_properties": {
-        "radius": 26,
+        "radius": 28,
         "initial_velocity": [
-          90,
+          80,
           0
         ]
       }

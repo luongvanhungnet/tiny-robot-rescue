@@ -1,24 +1,41 @@
 {
   "id": 57,
-  "title": "57. Master Circuit 7",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "57. Conveyor Storm",
+  "hint": "Two patrol gears from left and right plus a falling boulder!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 484,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 620,
+  "simulation_duration": 7.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      240,
+      935
+    ],
+    [
+      260,
+      770
+    ],
+    [
+      460,
+      770
+    ],
+    [
+      480,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -44,46 +61,60 @@
     {
       "object_type": "robot",
       "position": [
-        200,
+        360,
         900
-      ]
-    },
-    {
-      "object_type": "switch",
-      "position": [
-        560,
-        915
       ]
     },
     {
       "object_type": "conveyor_gear",
       "position": [
-        120,
-        885
+        110,
+        908
       ],
       "patrol_path": [
         [
-          120,
-          885
+          110,
+          908
         ],
         [
-          540,
-          885
+          580,
+          908
         ]
       ],
       "physics_properties": {
         "radius": 26,
-        "patrol_speed": 180
+        "patrol_speed": 165
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "conveyor_gear",
+      "position": [
+        610,
+        908
+      ],
+      "patrol_path": [
+        [
+          610,
+          908
+        ],
+        [
+          140,
+          908
+        ]
+      ],
+      "physics_properties": {
+        "radius": 26,
+        "patrol_speed": 165
+      }
+    },
+    {
+      "object_type": "rock",
       "position": [
         360,
         240
       ],
       "physics_properties": {
-        "radius": 24
+        "radius": 30
       }
     }
   ]

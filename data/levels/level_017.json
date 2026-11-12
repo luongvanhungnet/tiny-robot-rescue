@@ -1,15 +1,15 @@
 {
   "id": 17,
-  "title": "17. Bounce Gauntlet 7",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "17. Double Drone Guard",
+  "hint": "Save BOTH robots from the Spark-Drones with one wide dome!",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 372,
+  "max_stroke_length": 760,
   "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
@@ -18,6 +18,24 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      140,
+      935
+    ],
+    [
+      160,
+      790
+    ],
+    [
+      560,
+      790
+    ],
+    [
+      580,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -36,7 +54,7 @@
         960
       ],
       "scale": [
-        520,
+        560,
         40
       ]
     },
@@ -48,27 +66,20 @@
       ]
     },
     {
-      "object_type": "ball",
+      "object_type": "robot",
       "position": [
-        350,
-        260
-      ],
-      "physics_properties": {
-        "radius": 26,
-        "initial_velocity": [
-          70,
-          0
-        ]
-      }
+        500,
+        900
+      ]
     },
     {
-      "object_type": "gear",
+      "object_type": "drone_vent",
       "position": [
-        380,
-        300
+        360,
+        280
       ],
       "physics_properties": {
-        "radius": 28
+        "drone_count": 4
       }
     }
   ]

@@ -1,24 +1,37 @@
 {
   "id": 59,
-  "title": "59. Master Circuit 9",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "59. Gale Bridge Gauntlet",
+  "hint": "Bridge the spikes against a headwind while dodging a falling boulder!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 472,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 500,
+  "simulation_duration": 10.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "exit"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      205,
+      825
+    ],
+    [
+      380,
+      860
+    ],
+    [
+      500,
+      892
+    ]
   ],
   "draw_zones": [
     {
@@ -33,57 +46,78 @@
     {
       "object_type": "platform",
       "position": [
-        360,
-        960
+        130,
+        840
       ],
       "scale": [
-        580,
+        180,
         40
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "platform",
       "position": [
-        200,
-        900
-      ]
-    },
-    {
-      "object_type": "switch",
-      "position": [
-        560,
-        915
-      ]
-    },
-    {
-      "object_type": "conveyor_gear",
-      "position": [
-        120,
-        885
+        580,
+        910
       ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+      "scale": [
+        200,
+        40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        355,
+        1090
+      ],
+      "scale": [
+        270,
+        22
+      ]
+    },
+    {
+      "object_type": "fan",
+      "position": [
+        640,
+        760
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 190
+        "direction": [
+          -1,
+          0
+        ],
+        "range": 420,
+        "width": 120,
+        "strength": 480
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "robot",
+      "position": [
+        110,
+        780
+      ],
+      "physics_properties": {
+        "move_toward_goal": true,
+        "goal_x": 580
+      }
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        580,
+        855
+      ]
+    },
+    {
+      "object_type": "rock",
       "position": [
         360,
         240
       ],
       "physics_properties": {
-        "radius": 24
+        "radius": 28
       }
     }
   ]

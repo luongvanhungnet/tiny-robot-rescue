@@ -1,16 +1,16 @@
 {
   "id": 60,
-  "title": "60. Master Circuit 10",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "60. Grand Finale",
+  "hint": "Seal BOTH robots from drones, gear & laser AND slide the ball onto the switch with ONE line!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 466,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 600,
+  "simulation_duration": 9.0,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,24 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      120,
+      935
+    ],
+    [
+      120,
+      780
+    ],
+    [
+      385,
+      780
+    ],
+    [
+      470,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -37,53 +55,73 @@
         960
       ],
       "scale": [
-        580,
+        600,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        200,
+        190,
+        900
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        320,
         900
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        550,
+        920
       ]
     },
     {
-      "object_type": "conveyor_gear",
+      "object_type": "laser",
       "position": [
-        120,
-        885
-      ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+        80,
+        900
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 195
+        "direction": [
+          1,
+          0
+        ],
+        "max_length": 580
+      }
+    },
+    {
+      "object_type": "drone_vent",
+      "position": [
+        190,
+        280
+      ],
+      "physics_properties": {
+        "drone_count": 3
+      }
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        320,
+        250
+      ],
+      "physics_properties": {
+        "radius": 28
       }
     },
     {
       "object_type": "ball",
       "position": [
-        360,
-        240
+        430,
+        260
       ],
       "physics_properties": {
-        "radius": 24
+        "radius": 25
       }
     }
   ]

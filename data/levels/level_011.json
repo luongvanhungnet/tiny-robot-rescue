@@ -1,8 +1,8 @@
 {
   "id": 11,
-  "title": "11. Bounce Gauntlet 1",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "11. Twin Bounce",
+  "hint": "Draw an umbrella shield that deflects both the ball and spinning gear!",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      240,
+      740
+    ],
+    [
+      360,
+      670
+    ],
+    [
+      480,
+      740
+    ]
   ],
   "draw_zones": [
     {
@@ -43,7 +57,7 @@
     {
       "object_type": "robot",
       "position": [
-        220,
+        360,
         900
       ]
     },
@@ -51,12 +65,12 @@
       "object_type": "ball",
       "position": [
         140,
-        260
+        280
       ],
       "physics_properties": {
         "radius": 26,
         "initial_velocity": [
-          80,
+          190,
           0
         ]
       }
@@ -64,11 +78,15 @@
     {
       "object_type": "gear",
       "position": [
-        560,
-        300
+        540,
+        260
       ],
       "physics_properties": {
-        "radius": 28
+        "radius": 28,
+        "initial_velocity": [
+          -130,
+          0
+        ]
       }
     }
   ]

@@ -1,15 +1,15 @@
 {
   "id": 51,
-  "title": "51. Master Circuit 1",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "51. Conveyor Switch",
+  "hint": "Deflect the patrol gear upward AND hit the switch with the falling ball!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 520,
+  "max_stroke_length": 500,
   "simulation_duration": 8.5,
   "objective": {
     "type": "switch",
@@ -19,6 +19,20 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      160,
+      935
+    ],
+    [
+      220,
+      800
+    ],
+    [
+      520,
+      800
+    ]
   ],
   "draw_zones": [
     {
@@ -44,7 +58,7 @@
     {
       "object_type": "robot",
       "position": [
-        200,
+        240,
         900
       ]
     },
@@ -52,35 +66,35 @@
       "object_type": "switch",
       "position": [
         560,
-        915
+        920
       ]
     },
     {
       "object_type": "conveyor_gear",
       "position": [
-        120,
-        885
+        110,
+        908
       ],
       "patrol_path": [
         [
-          120,
-          885
+          110,
+          908
         ],
         [
-          540,
-          885
+          520,
+          908
         ]
       ],
       "physics_properties": {
         "radius": 26,
-        "patrol_speed": 150
+        "patrol_speed": 155
       }
     },
     {
       "object_type": "ball",
       "position": [
         360,
-        240
+        260
       ],
       "physics_properties": {
         "radius": 24

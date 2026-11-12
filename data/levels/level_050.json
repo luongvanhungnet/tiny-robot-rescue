@@ -1,15 +1,15 @@
 {
   "id": 50,
-  "title": "50. Team Rescue 10",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "50. Team Boss",
+  "hint": "3 Robots + Laser + Switch! Block the laser and trigger the switch!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
+  "max_stroke_length": 740,
   "simulation_duration": 8.0,
   "objective": {
     "type": "switch",
@@ -19,6 +19,20 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      100,
+      940
+    ],
+    [
+      100,
+      720
+    ],
+    [
+      540,
+      780
+    ]
   ],
   "draw_zones": [
     {
@@ -37,49 +51,60 @@
         960
       ],
       "scale": [
-        580,
+        600,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        180,
+        160,
         900
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        360,
+        320,
+        900
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        480,
         900
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        600,
+        920
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "laser",
       "position": [
-        180,
-        260
+        70,
+        900
       ],
       "physics_properties": {
-        "radius": 28
+        "direction": [
+          1,
+          0
+        ],
+        "max_length": 580
       }
     },
     {
       "object_type": "ball",
       "position": [
-        360,
+        320,
         260
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 25
       }
     }
   ]

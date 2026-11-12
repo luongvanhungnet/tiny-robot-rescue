@@ -1,23 +1,37 @@
 {
   "id": 19,
-  "title": "19. Bounce Gauntlet 9",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "19. Patrol & Boulder",
+  "hint": "Deflect the rolling patrol gear on the floor AND block the boulder above!",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 356,
-  "simulation_duration": 6.5,
+  "max_stroke_length": 450,
+  "simulation_duration": 7.0,
   "objective": {
     "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      240,
+      935
+    ],
+    [
+      360,
+      820
+    ],
+    [
+      560,
+      760
+    ]
   ],
   "draw_zones": [
     {
@@ -36,7 +50,7 @@
         960
       ],
       "scale": [
-        520,
+        540,
         40
       ]
     },
@@ -48,27 +62,34 @@
       ]
     },
     {
-      "object_type": "ball",
+      "object_type": "conveyor_gear",
       "position": [
-        420,
-        260
+        120,
+        908
+      ],
+      "patrol_path": [
+        [
+          120,
+          908
+        ],
+        [
+          560,
+          908
+        ]
       ],
       "physics_properties": {
-        "radius": 26,
-        "initial_velocity": [
-          40,
-          0
-        ]
+        "radius": 28,
+        "patrol_speed": 155
       }
     },
     {
-      "object_type": "gear",
+      "object_type": "rock",
       "position": [
-        320,
-        300
+        500,
+        260
       ],
       "physics_properties": {
-        "radius": 28
+        "radius": 30
       }
     }
   ]

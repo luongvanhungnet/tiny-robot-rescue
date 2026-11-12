@@ -1,23 +1,37 @@
 {
   "id": 27,
-  "title": "27. Bridge Crossing 7",
-  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
-  "background_id": "workshop_day",
+  "title": "27. Boulder Over Bridge",
+  "hint": "Draw a bridge AND keep the falling boulder from crushing the charger!",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 404,
+  "max_stroke_length": 460,
   "simulation_duration": 10.0,
   "objective": {
     "type": "exit"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      220,
+      825
+    ],
+    [
+      420,
+      880
+    ],
+    [
+      500,
+      892
+    ]
   ],
   "draw_zones": [
     {
@@ -33,7 +47,7 @@
       "object_type": "platform",
       "position": [
         140,
-        820
+        840
       ],
       "scale": [
         200,
@@ -43,42 +57,53 @@
     {
       "object_type": "platform",
       "position": [
-        555,
-        940
+        580,
+        910
       ],
       "scale": [
-        180,
+        200,
         40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        360,
+        1090
+      ],
+      "scale": [
+        280,
+        22
       ]
     },
     {
       "object_type": "robot",
       "position": [
         120,
-        760
+        780
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 555
+        "goal_x": 580
       }
     },
     {
       "object_type": "charger",
       "position": [
-        555,
-        885
+        580,
+        855
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "rock",
       "position": [
-        360,
-        260
+        560,
+        240
       ],
       "physics_properties": {
-        "radius": 26,
+        "radius": 32,
         "initial_velocity": [
-          60,
+          -70,
           0
         ]
       }

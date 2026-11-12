@@ -1,24 +1,41 @@
 {
   "id": 54,
-  "title": "54. Master Circuit 4",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "54. Triple Hazard Cage",
+  "hint": "4 Spark-Drones + Spring Ball + Falling Gear! Seal the robot completely.",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 502,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 500,
+  "simulation_duration": 7.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      340,
+      935
+    ],
+    [
+      345,
+      790
+    ],
+    [
+      535,
+      790
+    ],
+    [
+      540,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -37,53 +54,49 @@
         960
       ],
       "scale": [
-        580,
+        540,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        200,
+        440,
         900
       ]
     },
     {
-      "object_type": "switch",
+      "object_type": "drone_vent",
       "position": [
-        560,
-        915
-      ]
-    },
-    {
-      "object_type": "conveyor_gear",
-      "position": [
-        120,
-        885
-      ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+        540,
+        280
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 165
+        "drone_count": 4
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "spring_ball",
       "position": [
-        360,
+        130,
+        880
+      ],
+      "physics_properties": {
+        "radius": 24,
+        "initial_velocity": [
+          350,
+          -490
+        ]
+      }
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        440,
         240
       ],
       "physics_properties": {
-        "radius": 24
+        "radius": 28
       }
     }
   ]

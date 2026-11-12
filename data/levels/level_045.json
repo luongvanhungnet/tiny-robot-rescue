@@ -1,16 +1,16 @@
 {
   "id": 45,
-  "title": "45. Team Rescue 5",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "45. Gate & Conveyor",
+  "hint": "Deflect the patrol gear AND guide the ball onto the upper switch to open the gate!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 620,
+  "simulation_duration": 10.5,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,20 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      170,
+      935
+    ],
+    [
+      185,
+      560
+    ],
+    [
+      330,
+      610
+    ]
   ],
   "draw_zones": [
     {
@@ -42,44 +56,81 @@
       ]
     },
     {
-      "object_type": "robot",
-      "position": [
-        180,
-        900
-      ]
-    },
-    {
-      "object_type": "robot",
+      "object_type": "platform",
       "position": [
         360,
-        900
+        720
+      ],
+      "scale": [
+        120,
+        24
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        360,
+        693
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "robot",
       "position": [
-        180,
-        260
+        240,
+        900
       ],
       "physics_properties": {
-        "radius": 28
+        "move_toward_goal": true,
+        "goal_x": 580
       }
+    },
+    {
+      "object_type": "conveyor_gear",
+      "position": [
+        110,
+        908
+      ],
+      "patrol_path": [
+        [
+          110,
+          908
+        ],
+        [
+          380,
+          908
+        ]
+      ],
+      "physics_properties": {
+        "radius": 26,
+        "patrol_speed": 130
+      }
+    },
+    {
+      "object_type": "gate",
+      "position": [
+        480,
+        875
+      ],
+      "scale": [
+        28,
+        130
+      ]
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        580,
+        905
+      ]
     },
     {
       "object_type": "ball",
       "position": [
-        360,
+        200,
         260
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 24
       }
     }
   ]

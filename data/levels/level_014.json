@@ -1,15 +1,15 @@
 {
   "id": 14,
-  "title": "14. Bounce Gauntlet 4",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "14. Twin Drone Vents",
+  "hint": "Two drone vents! Wrap a protective shell tightly around the robot.",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 396,
+  "max_stroke_length": 440,
   "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
@@ -18,6 +18,24 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      270,
+      935
+    ],
+    [
+      275,
+      810
+    ],
+    [
+      445,
+      810
+    ],
+    [
+      450,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -36,39 +54,35 @@
         960
       ],
       "scale": [
-        520,
+        500,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        220,
+        360,
         900
       ]
     },
     {
-      "object_type": "ball",
+      "object_type": "drone_vent",
       "position": [
-        245,
-        260
+        160,
+        340
       ],
       "physics_properties": {
-        "radius": 26,
-        "initial_velocity": [
-          -20,
-          0
-        ]
+        "drone_count": 2
       }
     },
     {
-      "object_type": "gear",
+      "object_type": "drone_vent",
       "position": [
-        470,
-        300
+        560,
+        340
       ],
       "physics_properties": {
-        "radius": 28
+        "drone_count": 2
       }
     }
   ]

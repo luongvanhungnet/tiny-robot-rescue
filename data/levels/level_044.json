@@ -1,24 +1,37 @@
 {
   "id": 44,
-  "title": "44. Team Rescue 4",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "44. Three Robots!",
+  "hint": "Protect ALL THREE robots from the falling gears and bouncy ball!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 560,
+  "simulation_duration": 6.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "hard",
+  "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      90,
+      740
+    ],
+    [
+      360,
+      700
+    ],
+    [
+      630,
+      740
+    ]
   ],
   "draw_zones": [
     {
@@ -37,14 +50,14 @@
         960
       ],
       "scale": [
-        580,
+        600,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        180,
+        160,
         900
       ]
     },
@@ -56,26 +69,40 @@
       ]
     },
     {
-      "object_type": "switch",
+      "object_type": "robot",
       "position": [
         560,
-        915
+        900
       ]
     },
     {
       "object_type": "gear",
       "position": [
-        180,
+        160,
         260
       ],
       "physics_properties": {
-        "radius": 28
+        "radius": 26
       }
     },
     {
       "object_type": "ball",
       "position": [
         360,
+        260
+      ],
+      "physics_properties": {
+        "radius": 25,
+        "initial_velocity": [
+          120,
+          0
+        ]
+      }
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        560,
         260
       ],
       "physics_properties": {

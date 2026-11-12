@@ -1,23 +1,37 @@
 {
   "id": 36,
-  "title": "36. Spring Storm 6",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "36. Gust Over Spikes",
+  "hint": "Right-blowing fan helps push the robot, but stops at spikes \u2014 draw a bridge & backstop!",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 415,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 440,
+  "simulation_duration": 9.5,
   "objective": {
-    "type": "survival"
+    "type": "exit"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      220,
+      862
+    ],
+    [
+      350,
+      862
+    ],
+    [
+      480,
+      862
+    ]
   ],
   "draw_zones": [
     {
@@ -32,45 +46,69 @@
     {
       "object_type": "platform",
       "position": [
-        360,
-        960
+        140,
+        880
       ],
       "scale": [
-        520,
+        200,
         40
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "platform",
       "position": [
-        480,
-        900
+        560,
+        880
+      ],
+      "scale": [
+        200,
+        40
       ]
     },
     {
-      "object_type": "spring_ball",
+      "object_type": "spikes",
       "position": [
-        140,
-        880
+        350,
+        1080
+      ],
+      "scale": [
+        240,
+        22
+      ]
+    },
+    {
+      "object_type": "fan",
+      "position": [
+        70,
+        820
       ],
       "physics_properties": {
-        "radius": 24,
-        "initial_velocity": [
-          390,
-          -460
-        ]
+        "direction": [
+          1,
+          0
+        ],
+        "range": 380,
+        "width": 100,
+        "strength": 620
       }
     },
     {
-      "object_type": "block",
+      "object_type": "robot",
       "position": [
-        480,
-        260
+        140,
+        820
       ],
       "physics_properties": {
-        "w": 64,
-        "h": 64
+        "move_toward_goal": true,
+        "goal_x": 550
       }
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        550,
+        825
+      ]
     }
   ]
 }

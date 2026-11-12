@@ -1,8 +1,8 @@
 {
   "id": 49,
-  "title": "49. Team Rescue 9",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "49. Drone Gate Escape",
+  "hint": "Shield the robot from the gear AND bounce the ball onto the switch to open the gate!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
@@ -10,7 +10,7 @@
     "h": 1280
   },
   "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "simulation_duration": 10.5,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,20 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      100,
+      680
+    ],
+    [
+      250,
+      600
+    ],
+    [
+      375,
+      655
+    ]
   ],
   "draw_zones": [
     {
@@ -42,31 +56,57 @@
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "platform",
       "position": [
-        180,
-        900
-      ]
-    },
-    {
-      "object_type": "robot",
-      "position": [
-        360,
-        900
+        400,
+        740
+      ],
+      "scale": [
+        120,
+        24
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        400,
+        713
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        130,
+        900
+      ],
+      "physics_properties": {
+        "move_toward_goal": true,
+        "goal_x": 580
+      }
+    },
+    {
+      "object_type": "gate",
+      "position": [
+        490,
+        875
+      ],
+      "scale": [
+        28,
+        130
+      ]
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        580,
+        905
       ]
     },
     {
       "object_type": "gear",
       "position": [
-        180,
-        260
+        130,
+        250
       ],
       "physics_properties": {
         "radius": 28
@@ -75,11 +115,11 @@
     {
       "object_type": "ball",
       "position": [
-        360,
+        270,
         260
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 24
       }
     }
   ]

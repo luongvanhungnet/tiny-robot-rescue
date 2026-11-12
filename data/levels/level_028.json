@@ -1,23 +1,37 @@
 {
   "id": 28,
-  "title": "28. Bridge Crossing 8",
-  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
-  "background_id": "workshop_day",
+  "title": "28. Bridge & Bouncers",
+  "hint": "Build a bridge across the spike pit AND dodge the bouncing ball!",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 398,
+  "max_stroke_length": 480,
   "simulation_duration": 10.0,
   "objective": {
     "type": "exit"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      220,
+      855
+    ],
+    [
+      380,
+      865
+    ],
+    [
+      500,
+      875
+    ]
   ],
   "draw_zones": [
     {
@@ -33,7 +47,7 @@
       "object_type": "platform",
       "position": [
         140,
-        820
+        870
       ],
       "scale": [
         200,
@@ -43,42 +57,53 @@
     {
       "object_type": "platform",
       "position": [
-        570,
-        940
+        580,
+        890
       ],
       "scale": [
-        180,
+        200,
         40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        360,
+        1090
+      ],
+      "scale": [
+        280,
+        22
       ]
     },
     {
       "object_type": "robot",
       "position": [
         120,
-        760
+        810
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 570
+        "goal_x": 580
       }
     },
     {
       "object_type": "charger",
       "position": [
-        570,
-        885
+        580,
+        835
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "ball",
       "position": [
-        360,
+        220,
         260
       ],
       "physics_properties": {
-        "radius": 26,
+        "radius": 25,
         "initial_velocity": [
-          70,
+          140,
           0
         ]
       }

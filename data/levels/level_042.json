@@ -1,24 +1,37 @@
 {
   "id": 42,
-  "title": "42. Team Rescue 2",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "42. Twin Robots & Laser",
+  "hint": "Save BOTH robots from the top laser and falling blocks!",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 720,
+  "simulation_duration": 6.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "hard",
+  "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      130,
+      940
+    ],
+    [
+      130,
+      740
+    ],
+    [
+      570,
+      740
+    ]
   ],
   "draw_zones": [
     {
@@ -37,49 +50,58 @@
         960
       ],
       "scale": [
-        580,
+        560,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        180,
+        210,
         900
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        360,
+        510,
         900
       ]
     },
     {
-      "object_type": "switch",
+      "object_type": "laser",
       "position": [
-        560,
-        915
-      ]
-    },
-    {
-      "object_type": "gear",
-      "position": [
-        180,
-        260
+        100,
+        900
       ],
       "physics_properties": {
-        "radius": 28
+        "direction": [
+          1,
+          0
+        ],
+        "max_length": 580
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "block",
       "position": [
-        360,
+        210,
         260
       ],
       "physics_properties": {
-        "radius": 26
+        "w": 62,
+        "h": 62
+      }
+    },
+    {
+      "object_type": "block",
+      "position": [
+        510,
+        260
+      ],
+      "physics_properties": {
+        "w": 62,
+        "h": 62
       }
     }
   ]

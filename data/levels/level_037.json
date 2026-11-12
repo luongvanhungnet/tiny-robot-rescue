@@ -1,23 +1,37 @@
 {
   "id": 37,
-  "title": "37. Spring Storm 7",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "37. Updraft Storm",
+  "hint": "An upward fan lifts bouncing balls wildly! Build an overhead bunker.",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 410,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 430,
+  "simulation_duration": 7.0,
   "objective": {
     "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      380,
+      760
+    ],
+    [
+      480,
+      700
+    ],
+    [
+      580,
+      760
+    ]
   ],
   "draw_zones": [
     {
@@ -41,23 +55,32 @@
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "fan",
       "position": [
-        480,
-        900
-      ]
-    },
-    {
-      "object_type": "spring_ball",
-      "position": [
-        140,
-        880
+        220,
+        920
       ],
       "physics_properties": {
-        "radius": 24,
+        "direction": [
+          0,
+          -1
+        ],
+        "range": 520,
+        "width": 130,
+        "strength": 1100
+      }
+    },
+    {
+      "object_type": "ball",
+      "position": [
+        220,
+        420
+      ],
+      "physics_properties": {
+        "radius": 26,
         "initial_velocity": [
-          400,
-          -460
+          140,
+          0
         ]
       }
     },
@@ -71,6 +94,13 @@
         "w": 64,
         "h": 64
       }
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        480,
+        900
+      ]
     }
   ]
 }

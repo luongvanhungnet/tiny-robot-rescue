@@ -4,15 +4,15 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal_panel"]
 bg_color = Color(0.118, 0.161, 0.231, 0.98)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.278, 0.333, 0.412, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0.22, 0.74, 0.97, 0.8)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 content_margin_left = 24.0
 content_margin_top = 24.0
 content_margin_right = 24.0
@@ -34,12 +34,35 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.086, 0.125, 0.196, 1)
 
+[node name="TopStats" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 28.0
+offset_top = 48.0
+offset_right = -28.0
+offset_bottom = 94.0
+
+[node name="StarsLabel" type="Label" parent="TopStats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.98, 0.8, 0.08, 1)
+theme_override_font_sizes/font_size = 22
+text = "STARS: 0 / 180"
+
+[node name="BoltsLabel" type="Label" parent="TopStats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.22, 0.74, 0.97, 1)
+theme_override_font_sizes/font_size = 22
+text = "BOLTS: 0"
+horizontal_alignment = 2
+
 [node name="TitleLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 160.0
-offset_bottom = 280.0
+offset_top = 120.0
+offset_bottom = 240.0
 theme_override_font_sizes/font_size = 52
 text = "TINY ROBOT
 RESCUE"
@@ -50,12 +73,15 @@ vertical_alignment = 1
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 300.0
-offset_bottom = 350.0
+offset_top = 248.0
+offset_bottom = 290.0
 theme_override_colors/font_color = Color(0.58, 0.74, 0.92, 1)
 theme_override_font_sizes/font_size = 22
-text = "Save the robot with one line!"
+text = "Draw one line to save the robot!"
 horizontal_alignment = 1
+
+[node name="RobotPreviewAnchor" type="Node2D" parent="."]
+position = Vector2(360, 385)
 
 [node name="CenterBox" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -64,37 +90,43 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -60.0
-offset_right = 180.0
-offset_bottom = 260.0
+offset_left = -190.0
+offset_top = -140.0
+offset_right = 190.0
+offset_bottom = 270.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 14
 
 [node name="PlayButton" type="Button" parent="CenterBox"]
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 26
 text = "PLAY"
 
 [node name="LevelsButton" type="Button" parent="CenterBox"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "LEVEL SELECT"
 
-[node name="SettingsButton" type="Button" parent="CenterBox"]
-custom_minimum_size = Vector2(0, 60)
+[node name="HangarButton" type="Button" parent="CenterBox"]
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "SETTINGS"
+theme_override_font_sizes/font_size = 22
+text = "ROBOT HANGAR"
 
 [node name="ShopButton" type="Button" parent="CenterBox"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "SHOP"
+
+[node name="SettingsButton" type="Button" parent="CenterBox"]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "SETTINGS"
 
 [node name="ModalPanel" type="PanelContainer" parent="."]
 visible = false
@@ -104,31 +136,35 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -220.0
-offset_right = 260.0
-offset_bottom = 220.0
+offset_left = -290.0
+offset_top = -340.0
+offset_right = 290.0
+offset_bottom = 340.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_modal_panel")
 
 [node name="VBox" type="VBoxContainer" parent="ModalPanel"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="ModalPanel/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 text = "Modal"
 horizontal_alignment = 1
 
-[node name="Body" type="VBoxContainer" parent="ModalPanel/VBox"]
+[node name="Scroll" type="ScrollContainer" parent="ModalPanel/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Body" type="VBoxContainer" parent="ModalPanel/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="CloseButton" type="Button" parent="ModalPanel/VBox"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "CLOSE"

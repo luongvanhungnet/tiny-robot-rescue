@@ -1,16 +1,16 @@
 {
   "id": 35,
-  "title": "35. Spring Storm 5",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "35. Spring & Laser",
+  "hint": "Block the horizontal laser AND deflect the spring-launched ball!",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 420,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 440,
+  "simulation_duration": 7.0,
   "objective": {
     "type": "survival"
   },
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      520,
+      940
+    ],
+    [
+      520,
+      760
+    ],
+    [
+      310,
+      760
+    ]
   ],
   "draw_zones": [
     {
@@ -41,11 +55,18 @@
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "laser",
       "position": [
-        480,
+        610,
         900
-      ]
+      ],
+      "physics_properties": {
+        "direction": [
+          -1,
+          0
+        ],
+        "max_length": 540
+      }
     },
     {
       "object_type": "spring_ball",
@@ -56,21 +77,17 @@
       "physics_properties": {
         "radius": 24,
         "initial_velocity": [
-          380,
-          -460
+          340,
+          -480
         ]
       }
     },
     {
-      "object_type": "block",
+      "object_type": "robot",
       "position": [
-        480,
-        260
-      ],
-      "physics_properties": {
-        "w": 64,
-        "h": 64
-      }
+        420,
+        900
+      ]
     }
   ]
 }

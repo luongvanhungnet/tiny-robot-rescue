@@ -1,16 +1,16 @@
 {
   "id": 21,
-  "title": "21. Bridge Crossing 1",
-  "hint": "Build a sturdy bridge to guide the robot to the green charger!",
-  "background_id": "workshop_day",
+  "title": "21. Spike Pit",
+  "hint": "Bridge the gap above the red spikes so the robot safely reaches the charger!",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 440,
-  "simulation_duration": 10.0,
+  "max_stroke_length": 380,
+  "simulation_duration": 9.0,
   "objective": {
     "type": "exit"
   },
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      220,
+      862
+    ],
+    [
+      360,
+      862
+    ],
+    [
+      500,
+      862
+    ]
   ],
   "draw_zones": [
     {
@@ -43,12 +57,23 @@
     {
       "object_type": "platform",
       "position": [
-        520,
+        580,
         880
       ],
       "scale": [
-        220,
+        200,
         40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        360,
+        1080
+      ],
+      "scale": [
+        280,
+        22
       ]
     },
     {
@@ -59,13 +84,13 @@
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 520
+        "goal_x": 580
       }
     },
     {
       "object_type": "charger",
       "position": [
-        520,
+        580,
         825
       ]
     }

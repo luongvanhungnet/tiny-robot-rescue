@@ -1,15 +1,15 @@
 {
   "id": 18,
-  "title": "18. Bounce Gauntlet 8",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "18. Swarm & Bouncer",
+  "hint": "Seal the robot from drones while blocking the yellow bouncy ball!",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 364,
+  "max_stroke_length": 560,
   "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
@@ -18,6 +18,24 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      340,
+      935
+    ],
+    [
+      350,
+      790
+    ],
+    [
+      530,
+      790
+    ],
+    [
+      540,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -43,32 +61,32 @@
     {
       "object_type": "robot",
       "position": [
-        360,
+        440,
         900
       ]
     },
     {
+      "object_type": "drone_vent",
+      "position": [
+        540,
+        300
+      ],
+      "physics_properties": {
+        "drone_count": 3
+      }
+    },
+    {
       "object_type": "ball",
       "position": [
-        385,
-        260
+        130,
+        340
       ],
       "physics_properties": {
         "radius": 26,
         "initial_velocity": [
-          55,
+          230,
           0
         ]
-      }
-    },
-    {
-      "object_type": "gear",
-      "position": [
-        350,
-        300
-      ],
-      "physics_properties": {
-        "radius": 28
       }
     }
   ]

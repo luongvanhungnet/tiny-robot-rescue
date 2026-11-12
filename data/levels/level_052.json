@@ -1,24 +1,41 @@
 {
   "id": 52,
-  "title": "52. Master Circuit 2",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "52. Wind Laser Swarm",
+  "hint": "Laser + Wind Fan + 3 Spark-Drones! Build a complete survival pod.",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 514,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 500,
+  "simulation_duration": 7.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      260,
+      935
+    ],
+    [
+      265,
+      790
+    ],
+    [
+      455,
+      790
+    ],
+    [
+      460,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -37,53 +54,55 @@
         960
       ],
       "scale": [
-        580,
+        540,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        200,
+        360,
         900
       ]
     },
     {
-      "object_type": "switch",
+      "object_type": "laser",
       "position": [
-        560,
-        915
-      ]
-    },
-    {
-      "object_type": "conveyor_gear",
-      "position": [
-        120,
-        885
-      ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+        100,
+        900
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 155
+        "direction": [
+          1,
+          0
+        ],
+        "max_length": 560
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "fan",
       "position": [
-        360,
-        240
+        620,
+        860
       ],
       "physics_properties": {
-        "radius": 24
+        "direction": [
+          -1,
+          0
+        ],
+        "range": 480,
+        "width": 120,
+        "strength": 800
+      }
+    },
+    {
+      "object_type": "drone_vent",
+      "position": [
+        360,
+        280
+      ],
+      "physics_properties": {
+        "drone_count": 3
       }
     }
   ]

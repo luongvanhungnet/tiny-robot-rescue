@@ -1,24 +1,37 @@
 {
   "id": 56,
-  "title": "56. Master Circuit 6",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "56. Twin Bridge Rescue",
+  "hint": "BOTH robots must cross the bridge to reach the center charger!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 490,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 540,
+  "simulation_duration": 10.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "exit"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      175,
+      845
+    ],
+    [
+      360,
+      862
+    ],
+    [
+      545,
+      845
+    ]
   ],
   "draw_zones": [
     {
@@ -33,58 +46,86 @@
     {
       "object_type": "platform",
       "position": [
-        360,
-        960
+        110,
+        860
       ],
       "scale": [
-        580,
+        160,
         40
+      ]
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        880
+      ],
+      "scale": [
+        140,
+        40
+      ]
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        610,
+        860
+      ],
+      "scale": [
+        160,
+        40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        235,
+        1080
+      ],
+      "scale": [
+        140,
+        22
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        485,
+        1080
+      ],
+      "scale": [
+        140,
+        22
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        200,
-        900
-      ]
-    },
-    {
-      "object_type": "switch",
-      "position": [
-        560,
-        915
-      ]
-    },
-    {
-      "object_type": "conveyor_gear",
-      "position": [
-        120,
-        885
-      ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+        100,
+        800
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 175
+        "move_toward_goal": true,
+        "goal_x": 360
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "robot",
+      "position": [
+        620,
+        800
+      ],
+      "physics_properties": {
+        "move_toward_goal": true,
+        "goal_x": 360
+      }
+    },
+    {
+      "object_type": "charger",
       "position": [
         360,
-        240
-      ],
-      "physics_properties": {
-        "radius": 24
-      }
+        825
+      ]
     }
   ]
 }

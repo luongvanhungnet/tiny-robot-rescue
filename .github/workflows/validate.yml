@@ -15,5 +15,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Import Project Headless
         run: godot --headless --import --quit
+      - name: Smoke Boot All Scenes (Autoloads + UI + Gameplay)
+        run: |
+          for scene in res://scenes/home.tscn res://scenes/level_select.tscn res://scenes/gameplay.tscn; do
+            echo "=== Booting $scene ==="
+            godot --headless --quit-after 5 "$scene" 2>&1 | tee /tmp/boot.log
+            if grep -qE "SCRIPT ERROR|Parse Error|Failed to load script|Cannot call method" /tmp/boot.log; then
+              echo "Detected script/scene error booting $scene"
+              exit 1
+            fi
+          done
       - name: Run Headless Unit Tests
         run: godot --headless --script res://tests/test_runner.gd

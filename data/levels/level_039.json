@@ -1,23 +1,37 @@
 {
   "id": 39,
-  "title": "39. Spring Storm 9",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "39. Opposing Fans",
+  "hint": "Left & right fans blow rocks from both sides! Build a tight A-frame roof.",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 400,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 420,
+  "simulation_duration": 7.0,
   "objective": {
     "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      250,
+      780
+    ],
+    [
+      360,
+      690
+    ],
+    [
+      470,
+      780
+    ]
   ],
   "draw_zones": [
     {
@@ -36,41 +50,68 @@
         960
       ],
       "scale": [
-        520,
+        540,
         40
       ]
     },
     {
+      "object_type": "fan",
+      "position": [
+        90,
+        560
+      ],
+      "physics_properties": {
+        "direction": [
+          1,
+          0
+        ],
+        "range": 340,
+        "width": 120,
+        "strength": 820
+      }
+    },
+    {
+      "object_type": "fan",
+      "position": [
+        630,
+        560
+      ],
+      "physics_properties": {
+        "direction": [
+          -1,
+          0
+        ],
+        "range": 340,
+        "width": 120,
+        "strength": 820
+      }
+    },
+    {
+      "object_type": "rock",
+      "position": [
+        180,
+        280
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    },
+    {
+      "object_type": "rock",
+      "position": [
+        540,
+        280
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    },
+    {
       "object_type": "robot",
       "position": [
-        480,
+        360,
         900
       ]
-    },
-    {
-      "object_type": "spring_ball",
-      "position": [
-        140,
-        880
-      ],
-      "physics_properties": {
-        "radius": 24,
-        "initial_velocity": [
-          420,
-          -460
-        ]
-      }
-    },
-    {
-      "object_type": "block",
-      "position": [
-        480,
-        260
-      ],
-      "physics_properties": {
-        "w": 64,
-        "h": 64
-      }
     }
   ]
 }

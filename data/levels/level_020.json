@@ -1,23 +1,41 @@
 {
   "id": 20,
-  "title": "20. Bounce Gauntlet 10",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "20. Swarm Boss",
+  "hint": "5 Spark-Drones plus a falling gear! Build a rock-solid bunker.",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 348,
-  "simulation_duration": 6.5,
+  "max_stroke_length": 480,
+  "simulation_duration": 7.0,
   "objective": {
     "type": "survival"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      260,
+      935
+    ],
+    [
+      270,
+      790
+    ],
+    [
+      450,
+      790
+    ],
+    [
+      460,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -43,32 +61,38 @@
     {
       "object_type": "robot",
       "position": [
-        220,
+        360,
         900
       ]
     },
     {
-      "object_type": "ball",
+      "object_type": "drone_vent",
       "position": [
-        455,
-        260
+        200,
+        280
       ],
       "physics_properties": {
-        "radius": 26,
-        "initial_velocity": [
-          -200,
-          0
-        ]
+        "drone_count": 3
+      }
+    },
+    {
+      "object_type": "drone_vent",
+      "position": [
+        520,
+        280
+      ],
+      "physics_properties": {
+        "drone_count": 2
       }
     },
     {
       "object_type": "gear",
       "position": [
-        290,
-        300
+        360,
+        240
       ],
       "physics_properties": {
-        "radius": 28
+        "radius": 30
       }
     }
   ]

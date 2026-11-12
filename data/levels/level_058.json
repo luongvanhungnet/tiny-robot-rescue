@@ -1,24 +1,41 @@
 {
   "id": 58,
-  "title": "58. Master Circuit 8",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "58. Laser Swarm Vault",
+  "hint": "Two lasers AND 4 Spark-Drones! Build a shielded vault around the robot.",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 478,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 520,
+  "simulation_duration": 7.5,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      260,
+      935
+    ],
+    [
+      265,
+      790
+    ],
+    [
+      455,
+      790
+    ],
+    [
+      460,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -37,53 +54,53 @@
         960
       ],
       "scale": [
-        580,
+        560,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        200,
+        360,
         900
       ]
     },
     {
-      "object_type": "switch",
+      "object_type": "laser",
       "position": [
-        560,
-        915
-      ]
-    },
-    {
-      "object_type": "conveyor_gear",
-      "position": [
-        120,
-        885
-      ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+        90,
+        895
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 185
+        "direction": [
+          1,
+          0
+        ],
+        "max_length": 580
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "laser",
       "position": [
-        360,
-        240
+        630,
+        865
       ],
       "physics_properties": {
-        "radius": 24
+        "direction": [
+          -1,
+          0
+        ],
+        "max_length": 580
+      }
+    },
+    {
+      "object_type": "drone_vent",
+      "position": [
+        360,
+        280
+      ],
+      "physics_properties": {
+        "drone_count": 4
       }
     }
   ]

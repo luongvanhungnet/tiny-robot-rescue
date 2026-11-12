@@ -1,24 +1,41 @@
 {
   "id": 46,
-  "title": "46. Team Rescue 6",
-  "hint": "Protect all robots AND trigger the blue switch!",
-  "background_id": "workshop_day",
+  "title": "46. Split Elevation",
+  "hint": "One robot on the balcony, one below! Protect both with one sweeping shield.",
+  "background_id": "volt_chamber",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 500,
-  "simulation_duration": 8.0,
+  "max_stroke_length": 640,
+  "simulation_duration": 7.0,
   "objective": {
-    "type": "switch",
-    "required_switches": 1
+    "type": "survival"
   },
   "tutorial_steps": [],
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      120,
+      560
+    ],
+    [
+      280,
+      560
+    ],
+    [
+      400,
+      750
+    ],
+    [
+      560,
+      750
+    ]
   ],
   "draw_zones": [
     {
@@ -33,53 +50,57 @@
     {
       "object_type": "platform",
       "position": [
-        360,
+        200,
+        740
+      ],
+      "scale": [
+        200,
+        36
+      ]
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        480,
         960
       ],
       "scale": [
-        580,
+        240,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        180,
-        900
+        200,
+        680
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        360,
+        480,
         900
-      ]
-    },
-    {
-      "object_type": "switch",
-      "position": [
-        560,
-        915
       ]
     },
     {
       "object_type": "gear",
       "position": [
-        180,
-        260
+        200,
+        240
       ],
       "physics_properties": {
         "radius": 28
       }
     },
     {
-      "object_type": "ball",
+      "object_type": "rock",
       "position": [
-        360,
-        260
+        480,
+        240
       ],
       "physics_properties": {
-        "radius": 26
+        "radius": 30
       }
     }
   ]

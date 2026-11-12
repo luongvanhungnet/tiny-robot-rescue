@@ -1,23 +1,37 @@
 {
   "id": 29,
-  "title": "29. Bridge Crossing 9",
-  "hint": "Draw a downhill bridge so the falling gear rolls off the lower ledge!",
-  "background_id": "workshop_day",
+  "title": "29. Bouncer Bridge",
+  "hint": "Bridge the gap and deflect the yellow ball coming from the right!",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 392,
+  "max_stroke_length": 450,
   "simulation_duration": 10.0,
   "objective": {
     "type": "exit"
   },
   "tutorial_steps": [],
-  "difficulty_tag": "medium",
+  "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      220,
+      825
+    ],
+    [
+      380,
+      865
+    ],
+    [
+      500,
+      892
+    ]
   ],
   "draw_zones": [
     {
@@ -33,7 +47,7 @@
       "object_type": "platform",
       "position": [
         140,
-        820
+        840
       ],
       "scale": [
         200,
@@ -43,42 +57,53 @@
     {
       "object_type": "platform",
       "position": [
-        585,
-        940
+        580,
+        910
       ],
       "scale": [
-        180,
+        200,
         40
+      ]
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        360,
+        1090
+      ],
+      "scale": [
+        280,
+        22
       ]
     },
     {
       "object_type": "robot",
       "position": [
         120,
-        760
+        780
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 585
+        "goal_x": 580
       }
     },
     {
       "object_type": "charger",
       "position": [
-        585,
-        885
+        580,
+        855
       ]
     },
     {
-      "object_type": "gear",
+      "object_type": "ball",
       "position": [
-        360,
-        260
+        580,
+        300
       ],
       "physics_properties": {
         "radius": 26,
         "initial_velocity": [
-          80,
+          -160,
           0
         ]
       }

@@ -1,16 +1,16 @@
 {
   "id": 24,
-  "title": "24. Bridge Crossing 4",
-  "hint": "Build a sturdy bridge to guide the robot to the green charger!",
-  "background_id": "workshop_day",
+  "title": "24. Spring Crossing",
+  "hint": "The orange spring launches the robot! Draw a landing slide above the spikes.",
+  "background_id": "skybridge_yard",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 422,
-  "simulation_duration": 10.0,
+  "max_stroke_length": 460,
+  "simulation_duration": 9.0,
   "objective": {
     "type": "exit"
   },
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      260,
+      770
+    ],
+    [
+      420,
+      825
+    ],
+    [
+      520,
+      878
+    ]
   ],
   "draw_zones": [
     {
@@ -33,18 +47,7 @@
       "object_type": "platform",
       "position": [
         140,
-        880
-      ],
-      "scale": [
-        200,
-        40
-      ]
-    },
-    {
-      "object_type": "platform",
-      "position": [
-        610,
-        880
+        900
       ],
       "scale": [
         220,
@@ -52,21 +55,56 @@
       ]
     },
     {
+      "object_type": "spring_pad",
+      "position": [
+        200,
+        874
+      ],
+      "physics_properties": {
+        "launch_velocity": [
+          260,
+          -560
+        ]
+      }
+    },
+    {
+      "object_type": "spikes",
+      "position": [
+        380,
+        1080
+      ],
+      "scale": [
+        260,
+        22
+      ]
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        580,
+        900
+      ],
+      "scale": [
+        200,
+        40
+      ]
+    },
+    {
       "object_type": "robot",
       "position": [
-        120,
-        820
+        100,
+        840
       ],
       "physics_properties": {
         "move_toward_goal": true,
-        "goal_x": 610
+        "goal_x": 580
       }
     },
     {
       "object_type": "charger",
       "position": [
-        610,
-        825
+        580,
+        845
       ]
     }
   ]

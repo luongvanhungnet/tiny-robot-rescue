@@ -1,16 +1,16 @@
 {
   "id": 16,
-  "title": "16. Bounce Gauntlet 6",
-  "hint": "Deflect the bouncing balls and moving gears away from the robot!",
-  "background_id": "workshop_day",
+  "title": "16. Tight Ink Cage",
+  "hint": "Ceiling forbidden zone! Seal the Spark-Drones out with short walls.",
+  "background_id": "drone_factory",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 380,
-  "simulation_duration": 6.5,
+  "max_stroke_length": 460,
+  "simulation_duration": 6.0,
   "objective": {
     "type": "survival"
   },
@@ -18,6 +18,24 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      290,
+      935
+    ],
+    [
+      295,
+      790
+    ],
+    [
+      425,
+      790
+    ],
+    [
+      430,
+      935
+    ]
   ],
   "draw_zones": [
     {
@@ -27,8 +45,26 @@
       "h": 900
     }
   ],
-  "forbidden_zones": [],
+  "forbidden_zones": [
+    {
+      "x": 220,
+      "y": 682,
+      "w": 280,
+      "h": 36
+    }
+  ],
   "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        700
+      ],
+      "scale": [
+        280,
+        36
+      ]
+    },
     {
       "object_type": "platform",
       "position": [
@@ -36,39 +72,25 @@
         960
       ],
       "scale": [
-        520,
+        480,
         40
       ]
     },
     {
       "object_type": "robot",
       "position": [
-        500,
+        360,
         900
       ]
     },
     {
-      "object_type": "ball",
+      "object_type": "drone_vent",
       "position": [
-        315,
-        260
-      ],
-      "physics_properties": {
-        "radius": 26,
-        "initial_velocity": [
-          85,
-          0
-        ]
-      }
-    },
-    {
-      "object_type": "gear",
-      "position": [
-        410,
+        360,
         300
       ],
       "physics_properties": {
-        "radius": 28
+        "drone_count": 4
       }
     }
   ]

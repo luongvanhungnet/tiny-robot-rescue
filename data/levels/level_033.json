@@ -1,16 +1,16 @@
 {
   "id": 33,
-  "title": "33. Spring Storm 3",
-  "hint": "Shield against the spring-launched ball and falling blocks!",
-  "background_id": "workshop_day",
+  "title": "33. Wind-Blown Gear",
+  "hint": "The fan pushes a falling gear sideways! Block the wind or shield the robot.",
+  "background_id": "wind_lab",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 430,
-  "simulation_duration": 7.5,
+  "max_stroke_length": 380,
+  "simulation_duration": 6.5,
   "objective": {
     "type": "survival"
   },
@@ -18,6 +18,20 @@
   "difficulty_tag": "medium",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      390,
+      740
+    ],
+    [
+      490,
+      710
+    ],
+    [
+      580,
+      760
+    ]
   ],
   "draw_zones": [
     {
@@ -41,36 +55,37 @@
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "fan",
       "position": [
-        480,
-        900
-      ]
-    },
-    {
-      "object_type": "spring_ball",
-      "position": [
-        140,
-        880
+        100,
+        560
       ],
       "physics_properties": {
-        "radius": 24,
-        "initial_velocity": [
-          360,
-          -460
-        ]
+        "direction": [
+          1,
+          0
+        ],
+        "range": 520,
+        "width": 140,
+        "strength": 850
       }
     },
     {
-      "object_type": "block",
+      "object_type": "gear",
       "position": [
-        480,
+        260,
         260
       ],
       "physics_properties": {
-        "w": 64,
-        "h": 64
+        "radius": 28
       }
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        490,
+        900
+      ]
     }
   ]
 }

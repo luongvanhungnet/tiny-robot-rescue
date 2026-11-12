@@ -1,16 +1,16 @@
 {
   "id": 53,
-  "title": "53. Master Circuit 3",
-  "hint": "Use one clever line to shield, deflect, and win!",
-  "background_id": "workshop_day",
+  "title": "53. Laser Gate Bridge",
+  "hint": "Shield the gear, roll the ball onto the switch to unlock the gate & laser, and cross the moving ferry!",
+  "background_id": "master_core",
   "world_bounds": {
     "x": 0,
     "y": 0,
     "w": 720,
     "h": 1280
   },
-  "max_stroke_length": 508,
-  "simulation_duration": 8.5,
+  "max_stroke_length": 520,
+  "simulation_duration": 11.0,
   "objective": {
     "type": "switch",
     "required_switches": 1
@@ -19,6 +19,20 @@
   "difficulty_tag": "hard",
   "expected_solution_tags": [
     "one_line"
+  ],
+  "expected_solution_guide": [
+    [
+      70,
+      640
+    ],
+    [
+      220,
+      560
+    ],
+    [
+      385,
+      620
+    ]
   ],
   "draw_zones": [
     {
@@ -33,54 +47,136 @@
     {
       "object_type": "platform",
       "position": [
-        360,
-        960
+        120,
+        880
       ],
       "scale": [
-        580,
+        180,
         40
       ]
     },
     {
-      "object_type": "robot",
+      "object_type": "moving_platform",
       "position": [
-        200,
-        900
+        280,
+        880
+      ],
+      "scale": [
+        150,
+        32
+      ],
+      "patrol_path": [
+        [
+          275,
+          880
+        ],
+        [
+          450,
+          880
+        ]
+      ],
+      "physics_properties": {
+        "speed": 95
+      }
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        590,
+        880
+      ],
+      "scale": [
+        180,
+        40
+      ]
+    },
+    {
+      "object_type": "platform",
+      "position": [
+        410,
+        700
+      ],
+      "scale": [
+        110,
+        24
       ]
     },
     {
       "object_type": "switch",
       "position": [
-        560,
-        915
+        410,
+        673
       ]
     },
     {
-      "object_type": "conveyor_gear",
+      "object_type": "spikes",
       "position": [
-        120,
-        885
+        355,
+        1080
       ],
-      "patrol_path": [
-        [
-          120,
-          885
-        ],
-        [
-          540,
-          885
-        ]
+      "scale": [
+        270,
+        22
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        110,
+        820
       ],
       "physics_properties": {
-        "radius": 26,
-        "patrol_speed": 160
+        "move_toward_goal": true,
+        "goal_x": 590
+      }
+    },
+    {
+      "object_type": "gate",
+      "position": [
+        520,
+        795
+      ],
+      "scale": [
+        28,
+        130
+      ]
+    },
+    {
+      "object_type": "laser",
+      "position": [
+        555,
+        560
+      ],
+      "physics_properties": {
+        "direction": [
+          0,
+          1
+        ],
+        "max_length": 320
+      }
+    },
+    {
+      "object_type": "charger",
+      "position": [
+        590,
+        825
+      ]
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        120,
+        240
+      ],
+      "physics_properties": {
+        "radius": 26
       }
     },
     {
       "object_type": "ball",
       "position": [
-        360,
-        240
+        240,
+        260
       ],
       "physics_properties": {
         "radius": 24
