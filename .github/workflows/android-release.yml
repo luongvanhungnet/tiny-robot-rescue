@@ -1,0 +1,36 @@
+name: Android Release AAB
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-release-aab:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Export Directory
+        run: mkdir -p build/android
+      - name: Decode Release Keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "ERROR: ANDROID_KEYSTORE_BASE64 secret is not set."
+            exit 1
+          fi
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > /tmp/release.keystore
+      - name: Import Project
+        run: godot --headless --import --quit
+      - name: Export Release AAB
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/release.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: godot --headless --export-release "Android" build/android/tiny-robot-rescue-release.aab
+      - name: Upload Release AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiny-robot-rescue-release-aab
+          path: build/android/tiny-robot-rescue-release.aab

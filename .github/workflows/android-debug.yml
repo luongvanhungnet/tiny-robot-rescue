@@ -1,0 +1,25 @@
+name: Android Debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-debug-apk:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Export Directory
+        run: mkdir -p build/android
+      - name: Import Project
+        run: godot --headless --import --quit
+      - name: Export Debug APK
+        run: godot --headless --export-debug "Android" build/android/tiny-robot-rescue-debug.apk
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiny-robot-rescue-debug-apk
+          path: build/android/tiny-robot-rescue-debug.apk

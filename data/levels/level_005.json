@@ -1,0 +1,78 @@
+{
+  "id": 5,
+  "title": "05. Two Robots",
+  "hint": "Protect BOTH robots with a single continuous line!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 480,
+  "simulation_duration": 6.0,
+  "objective": {
+    "type": "survival"
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "medium",
+  "expected_solution_tags": [
+    "wide_roof"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        560,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        220,
+        900
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        500,
+        900
+      ]
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        220,
+        260
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        500,
+        260
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    }
+  ]
+}

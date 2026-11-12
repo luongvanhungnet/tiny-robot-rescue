@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/robot_controller.gd" id="1_robot"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_robot"]
+size = Vector2(48, 52)
+
+[node name="Robot" type="RigidBody2D"]
+script = ExtResource("1_robot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_robot")

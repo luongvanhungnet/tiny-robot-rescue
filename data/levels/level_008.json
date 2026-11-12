@@ -1,0 +1,72 @@
+{
+  "id": 8,
+  "title": "08. Gear Conveyor",
+  "hint": "A moving gear approaches from the left. Draw a ramp to deflect it!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 380,
+  "simulation_duration": 7.0,
+  "objective": {
+    "type": "survival"
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "hard",
+  "expected_solution_tags": [
+    "ramp"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        540,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        520,
+        900
+      ]
+    },
+    {
+      "object_type": "conveyor_gear",
+      "position": [
+        120,
+        860
+      ],
+      "patrol_path": [
+        [
+          120,
+          860
+        ],
+        [
+          560,
+          860
+        ]
+      ],
+      "physics_properties": {
+        "radius": 28,
+        "patrol_speed": 150
+      }
+    }
+  ]
+}

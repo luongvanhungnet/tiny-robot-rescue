@@ -1,0 +1,79 @@
+{
+  "id": 10,
+  "title": "10. One-Line Finale",
+  "hint": "Shield the robot AND guide the ball onto the switch with ONE line!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 500,
+  "simulation_duration": 8.0,
+  "objective": {
+    "type": "switch",
+    "required_switches": 1
+  },
+  "tutorial_steps": [],
+  "difficulty_tag": "hard",
+  "expected_solution_tags": [
+    "shield_and_ramp"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        560,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        220,
+        900
+      ]
+    },
+    {
+      "object_type": "switch",
+      "position": [
+        560,
+        915
+      ]
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        220,
+        260
+      ],
+      "physics_properties": {
+        "radius": 28
+      }
+    },
+    {
+      "object_type": "ball",
+      "position": [
+        380,
+        260
+      ],
+      "physics_properties": {
+        "radius": 24
+      }
+    }
+  ]
+}

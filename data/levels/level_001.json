@@ -1,0 +1,65 @@
+{
+  "id": 1,
+  "title": "01. First Shield",
+  "hint": "Draw a roof above the robot to block the falling gear!",
+  "background_id": "workshop_day",
+  "world_bounds": {
+    "x": 0,
+    "y": 0,
+    "w": 720,
+    "h": 1280
+  },
+  "max_stroke_length": 360,
+  "simulation_duration": 5.0,
+  "objective": {
+    "type": "survival"
+  },
+  "tutorial_steps": [
+    "Drag to draw a line above the robot",
+    "Release to drop the gear and test your shield!"
+  ],
+  "difficulty_tag": "tutorial",
+  "expected_solution_tags": [
+    "roof",
+    "shield"
+  ],
+  "draw_zones": [
+    {
+      "x": 40,
+      "y": 200,
+      "w": 640,
+      "h": 900
+    }
+  ],
+  "forbidden_zones": [],
+  "spawn_objects": [
+    {
+      "object_type": "platform",
+      "position": [
+        360,
+        960
+      ],
+      "scale": [
+        420,
+        40
+      ]
+    },
+    {
+      "object_type": "robot",
+      "position": [
+        360,
+        900
+      ]
+    },
+    {
+      "object_type": "gear",
+      "position": [
+        360,
+        260
+      ],
+      "physics_properties": {
+        "radius": 30
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+name: Validate Godot Project
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import Project Headless
+        run: godot --headless --import --quit
+      - name: Run Headless Unit Tests
+        run: godot --headless --script res://tests/test_runner.gd
