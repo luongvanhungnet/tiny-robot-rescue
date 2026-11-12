@@ -26,17 +26,17 @@ func _get_cm() -> Node:
 	return get_node_or_null("/root/ConsentManager") if is_inside_tree() else null
 
 func is_interstitial_ready(level_id: int) -> bool:
-	var ps := _get_ps()
+	var ps: Variant = _get_ps()
 	if ps != null and ps.has_remove_ads():
 		return false
 	if level_id < MIN_LEVEL_FOR_INTERSTITIAL:
 		return false
 	if _levels_since_interstitial < INTERSTITIAL_LEVEL_INTERVAL:
 		return false
-	var now := Time.get_unix_time_from_system()
+	var now: float = Time.get_unix_time_from_system()
 	if (now - _last_interstitial_time) < INTERSTITIAL_MIN_GAP_SEC:
 		return false
-	var cm := _get_cm()
+	var cm: Variant = _get_cm()
 	if cm == null:
 		return false
 	return cm.can_request_ads()
@@ -63,7 +63,7 @@ func show_rewarded_ad(placement_id: String, request_token: String = "") -> void:
 		rewarded_ad_failed.emit(placement_id, "duplicate_reward_token")
 		return
 	
-	var cm := _get_cm()
+	var cm: Variant = _get_cm()
 	if (cm == null or not cm.can_request_ads()) and not test_mode:
 		rewarded_ad_failed.emit(placement_id, "offline_or_no_consent")
 		return
@@ -74,7 +74,7 @@ func show_rewarded_ad(placement_id: String, request_token: String = "") -> void:
 	
 	if request_token != "":
 		_granted_reward_tokens[request_token] = true
-	var ps := _get_ps()
+	var ps: Variant = _get_ps()
 	if ps != null:
 		ps.data["analytics_local"]["ads_watched"] = int(ps.data["analytics_local"].get("ads_watched", 0)) + 1
 		ps.save_now()

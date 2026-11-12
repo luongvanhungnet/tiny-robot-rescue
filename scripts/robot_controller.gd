@@ -17,6 +17,7 @@ var _blink_timer: float = 2.0
 var _is_blinking: bool = false
 var _danger_near: bool = false
 var _stuck_frames: int = 0
+var _rescued: bool = false
 
 func _ready() -> void:
 	add_to_group("robot")
@@ -26,13 +27,13 @@ func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 6
 	
-	var ps := get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
+	var ps: Variant = get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
 	if ps != null and ps.has_method("get_selected_skin"):
 		skin_id = ps.get_selected_skin()
 	
 	if move_toward_goal:
 		can_sleep = false
-		var mat := PhysicsMaterial.new()
+		var mat: PhysicsMaterial = PhysicsMaterial.new()
 		mat.friction = 0.05
 		mat.bounce = 0.0
 		physics_material_override = mat
@@ -42,12 +43,13 @@ func _physics_process(delta: float) -> void:
 	if not is_alive:
 		return
 	if position.y > 1360.0 or position.x < -80.0 or position.x > 800.0:
-		die("Robot fell out of bounds!")
+		if not _rescued:
+			die("Robot fell out of bounds!")
 		return
 	
-	if move_toward_goal and not at_goal and not freeze:
-		var dx := goal_x - global_position.x
-		var dir := signf(dx)
+	if move_toward_goal and not at_goal and not _rescued and not freeze:
+		var dx: float = goal_x - global_position.x
+		var dir: float = signf(dx)
 		if absf(dx) > 12.0:
 			linear_velocity.x = lerpf(linear_velocity.x, dir * 155.0, 0.25)
 			# Small step-up assist when climbing onto drawn bridges
@@ -63,8 +65,8 @@ func _physics_process(delta: float) -> void:
 			linear_velocity.x = lerpf(linear_velocity.x, 0.0, 0.3)
 	
 	# Dynamic expression reaction to nearby moving hazards during simulation
-	if not freeze and not at_goal:
-		var danger := false
+	if not freeze and not at_goal and not _rescued:
+		var danger: bool = false
 		for h in get_tree().get_nodes_in_group("hazard"):
 			if h is Node2D and not h.is_in_group("stationary_hazard"):
 				if global_position.distance_to(h.global_position) < 165.0:
@@ -90,21 +92,26 @@ func set_expression(expr: RobotExpression) -> void:
 		current_expression = expr
 		queue_redraw()
 
+func mark_rescued() -> void:
+	_rescued = true
+	_danger_near = false
+	set_expression(RobotExpression.HAPPY)
+
 func _play_tone(freq_hz: float, duration_sec: float, volume_db: float) -> void:
 	if not is_inside_tree():
 		return
-	var gm := get_node_or_null("/root/GameManager")
+	var gm: Variant = get_node_or_null("/root/GameManager")
 	if gm != null:
 		gm.play_tone(freq_hz, duration_sec, volume_db)
 
 func die(reason: String) -> void:
-	if not is_alive:
+	if not is_alive or _rescued:
 		return
 	is_alive = false
 	_danger_near = false
 	set_expression(RobotExpression.SCARED)
 	if is_inside_tree():
-		var gm := get_node_or_null("/root/GameManager")
+		var gm: Variant = get_node_or_null("/root/GameManager")
 		if gm != null and gm.has_method("play_fail_zap"):
 			gm.play_fail_zap()
 			gm.vibrate(45)
@@ -122,10 +129,10 @@ func reach_goal() -> void:
 	robot_reached_goal.emit()
 
 func _on_body_entered(body: Node) -> void:
-	if not is_alive:
+	if not is_alive or _rescued:
 		return
 	if body.is_in_group("hazard"):
-		var label := str(body.call("get_display_name")) if body.has_method("get_display_name") else "Hazard"
+		var label: String = str(body.call("get_display_name")) if body.has_method("get_display_name") else "Hazard"
 		die("Hit by " + label + "!")
 
 func _get_palette() -> Dictionary:
@@ -144,7 +151,7 @@ func _get_palette() -> Dictionary:
 			return {"body": Color("#f8fafc"), "trim": Color("#0f172a"), "eye": Color("#0ea5e9"), "bulb": Color("#fbbf24")}
 
 func _draw() -> void:
-	var pal := _get_palette()
+	var pal: Dictionary = _get_palette()
 	
 	# Antenna (Crown for Golden Champion!)
 	if skin_id == "bot_tier_5":
@@ -156,7 +163,7 @@ func _draw() -> void:
 		draw_arc(Vector2(0, -38), 5.5, 0, TAU, 16, pal["trim"], 2.0)
 	
 	# Main Chassis
-	var body_rect := Rect2(-24, -24, 48, 44)
+	var body_rect: Rect2 = Rect2(-24, -24, 48, 44)
 	draw_rect(body_rect, pal["body"], true)
 	draw_rect(body_rect, pal["trim"], false, 3.0)
 	

@@ -226,20 +226,24 @@ func _draw() -> void:
 		for r_pos in robot_positions:
 			draw_arc(r_pos, robot_exclusion_radius, 0.0, TAU, 28, Color("#ef4444", 0.55), 2.5)
 	
-	var guide := hint_guide_points if show_hint_guide and hint_guide_points.size() >= 2 else (tutorial_guide_points if show_tutorial_guide and tutorial_guide_points.size() >= 2 else PackedVector2Array())
+	var guide: PackedVector2Array = PackedVector2Array()
+	if show_hint_guide and hint_guide_points.size() >= 2:
+		guide = hint_guide_points
+	elif show_tutorial_guide and tutorial_guide_points.size() >= 2:
+		guide = tutorial_guide_points
 	if guide.size() >= 2 and not _is_drawing:
 		for i in range(guide.size() - 1):
 			draw_dashed_line(guide[i], guide[i + 1], Color("#0284c7", 0.55), 6.0, 12.0)
-		var total_segs := guide.size() - 1
-		var t := fmod(_anim_time * 0.75, 1.0)
-		var fidx := t * float(total_segs)
-		var seg_idx := mini(int(fidx), total_segs - 1)
-		var local_t := fidx - float(seg_idx)
-		var hand_pos := guide[seg_idx].lerp(guide[seg_idx + 1], local_t)
+		var total_segs: int = guide.size() - 1
+		var t: float = fmod(_anim_time * 0.75, 1.0)
+		var fidx: float = t * float(total_segs)
+		var seg_idx: int = mini(int(fidx), total_segs - 1)
+		var local_t: float = fidx - float(seg_idx)
+		var hand_pos: Vector2 = guide[seg_idx].lerp(guide[seg_idx + 1], local_t)
 		draw_circle(hand_pos, 14.0, Color("#0284c7", 0.25))
 		draw_circle(hand_pos, 7.0, Color("#0ea5e9", 0.9))
 	
 	if _warning_timer > 0.0:
-		var alpha := clampf(_warning_timer * 2.0, 0.0, 1.0)
+		var alpha: float = clampf(_warning_timer * 2.0, 0.0, 1.0)
 		draw_circle(_warning_pos, 18.0 * (1.2 - alpha * 0.2), Color("#ef4444", alpha * 0.35))
 		draw_arc(_warning_pos, 18.0, 0.0, TAU, 24, Color("#ef4444", alpha), 3.0)

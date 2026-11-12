@@ -1,4 +1,4 @@
 Tiny Robot Rescue - Asset Attribution
 
-All visual sprites (SVG icon, procedural vector robots, hazards, platforms) and procedural audio tones in the Vertical Slice are 100% original and generated in-engine.
-No third-party copyrighted assets are used.
+All visual sprites (SVG app icon, 6 procedural vector robot skins, hazards, drones, wind fans, lasers, gates, platforms, blueprint backgrounds), particle effects, procedural SFX, and background music loop are 100% original and generated in-engine.
+No third-party copyrighted assets or external packs are used.

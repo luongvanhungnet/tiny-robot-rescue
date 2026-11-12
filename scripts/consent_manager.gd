@@ -10,7 +10,7 @@ func _ready() -> void:
 	sync_from_save()
 
 func sync_from_save() -> void:
-	var ps := get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
+	var ps: Variant = get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
 	if ps != null and ps.data.has("privacy"):
 		var priv: Dictionary = ps.data["privacy"]
 		consent_granted = bool(priv.get("prompt_completed", false))
@@ -18,7 +18,7 @@ func sync_from_save() -> void:
 		analytics_allowed = bool(priv.get("analytics_allowed", false))
 
 func needs_consent_prompt() -> bool:
-	var ps := get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
+	var ps: Variant = get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
 	if ps != null and ps.data.has("privacy"):
 		return not bool(ps.data["privacy"].get("prompt_completed", false))
 	return not consent_granted
@@ -30,7 +30,7 @@ func set_consent(personalized: bool, analytics: bool) -> void:
 	consent_granted = true
 	personalized_ads_allowed = personalized
 	analytics_allowed = analytics
-	var ps := get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
+	var ps: Variant = get_node_or_null("/root/ProgressSave") if is_inside_tree() else null
 	if ps != null:
 		ps.data["privacy"]["prompt_completed"] = true
 		ps.data["privacy"]["personalized_ads"] = personalized

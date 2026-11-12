@@ -11,12 +11,12 @@ var _music_paused_by_bg: bool = false
 
 func _ready() -> void:
 	get_tree().set_quit_on_go_back(false)
-	var ps := get_node_or_null("/root/ProgressSave")
+	var ps: Variant = get_node_or_null("/root/ProgressSave")
 	if ps != null:
 		current_level_id = clampi(int(ps.data.get("last_selected_level", 1)), 1, TOTAL_LEVELS)
 	
 	for i in range(4):
-		var p := AudioStreamPlayer.new()
+		var p: AudioStreamPlayer = AudioStreamPlayer.new()
 		p.process_mode = Node.PROCESS_MODE_ALWAYS
 		add_child(p)
 		_sfx_players.append(p)
@@ -48,31 +48,31 @@ func go_level_select() -> void:
 	get_tree().call_deferred("change_scene_to_file", "res://scenes/level_select.tscn")
 
 func is_sound_enabled() -> bool:
-	var ps := get_node_or_null("/root/ProgressSave")
+	var ps: Variant = get_node_or_null("/root/ProgressSave")
 	if ps == null:
 		return true
 	return bool(ps.data["settings"].get("sound_enabled", true))
 
 func is_music_enabled() -> bool:
-	var ps := get_node_or_null("/root/ProgressSave")
+	var ps: Variant = get_node_or_null("/root/ProgressSave")
 	if ps == null:
 		return true
 	return bool(ps.data["settings"].get("music_enabled", true))
 
 func is_vibration_enabled() -> bool:
-	var ps := get_node_or_null("/root/ProgressSave")
+	var ps: Variant = get_node_or_null("/root/ProgressSave")
 	if ps == null:
 		return true
 	return bool(ps.data["settings"].get("vibration_enabled", true))
 
 func is_reduced_motion() -> bool:
-	var ps := get_node_or_null("/root/ProgressSave")
+	var ps: Variant = get_node_or_null("/root/ProgressSave")
 	if ps == null:
 		return false
 	return bool(ps.data["settings"].get("reduced_motion", false))
 
 func is_clean_capture_mode() -> bool:
-	var ps := get_node_or_null("/root/ProgressSave")
+	var ps: Variant = get_node_or_null("/root/ProgressSave")
 	if ps == null:
 		return false
 	return bool(ps.data["settings"].get("clean_capture_mode", false))
@@ -95,27 +95,28 @@ func refresh_music_state() -> void:
 
 func _init_background_music() -> void:
 	# Generate a lightweight, playful 4-second chiptune arpeggio loop (8-bit, ~88KB)
-	var sample_rate := 22050
-	var bpm := 120.0
-	var step_sec := 60.0 / bpm / 2.0 # eighth notes = 0.25s
-	var notes := [
+	var sample_rate: int = 22050
+	var bpm: float = 120.0
+	var step_sec: float = 60.0 / bpm / 2.0 # eighth notes = 0.25s
+	var notes: Array[float] = [
 		261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 293.66, 392.00,
 		220.00, 261.63, 329.63, 440.00, 329.63, 261.63, 196.00, 293.66
 	]
-	var total_sec := step_sec * notes.size()
-	var total_samples := int(sample_rate * total_sec)
-	var buf := PackedByteArray()
+	var total_sec: float = step_sec * float(notes.size())
+	var total_samples: int = maxi(1, int(float(sample_rate) * total_sec))
+	var buf: PackedByteArray = PackedByteArray()
 	buf.resize(total_samples)
-	var step_samples := int(sample_rate * step_sec)
+	var step_samples: int = maxi(1, int(float(sample_rate) * step_sec))
 	for i in range(total_samples):
-		var idx := mini(i / step_samples, notes.size() - 1)
-		var local_i := i % step_samples
-		var env := pow(1.0 - (float(local_i) / float(step_samples)), 1.6)
-		var t := float(i) / float(sample_rate)
+		@warning_ignore("integer_division")
+		var idx: int = mini(i / step_samples, notes.size() - 1)
+		var local_i: int = i % step_samples
+		var env: float = pow(1.0 - (float(local_i) / float(step_samples)), 1.6)
+		var t: float = float(i) / float(sample_rate)
 		var freq: float = notes[idx]
-		var wave := sin(TAU * freq * t) * 0.65 + sin(TAU * (freq * 0.5) * t) * 0.25
+		var wave: float = sin(TAU * freq * t) * 0.65 + sin(TAU * (freq * 0.5) * t) * 0.25
 		buf[i] = int(clampf(wave * env * 42.0, -128.0, 127.0)) & 0xFF
-	var stream := AudioStreamWAV.new()
+	var stream: AudioStreamWAV = AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_8_BITS
 	stream.mix_rate = sample_rate
 	stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
@@ -128,23 +129,23 @@ func _init_background_music() -> void:
 func play_tone(freq_hz: float, duration_sec: float = 0.12, volume_db: float = -10.0, freq_end_hz: float = -1.0) -> void:
 	if not is_sound_enabled() or _sfx_players.is_empty():
 		return
-	var sample_rate := 22050
-	var num_samples := max(1, int(sample_rate * duration_sec))
-	var stream := AudioStreamWAV.new()
+	var sample_rate: int = 22050
+	var num_samples: int = maxi(1, int(float(sample_rate) * duration_sec))
+	var stream: AudioStreamWAV = AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_8_BITS
 	stream.mix_rate = sample_rate
-	var buf := PackedByteArray()
+	var buf: PackedByteArray = PackedByteArray()
 	buf.resize(num_samples)
-	var phase := 0.0
+	var phase: float = 0.0
 	for i in range(num_samples):
-		var prog := float(i) / float(num_samples)
-		var env := 1.0 - prog
-		var f := freq_hz if freq_end_hz < 0.0 else lerpf(freq_hz, freq_end_hz, prog)
+		var prog: float = float(i) / float(num_samples)
+		var env: float = 1.0 - prog
+		var f: float = freq_hz if freq_end_hz < 0.0 else lerpf(freq_hz, freq_end_hz, prog)
 		phase += TAU * f / float(sample_rate)
-		var val := sin(phase) * env
+		var val: float = sin(phase) * env
 		buf[i] = int(clampf(val * 120.0, -128.0, 127.0)) & 0xFF
 	stream.data = buf
-	var player := _sfx_players[_sfx_cursor]
+	var player: AudioStreamPlayer = _sfx_players[_sfx_cursor]
 	_sfx_cursor = (_sfx_cursor + 1) % _sfx_players.size()
 	player.stream = stream
 	player.volume_db = volume_db

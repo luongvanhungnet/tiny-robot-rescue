@@ -53,10 +53,10 @@ func default_data() -> Dictionary:
 	}
 
 func load_save(custom_path: String = "") -> void:
-	var path := custom_path if custom_path != "" else SAVE_PATH
-	var bak_path := (custom_path + ".bak") if custom_path != "" else SAVE_BAK_PATH
+	var path: String = custom_path if custom_path != "" else SAVE_PATH
+	var bak_path: String = (custom_path + ".bak") if custom_path != "" else SAVE_BAK_PATH
 	
-	var loaded := _try_read_json(path)
+	var loaded: Dictionary = _try_read_json(path)
 	if loaded.is_empty():
 		loaded = _try_read_json(bak_path)
 	
@@ -69,12 +69,12 @@ func load_save(custom_path: String = "") -> void:
 func _try_read_json(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {}
-	var file := FileAccess.open(path, FileAccess.READ)
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {}
-	var text := file.get_as_text()
+	var text: String = file.get_as_text()
 	file.close()
-	var json := JSON.new()
+	var json: JSON = JSON.new()
 	if json.parse(text) != OK:
 		return {}
 	if typeof(json.data) != TYPE_DICTIONARY:
@@ -82,8 +82,8 @@ func _try_read_json(path: String) -> Dictionary:
 	return json.data
 
 func _is_compatible_type(loaded_val: Variant, base_val: Variant) -> bool:
-	var lt := typeof(loaded_val)
-	var bt := typeof(base_val)
+	var lt: int = typeof(loaded_val)
+	var bt: int = typeof(base_val)
 	if lt == bt:
 		return true
 	if (bt == TYPE_INT or bt == TYPE_FLOAT) and (lt == TYPE_INT or lt == TYPE_FLOAT):
@@ -91,7 +91,7 @@ func _is_compatible_type(loaded_val: Variant, base_val: Variant) -> bool:
 	return false
 
 func _migrate_and_validate(loaded: Dictionary) -> Dictionary:
-	var base := default_data()
+	var base: Dictionary = default_data()
 	for key in base.keys():
 		if not loaded.has(key) or not _is_compatible_type(loaded[key], base[key]):
 			loaded[key] = base[key]
@@ -109,7 +109,7 @@ func _migrate_and_validate(loaded: Dictionary) -> Dictionary:
 	for c_key in base["cosmetics"].keys():
 		if not loaded["cosmetics"].has(c_key):
 			loaded["cosmetics"][c_key] = base["cosmetics"][c_key]
-	loaded["cosmetics"]["bolts"] = max(0, int(loaded["cosmetics"].get("bolts", 0)))
+	loaded["cosmetics"]["bolts"] = maxi(0, int(loaded["cosmetics"].get("bolts", 0)))
 	if typeof(loaded["cosmetics"].get("unlocked")) != TYPE_ARRAY:
 		loaded["cosmetics"]["unlocked"] = ["default"]
 	if not ("default" in loaded["cosmetics"]["unlocked"]):
@@ -125,25 +125,25 @@ func _migrate_and_validate(loaded: Dictionary) -> Dictionary:
 		else:
 			loaded["analytics_local"][a_key] = int(loaded["analytics_local"][a_key])
 
-	var min_unlocked := 1
+	var min_unlocked: int = 1
 	var levels_dict: Dictionary = loaded["levels"]
 	for lvl_key in levels_dict.keys():
-		var entry = levels_dict[lvl_key]
+		var entry: Variant = levels_dict[lvl_key]
 		if typeof(entry) == TYPE_DICTIONARY and bool(entry.get("completed", false)):
-			min_unlocked = max(min_unlocked, int(lvl_key) + 1)
+			min_unlocked = maxi(min_unlocked, int(lvl_key) + 1)
 
 	loaded["schema_version"] = SCHEMA_VERSION
-	loaded["unlocked_level"] = max(min_unlocked, max(1, int(loaded["unlocked_level"])))
-	loaded["last_selected_level"] = clampi(int(loaded["last_selected_level"]), 1, loaded["unlocked_level"])
+	loaded["unlocked_level"] = maxi(min_unlocked, maxi(1, int(loaded["unlocked_level"])))
+	loaded["last_selected_level"] = clampi(int(loaded["last_selected_level"]), 1, int(loaded["unlocked_level"]))
 	return loaded
 
 func save_now(custom_path: String = "") -> bool:
-	var path := custom_path if custom_path != "" else SAVE_PATH
-	var tmp_path := (custom_path + ".tmp") if custom_path != "" else SAVE_TMP_PATH
-	var bak_path := (custom_path + ".bak") if custom_path != "" else SAVE_BAK_PATH
+	var path: String = custom_path if custom_path != "" else SAVE_PATH
+	var tmp_path: String = (custom_path + ".tmp") if custom_path != "" else SAVE_TMP_PATH
+	var bak_path: String = (custom_path + ".bak") if custom_path != "" else SAVE_BAK_PATH
 	
-	var json_str := JSON.stringify(data, "\t")
-	var tmp_file := FileAccess.open(tmp_path, FileAccess.WRITE)
+	var json_str: String = JSON.stringify(data, "\t")
+	var tmp_file: FileAccess = FileAccess.open(tmp_path, FileAccess.WRITE)
 	if tmp_file == null:
 		return false
 	tmp_file.store_string(json_str)
@@ -151,56 +151,64 @@ func save_now(custom_path: String = "") -> bool:
 	tmp_file.close()
 	
 	if FileAccess.file_exists(path):
-		var dir := DirAccess.open(path.get_base_dir())
+		var dir: DirAccess = DirAccess.open(path.get_base_dir())
 		if dir != null:
 			if FileAccess.file_exists(bak_path):
 				dir.remove(bak_path.get_file())
 			dir.rename(path.get_file(), bak_path.get_file())
 	
-	var dir2 := DirAccess.open(path.get_base_dir())
+	var dir2: DirAccess = DirAccess.open(path.get_base_dir())
 	if dir2 != null:
-		var err := dir2.rename(tmp_path.get_file(), path.get_file())
+		var err: int = dir2.rename(tmp_path.get_file(), path.get_file())
 		return err == OK
 	return false
 
 func record_level_attempt(level_id: int) -> void:
-	var key := str(level_id)
+	var key: String = str(level_id)
 	if not data["levels"].has(key):
 		data["levels"][key] = {"stars": 0, "best_ink": -1.0, "attempts": 0, "completed": false}
 	data["levels"][key]["attempts"] = int(data["levels"][key]["attempts"]) + 1
 	data["analytics_local"]["total_attempts"] = int(data["analytics_local"]["total_attempts"]) + 1
 	save_now()
 
+func _has_skin_in_catalog(skin_id: String) -> bool:
+	for skin in SKIN_CATALOG:
+		if str(skin["id"]) == skin_id:
+			return true
+	return false
+
 func record_level_win(level_id: int, stars: int, used_ink: float) -> Dictionary:
-	var key := str(level_id)
+	var key: String = str(level_id)
 	if not data["levels"].has(key):
 		data["levels"][key] = {"stars": 0, "best_ink": -1.0, "attempts": 1, "completed": false}
 	var entry: Dictionary = data["levels"][key]
-	var was_completed := bool(entry.get("completed", false))
-	var prev_stars := int(entry.get("stars", 0))
+	var was_completed: bool = bool(entry.get("completed", false))
+	var prev_stars: int = int(entry.get("stars", 0))
 	entry["completed"] = true
-	entry["stars"] = max(prev_stars, stars)
+	entry["stars"] = maxi(prev_stars, stars)
 	if float(entry["best_ink"]) < 0.0 or used_ink < float(entry["best_ink"]):
 		entry["best_ink"] = snappedf(used_ink, 0.1)
 	
 	if level_id >= int(data["unlocked_level"]):
-		data["unlocked_level"] = min(61, level_id + 1)
+		data["unlocked_level"] = mini(61, level_id + 1)
 	data["last_selected_level"] = clampi(level_id + 1, 1, 60)
 	data["analytics_local"]["total_completions"] = int(data["analytics_local"]["total_completions"]) + 1
 	
-	var earned_bolts := 0
+	var earned_bolts: int = 0
 	if not was_completed:
 		earned_bolts = 15 + stars * 5
+		if level_id == 60:
+			earned_bolts += 50
 	elif stars > prev_stars:
 		earned_bolts = (stars - prev_stars) * 5
 	else:
 		earned_bolts = 3
 	data["cosmetics"]["bolts"] = int(data["cosmetics"]["bolts"]) + earned_bolts
 	
-	var unlocked_skin := ""
+	var unlocked_skin: String = ""
 	if level_id % 10 == 0:
-		var skin_id := "bot_tier_%d" % (level_id / 10)
-		if not (skin_id in data["cosmetics"]["unlocked"]):
+		var skin_id: String = "bot_tier_%d" % roundi(float(level_id) / 10.0)
+		if _has_skin_in_catalog(skin_id) and not (skin_id in data["cosmetics"]["unlocked"]):
 			data["cosmetics"]["unlocked"].append(skin_id)
 			unlocked_skin = skin_id
 	
@@ -208,13 +216,13 @@ func record_level_win(level_id: int, stars: int, used_ink: float) -> Dictionary:
 	return {"earned_bolts": earned_bolts, "unlocked_skin": unlocked_skin}
 
 func get_level_stats(level_id: int) -> Dictionary:
-	var key := str(level_id)
+	var key: String = str(level_id)
 	if data["levels"].has(key):
 		return data["levels"][key]
 	return {"stars": 0, "best_ink": -1.0, "attempts": 0, "completed": false}
 
 func get_total_stars() -> int:
-	var total := 0
+	var total: int = 0
 	for entry in data.get("levels", {}).values():
 		if typeof(entry) == TYPE_DICTIONARY:
 			total += int(entry.get("stars", 0))
@@ -246,8 +254,8 @@ func buy_skin_with_bolts(skin_id: String) -> bool:
 	if is_skin_unlocked(skin_id):
 		return select_skin(skin_id)
 	for skin in SKIN_CATALOG:
-		if skin["id"] == skin_id:
-			var cost := int(skin["cost"])
+		if str(skin["id"]) == skin_id:
+			var cost: int = int(skin["cost"])
 			if get_bolts() >= cost:
 				data["cosmetics"]["bolts"] = get_bolts() - cost
 				data["cosmetics"]["unlocked"].append(skin_id)

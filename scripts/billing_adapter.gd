@@ -20,7 +20,7 @@ func is_billing_available() -> bool:
 	return Engine.has_singleton("GodotGooglePlayBilling")
 
 func purchase_remove_ads() -> void:
-	var ps := _get_progress_save()
+	var ps: Variant = _get_progress_save()
 	if ps != null and ps.has_remove_ads():
 		purchase_succeeded.emit(PRODUCT_REMOVE_ADS)
 		return
@@ -36,7 +36,7 @@ func verify_and_grant_purchase(product_id: String, purchase_token: String) -> bo
 		return false
 	_processed_tokens[purchase_token] = true
 	if product_id == PRODUCT_REMOVE_ADS:
-		var ps := _get_progress_save()
+		var ps: Variant = _get_progress_save()
 		if ps != null:
 			ps.set_remove_ads(true)
 		purchase_succeeded.emit(product_id)
@@ -49,7 +49,7 @@ func restore_purchases() -> void:
 		return
 	# Real Play Billing queryPurchases hooks here in M7
 	var restored: Array = []
-	var ps := _get_progress_save()
+	var ps: Variant = _get_progress_save()
 	if ps != null and ps.has_remove_ads():
 		restored.append(PRODUCT_REMOVE_ADS)
 	purchases_restored.emit(restored)

@@ -101,19 +101,19 @@ func _physics_process(delta: float) -> void:
 		rotation += 4.5 * delta
 	elif hazard_type == "spark_drone":
 		_buzz_phase += delta * 12.0
-		var target_robot := _find_nearest_alive_robot()
+		var target_robot: RobotController = _find_nearest_alive_robot()
 		if target_robot != null:
-			var to_r := (target_robot.global_position - global_position)
+			var to_r: Vector2 = target_robot.global_position - global_position
 			if to_r.length() > 1.0:
-				var desired := to_r.normalized() * 235.0
+				var desired: Vector2 = to_r.normalized() * 235.0
 				# Slight playful buzz perpendicular oscillation
-				var perp := Vector2(-to_r.y, to_r.x).normalized() * sin(_buzz_phase) * 45.0
+				var perp: Vector2 = Vector2(-to_r.y, to_r.x).normalized() * sin(_buzz_phase) * 45.0
 				linear_velocity = linear_velocity.lerp(desired + perp, clampf(delta * 3.8, 0.0, 1.0))
 		queue_redraw()
 	
 	if not patrol_points.is_empty() and not _deflected:
-		var target := patrol_points[_patrol_idx]
-		var to_target := target - global_position
+		var target: Vector2 = patrol_points[_patrol_idx]
+		var to_target: Vector2 = target - global_position
 		if to_target.length() < 10.0:
 			_patrol_idx = (_patrol_idx + 1) % patrol_points.size()
 		else:
@@ -126,10 +126,10 @@ func _find_nearest_alive_robot() -> RobotController:
 	if not is_inside_tree():
 		return null
 	var best: RobotController = null
-	var best_dist := INF
+	var best_dist: float = INF
 	for n in get_tree().get_nodes_in_group("robot"):
 		if n is RobotController and n.is_alive:
-			var d := global_position.distance_squared_to(n.global_position)
+			var d: float = global_position.distance_squared_to(n.global_position)
 			if d < best_dist:
 				best_dist = d
 				best = n
@@ -140,14 +140,14 @@ func _draw() -> void:
 		"gear", "conveyor_gear":
 			draw_circle(Vector2.ZERO, radius, Color("#ef4444"))
 			for i in range(8):
-				var ang := i * TAU / 8.0
-				var p1 := Vector2(cos(ang), sin(ang)) * (radius - 2.0)
-				var p2 := Vector2(cos(ang), sin(ang)) * (radius + 8.0)
+				var ang: float = float(i) * TAU / 8.0
+				var p1: Vector2 = Vector2(cos(ang), sin(ang)) * (radius - 2.0)
+				var p2: Vector2 = Vector2(cos(ang), sin(ang)) * (radius + 8.0)
 				draw_line(p1, p2, Color("#dc2626"), 6.0)
 			draw_arc(Vector2.ZERO, radius, 0, TAU, 24, Color("#7f1d1d"), 2.5)
 			draw_circle(Vector2.ZERO, radius * 0.35, Color("#1e293b"))
 		"block":
-			var r := Rect2(-box_size * 0.5, box_size)
+			var r: Rect2 = Rect2(-box_size * 0.5, box_size)
 			draw_rect(r, Color("#f97316"), true)
 			draw_rect(r, Color("#7c2d12"), false, 3.0)
 			draw_line(Vector2(-box_size.x * 0.3, -box_size.y * 0.3), Vector2(box_size.x * 0.3, box_size.y * 0.3), Color("#9a3412"), 3.0)
@@ -158,13 +158,13 @@ func _draw() -> void:
 			draw_circle(Vector2(-radius * 0.3, -radius * 0.2), radius * 0.2, Color("#94a3b8"))
 			draw_circle(Vector2(radius * 0.25, radius * 0.25), radius * 0.15, Color("#475569"))
 		"ball", "spring_ball":
-			var fill_c := Color("#eab308") if hazard_type == "ball" else Color("#ec4899")
-			var rim_c := Color("#713f12") if hazard_type == "ball" else Color("#831843")
+			var fill_c: Color = Color("#eab308") if hazard_type == "ball" else Color("#ec4899")
+			var rim_c: Color = Color("#713f12") if hazard_type == "ball" else Color("#831843")
 			draw_circle(Vector2.ZERO, radius, fill_c)
 			draw_arc(Vector2.ZERO, radius, 0, TAU, 24, rim_c, 3.0)
 			draw_circle(Vector2(-radius * 0.3, -radius * 0.3), radius * 0.2, Color(1, 1, 1, 0.45))
 		"spark_drone":
-			var wing_y := sin(_buzz_phase * 2.0) * 4.0
+			var wing_y: float = sin(_buzz_phase * 2.0) * 4.0
 			draw_line(Vector2(-10, -8), Vector2(-18, -14 + wing_y), Color("#cbd5e1"), 3.0)
 			draw_line(Vector2(10, -8), Vector2(18, -14 - wing_y), Color("#cbd5e1"), 3.0)
 			draw_circle(Vector2.ZERO, radius, Color("#7c3aed"))

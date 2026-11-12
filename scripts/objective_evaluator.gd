@@ -45,7 +45,7 @@ func step(delta: float) -> State:
 				loss_reason = "Time ran out before reaching the charger!"
 				return State.LOST
 		"switch":
-			var switches_ok := activated_switches >= required_switches
+			var switches_ok: bool = activated_switches >= required_switches
 			if has_charger:
 				if switches_ok and robots_at_goal >= total_robots:
 					return State.WON

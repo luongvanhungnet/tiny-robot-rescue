@@ -74,7 +74,7 @@ func _spawn_preview_robot() -> void:
 	shield.end_cap_mode = Line2D.LINE_CAP_ROUND
 	preview_anchor.add_child(shield)
 	
-	_preview_robot = ROBOT_SCENE.instantiate()
+	_preview_robot = ROBOT_SCENE.instantiate() as RobotController
 	_preview_robot.freeze = true
 	_preview_robot.scale = Vector2(1.4, 1.4)
 	_preview_robot.skin_id = ProgressSave.get_selected_skin()
@@ -110,27 +110,41 @@ func _on_purchases_restored(entitlements: Array) -> void:
 	else:
 		_set_status("Restored purchases successfully!")
 
+func _on_equip_skin_pressed(sid: String) -> void:
+	ProgressSave.select_skin(sid)
+	_spawn_preview_robot()
+	_open_hangar()
+
+func _on_buy_skin_pressed(sid: String, cost: int, unlock_lvl: int) -> void:
+	if ProgressSave.buy_skin_with_bolts(sid):
+		_refresh_header_stats()
+		_spawn_preview_robot()
+		_open_hangar()
+	else:
+		_set_status("Need %d Bolts (or complete Level %d)!" % [cost, unlock_lvl])
+
 func _open_hangar() -> void:
 	_clear_modal_body()
 	modal_title.text = "Robot Hangar (%d Bolts)" % ProgressSave.get_bolts()
 	modal_close.visible = true
 	
-	var selected := ProgressSave.get_selected_skin()
+	var selected: String = ProgressSave.get_selected_skin()
 	for skin in ProgressSave.SKIN_CATALOG:
-		var sid := str(skin["id"])
-		var sname := str(skin["name"])
-		var sdesc := str(skin["desc"])
-		var cost := int(skin["cost"])
-		var unlock_lvl := int(skin["unlock_level"])
-		var unlocked := ProgressSave.is_skin_unlocked(sid)
+		var sid: String = str(skin["id"])
+		var sname: String = str(skin["name"])
+		var sdesc: String = str(skin["desc"])
+		var cost: int = int(skin["cost"])
+		var unlock_lvl: int = int(skin["unlock_level"])
+		var unlocked: bool = ProgressSave.is_skin_unlocked(sid)
 		
-		var lbl := Label.new()
+		var lbl: Label = Label.new()
 		lbl.text = "%s — %s" % [sname, sdesc]
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		modal_body.add_child(lbl)
 		
-		var btn := Button.new()
+		var btn: Button = Button.new()
 		btn.custom_minimum_size = Vector2(0, 48)
+		btn.add_theme_font_size_override("font_size", 18)
 		if sid == selected:
 			btn.text = "EQUIPPED"
 			btn.disabled = true
@@ -138,22 +152,11 @@ func _open_hangar() -> void:
 		elif unlocked:
 			btn.text = "EQUIP"
 			UIThemeHelper.style_button(btn, Color("#0284c7"), Color("#0c4a6e"))
-			btn.pressed.connect(func():
-				ProgressSave.select_skin(sid)
-				_spawn_preview_robot()
-				_open_hangar()
-			)
+			btn.pressed.connect(_on_equip_skin_pressed.bind(sid))
 		else:
-			btn.text = "UNLOCK (%d Bolts or Level %d)" % [cost, unlock_lvl]
+			btn.text = "UNLOCK: %d Bolts / Lv.%d" % [cost, unlock_lvl]
 			UIThemeHelper.style_button(btn, Color("#d97706"), Color("#78350f"))
-			btn.pressed.connect(func():
-				if ProgressSave.buy_skin_with_bolts(sid):
-					_refresh_header_stats()
-					_spawn_preview_robot()
-					_open_hangar()
-				else:
-					_set_status("Need %d Bolts (or complete Level %d)!" % [cost, unlock_lvl])
-			)
+			btn.pressed.connect(_on_buy_skin_pressed.bind(sid, cost, unlock_lvl))
 		modal_body.add_child(btn)
 	
 	_add_status_label()

@@ -113,25 +113,25 @@ func _load_current_level() -> void:
 		return
 	
 	# Background themed per chapter
-	var bg := WorldElements.WorkshopBackground.new()
+	var bg: WorldElements.WorkshopBackground = WorldElements.WorkshopBackground.new()
 	bg.z_index = -10
 	bg.setup(str(level_data.get("background_id", "workshop_day")))
 	world_root.add_child(bg)
 	
 	level_title_lbl.text = str(level_data["title"])
-	var max_ink := float(level_data["max_stroke_length"])
+	var max_ink: float = float(level_data["max_stroke_length"])
 	draw_controller.max_stroke_length = max_ink
 	draw_controller.draw_zones.clear()
 	for dz in level_data.get("draw_zones", []):
-		draw_controller.draw_zones.append(Rect2(dz["x"], dz["y"], dz["w"], dz["h"]))
+		draw_controller.draw_zones.append(Rect2(float(dz["x"]), float(dz["y"]), float(dz["w"]), float(dz["h"])))
 	draw_controller.forbidden_rects.clear()
 	for fz in level_data["forbidden_zones"]:
-		draw_controller.forbidden_rects.append(Rect2(fz["x"], fz["y"], fz["w"], fz["h"]))
+		draw_controller.forbidden_rects.append(Rect2(float(fz["x"]), float(fz["y"]), float(fz["w"]), float(fz["h"])))
 	
 	# Load optional guide points
-	var guide_pts := PackedVector2Array()
+	var guide_pts: PackedVector2Array = PackedVector2Array()
 	for gp in level_data.get("expected_solution_guide", []):
-		guide_pts.append(Vector2(gp[0], gp[1]))
+		guide_pts.append(Vector2(float(gp[0]), float(gp[1])))
 	draw_controller.hint_guide_points = guide_pts
 	draw_controller.show_hint_guide = false
 	if GameManager.current_level_id == 1:
@@ -144,28 +144,28 @@ func _load_current_level() -> void:
 	pause_btn.disabled = false
 	pause_btn.text = "PAUSE"
 	
-	var switch_count := 0
-	var charger_present := false
+	var switch_count: int = 0
+	var charger_present: bool = false
 	var r_positions: Array[Vector2] = []
 	
 	for obj in level_data["spawn_objects"]:
-		var otype := str(obj["object_type"])
-		var pos := Vector2(obj["position"][0], obj["position"][1])
+		var otype: String = str(obj["object_type"])
+		var pos: Vector2 = Vector2(float(obj["position"][0]), float(obj["position"][1]))
 		var props: Dictionary = obj.get("physics_properties", {})
 		
 		match otype:
 			"platform":
 				var scale_arr: Array = obj.get("scale", [200, 40])
-				_spawn_platform(pos, Vector2(scale_arr[0], scale_arr[1]))
+				_spawn_platform(pos, Vector2(float(scale_arr[0]), float(scale_arr[1])))
 			"moving_platform":
 				var scale_arr: Array = obj.get("scale", [160, 32])
-				_spawn_moving_platform(pos, Vector2(scale_arr[0], scale_arr[1]), obj.get("patrol_path", []), props)
+				_spawn_moving_platform(pos, Vector2(float(scale_arr[0]), float(scale_arr[1])), obj.get("patrol_path", []), props)
 			"robot":
-				var r := _spawn_robot(pos, props)
+				var r: RobotController = _spawn_robot(pos, props)
 				robots.append(r)
 				r_positions.append(pos)
 			"gear", "block", "rock", "ball", "spring_ball", "conveyor_gear":
-				var h := _spawn_hazard(otype, pos, props, obj.get("patrol_path", []))
+				var h: HazardController = _spawn_hazard(otype, pos, props, obj.get("patrol_path", []))
 				hazards.append(h)
 			"charger":
 				charger_present = true
@@ -175,7 +175,7 @@ func _load_current_level() -> void:
 				_spawn_switch(pos)
 			"gate":
 				var scale_arr: Array = obj.get("scale", [28, 130])
-				_spawn_gate(pos, Vector2(scale_arr[0], scale_arr[1]))
+				_spawn_gate(pos, Vector2(float(scale_arr[0]), float(scale_arr[1])))
 			"spikes":
 				var scale_arr: Array = obj.get("scale", [120, 22])
 				_spawn_spikes(pos, float(scale_arr[0]))
@@ -192,13 +192,13 @@ func _load_current_level() -> void:
 	draw_controller.reset_stroke()
 	draw_controller.drawing_enabled = true
 	
-	var sim_dur := float(level_data["simulation_duration"])
+	var sim_dur: float = float(level_data["simulation_duration"])
 	evaluator.configure(level_data["objective"], sim_dur, robots.size(), switch_count, charger_present)
 	timer_lbl.text = "%.1fs" % sim_dur
 	ink_bar.max_value = max_ink
 	ink_bar.value = max_ink
 	
-	var clean_mode := GameManager.is_clean_capture_mode()
+	var clean_mode: bool = GameManager.is_clean_capture_mode()
 	hint_hud_btn.visible = not clean_mode
 	hint_lbl.visible = not clean_mode
 	
@@ -218,23 +218,23 @@ func _load_current_level() -> void:
 	telegraph_layer.queue_redraw()
 
 func _spawn_platform(pos: Vector2, sz: Vector2) -> void:
-	var plat := WorldElements.StyledPlatform.new()
+	var plat: WorldElements.StyledPlatform = WorldElements.StyledPlatform.new()
 	plat.position = pos
 	plat.box_size = sz
 	world_root.add_child(plat)
 
 func _spawn_moving_platform(pos: Vector2, sz: Vector2, patrol_arr: Array, props: Dictionary) -> void:
-	var mp := WorldElements.MovingPlatform.new()
+	var mp: WorldElements.MovingPlatform = WorldElements.MovingPlatform.new()
 	mp.position = pos
 	mp.box_size = sz
 	mp.speed = float(props.get("speed", 110.0))
 	for pt in patrol_arr:
-		mp.patrol_points.append(Vector2(pt[0], pt[1]))
+		mp.patrol_points.append(Vector2(float(pt[0]), float(pt[1])))
 	world_root.add_child(mp)
 	moving_platforms.append(mp)
 
 func _spawn_robot(pos: Vector2, props: Dictionary) -> RobotController:
-	var r: RobotController = ROBOT_SCENE.instantiate()
+	var r: RobotController = ROBOT_SCENE.instantiate() as RobotController
 	r.position = pos
 	r.freeze = true
 	r.move_toward_goal = bool(props.get("move_toward_goal", false))
@@ -245,7 +245,7 @@ func _spawn_robot(pos: Vector2, props: Dictionary) -> RobotController:
 	return r
 
 func _spawn_hazard(otype: String, pos: Vector2, props: Dictionary, patrol_arr: Array) -> HazardController:
-	var h := HazardController.new()
+	var h: HazardController = HazardController.new()
 	h.hazard_type = otype
 	h.position = pos
 	h.freeze = true
@@ -253,19 +253,19 @@ func _spawn_hazard(otype: String, pos: Vector2, props: Dictionary, patrol_arr: A
 	h.box_size = Vector2(float(props.get("w", 56.0)), float(props.get("h", 56.0)))
 	if props.has("initial_velocity"):
 		var iv: Array = props["initial_velocity"]
-		h.initial_velocity = Vector2(iv[0], iv[1])
+		h.initial_velocity = Vector2(float(iv[0]), float(iv[1]))
 	h.patrol_speed = float(props.get("patrol_speed", 120.0))
 	for pt in patrol_arr:
-		h.patrol_points.append(Vector2(pt[0], pt[1]))
+		h.patrol_points.append(Vector2(float(pt[0]), float(pt[1])))
 	h.hit_stroke.connect(_on_hazard_hit_stroke)
 	
-	var col := CollisionShape2D.new()
+	var col: CollisionShape2D = CollisionShape2D.new()
 	if otype == "block":
-		var shape := RectangleShape2D.new()
+		var shape: RectangleShape2D = RectangleShape2D.new()
 		shape.size = h.box_size
 		col.shape = shape
 	else:
-		var shape := CircleShape2D.new()
+		var shape: CircleShape2D = CircleShape2D.new()
 		shape.radius = h.radius
 		col.shape = shape
 	h.add_child(col)
@@ -275,7 +275,7 @@ func _spawn_hazard(otype: String, pos: Vector2, props: Dictionary, patrol_arr: A
 	if h.initial_velocity != Vector2.ZERO:
 		_telegraph_arrows.append({"from": pos, "dir": h.initial_velocity.normalized(), "len": 64.0})
 	elif not h.patrol_points.is_empty():
-		var pdir := (h.patrol_points[0] - pos)
+		var pdir: Vector2 = h.patrol_points[0] - pos
 		if pdir.length() < 4.0 and h.patrol_points.size() > 1:
 			pdir = h.patrol_points[1] - pos
 		if pdir.length() > 1.0:
@@ -325,17 +325,17 @@ func _spawn_spikes(pos: Vector2, width: float) -> void:
 	world_root.add_child(sp)
 
 func _spawn_spring_pad(pos: Vector2, props: Dictionary) -> void:
-	var pad := WorldElements.SpringPad.new()
+	var pad: WorldElements.SpringPad = WorldElements.SpringPad.new()
 	pad.position = pos
 	var lv: Array = props.get("launch_velocity", [180, -680])
-	pad.launch_velocity = Vector2(lv[0], lv[1])
+	pad.launch_velocity = Vector2(float(lv[0]), float(lv[1]))
 	world_root.add_child(pad)
 
 func _spawn_fan(pos: Vector2, props: Dictionary) -> void:
-	var fan := WorldElements.WindFan.new()
+	var fan: WorldElements.WindFan = WorldElements.WindFan.new()
 	fan.position = pos
 	var d_arr: Array = props.get("direction", [1, 0])
-	fan.blow_dir = Vector2(d_arr[0], d_arr[1]).normalized()
+	fan.blow_dir = Vector2(float(d_arr[0]), float(d_arr[1])).normalized()
 	fan.wind_range = float(props.get("range", 380.0))
 	fan.wind_width = float(props.get("width", 96.0))
 	fan.strength = float(props.get("strength", 820.0))
@@ -343,16 +343,16 @@ func _spawn_fan(pos: Vector2, props: Dictionary) -> void:
 	fans.append(fan)
 
 func _spawn_laser(pos: Vector2, props: Dictionary) -> void:
-	var las := WorldElements.LaserBeam.new()
+	var las: WorldElements.LaserBeam = WorldElements.LaserBeam.new()
 	las.position = pos
 	var d_arr: Array = props.get("direction", [1, 0])
-	las.beam_dir = Vector2(d_arr[0], d_arr[1]).normalized()
+	las.beam_dir = Vector2(float(d_arr[0]), float(d_arr[1])).normalized()
 	las.max_len = float(props.get("max_length", 700.0))
 	world_root.add_child(las)
 	lasers.append(las)
 
 func _spawn_drone_vent(pos: Vector2, props: Dictionary) -> void:
-	var vent := WorldElements.DroneVent.new()
+	var vent: WorldElements.DroneVent = WorldElements.DroneVent.new()
 	vent.position = pos
 	vent.drone_count = int(props.get("drone_count", 4))
 	vent.spawn_drone_requested.connect(_on_spawn_drone)
@@ -362,7 +362,7 @@ func _spawn_drone_vent(pos: Vector2, props: Dictionary) -> void:
 func _on_spawn_drone(spawn_pos: Vector2) -> void:
 	if state != ObjectiveEvaluator.State.SIMULATING:
 		return
-	var d := _spawn_hazard("spark_drone", spawn_pos, {"radius": 15.0}, [])
+	var d: HazardController = _spawn_hazard("spark_drone", spawn_pos, {"radius": 15.0}, [])
 	d.freeze = false
 	hazards.append(d)
 	_spawn_burst(spawn_pos, Color("#a855f7"), 8)
@@ -375,7 +375,7 @@ func _on_hazard_hit_stroke(pos: Vector2) -> void:
 func _spawn_burst(pos: Vector2, col: Color, count: int) -> void:
 	if GameManager.is_reduced_motion():
 		return
-	var p := CPUParticles2D.new()
+	var p: CPUParticles2D = CPUParticles2D.new()
 	p.position = pos
 	p.emitting = true
 	p.one_shot = true
@@ -413,7 +413,7 @@ func _on_stroke_rejected(reason: String) -> void:
 	state = ObjectiveEvaluator.State.READY
 
 func _on_stroke_completed(points: PackedVector2Array, used_len: float) -> void:
-	var stroke_body := StrokePhysicsBuilder.build_stroke_body(points)
+	var stroke_body: StaticBody2D = StrokePhysicsBuilder.build_stroke_body(points)
 	if stroke_body == null:
 		_on_stroke_rejected("too_short")
 		return
@@ -456,8 +456,8 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if state != ObjectiveEvaluator.State.SIMULATING or is_paused or _loss_pending:
 		return
-	var next_state := evaluator.step(delta)
-	var remaining := maxf(0.0, evaluator.simulation_duration - evaluator.elapsed_time)
+	var next_state: ObjectiveEvaluator.State = evaluator.step(delta)
+	var remaining: float = maxf(0.0, evaluator.simulation_duration - evaluator.elapsed_time)
 	timer_lbl.text = "%.1fs" % remaining
 	
 	if next_state == ObjectiveEvaluator.State.WON:
@@ -466,6 +466,8 @@ func _physics_process(delta: float) -> void:
 		_begin_loss_sequence(evaluator.loss_reason)
 
 func _on_robot_died(reason: String, hit_pos: Vector2) -> void:
+	if state != ObjectiveEvaluator.State.SIMULATING:
+		return
 	evaluator.alive_robots -= 1
 	evaluator.loss_reason = reason
 	_loss_hit_pos = hit_pos
@@ -473,6 +475,8 @@ func _on_robot_died(reason: String, hit_pos: Vector2) -> void:
 	_spawn_burst(hit_pos, Color("#ef4444"), 18)
 
 func _on_robot_reached_goal() -> void:
+	if state != ObjectiveEvaluator.State.SIMULATING:
+		return
 	evaluator.robots_at_goal += 1
 
 func _begin_loss_sequence(reason: String) -> void:
@@ -484,6 +488,10 @@ func _begin_loss_sequence(reason: String) -> void:
 	pause_btn.disabled = true
 	for dv in drone_vents:
 		dv.active = false
+	for l in lasers:
+		l.active = false
+	for f in fans:
+		f.active = false
 
 func _show_loss_panel(reason: String) -> void:
 	result_title.text = "OOPS!"
@@ -497,27 +505,34 @@ func _show_loss_panel(reason: String) -> void:
 func _on_win() -> void:
 	state = ObjectiveEvaluator.State.WON
 	for r in robots:
-		r.set_expression(RobotController.RobotExpression.HAPPY)
+		r.mark_rescued()
 		_spawn_burst(r.global_position, Color("#22c55e"), 20)
 		_spawn_burst(r.global_position, Color("#facc15"), 14)
+	for h in hazards:
+		if is_instance_valid(h):
+			h.freeze = true
 	for dv in drone_vents:
 		dv.active = false
 	for l in lasers:
 		l.active = false
+	for f in fans:
+		f.active = false
+	for mp in moving_platforms:
+		mp.active = false
 	
 	GameManager.play_win_fanfare()
 	GameManager.vibrate(25)
 	
-	var max_ink := float(level_data["max_stroke_length"])
-	var stars := 3 if used_ink <= max_ink * 0.65 else (2 if used_ink <= max_ink * 0.9 else 1)
-	var win_res := ProgressSave.record_level_win(GameManager.current_level_id, stars, used_ink)
+	var max_ink: float = float(level_data["max_stroke_length"])
+	var stars: int = 3 if used_ink <= max_ink * 0.65 else (2 if used_ink <= max_ink * 0.9 else 1)
+	var win_res: Dictionary = ProgressSave.record_level_win(GameManager.current_level_id, stars, used_ink)
 	AdsAdapter.record_level_completed()
 	AdsAdapter.show_interstitial_if_ready(GameManager.current_level_id)
 	
 	hint_lbl.text = "Level Complete!"
 	pause_btn.disabled = true
 	result_title.text = "RESCUED! (%d/3 Stars)" % stars
-	var desc := "Ink used: %.0f / %.0f\n+%d Bolts earned!" % [used_ink, max_ink, int(win_res["earned_bolts"])]
+	var desc: String = "Ink used: %.0f / %.0f\n+%d Bolts earned!" % [used_ink, max_ink, int(win_res["earned_bolts"])]
 	if str(win_res["unlocked_skin"]) != "":
 		desc += "\nNEW ROBOT SKIN UNLOCKED!"
 	result_desc.text = desc
@@ -529,12 +544,12 @@ func _on_win() -> void:
 	result_panel.visible = true
 
 func _is_free_hint_unlocked() -> bool:
-	var stats := ProgressSave.get_level_stats(GameManager.current_level_id)
+	var stats: Dictionary = ProgressSave.get_level_stats(GameManager.current_level_id)
 	return _hint_unlocked_this_run or int(stats.get("attempts", 0)) >= 3 or bool(stats.get("completed", false))
 
 func _update_hint_button_labels() -> void:
-	var free_ok := _is_free_hint_unlocked()
-	var txt := "FREE HINT" if free_ok else ("HINT (AD)" if AdsAdapter.is_rewarded_sdk_available() else "HINT")
+	var free_ok: bool = _is_free_hint_unlocked()
+	var txt: String = "FREE HINT" if free_ok else ("HINT (AD)" if AdsAdapter.is_rewarded_sdk_available() else "HINT")
 	hint_btn.text = txt
 	hint_hud_btn.text = "HINT"
 
@@ -547,8 +562,8 @@ func _request_hint() -> void:
 		AdsAdapter.show_rewarded_ad("level_hint", "hint_%d_%d" % [GameManager.current_level_id, Time.get_ticks_msec()])
 	else:
 		# Offline fallback (Spec 7.2): free hint after 3 attempts
-		var attempts := int(ProgressSave.get_level_stats(GameManager.current_level_id).get("attempts", 0))
-		var msg := "Offline: Free hint unlocks after 3 attempts (%d/3)." % attempts
+		var attempts: int = int(ProgressSave.get_level_stats(GameManager.current_level_id).get("attempts", 0))
+		var msg: String = "Offline: Free hint unlocks after 3 attempts (%d/3)." % attempts
 		hint_lbl.text = msg
 		if result_panel.visible:
 			result_desc.text = msg
@@ -577,7 +592,7 @@ func _on_rewarded_ad_failed(placement_id: String, _reason: String) -> void:
 
 func _apply_hint_reveal() -> void:
 	_hint_unlocked_this_run = true
-	var h_text := "HINT: " + str(level_data.get("hint", "Try a different angle!"))
+	var h_text: String = "HINT: " + str(level_data.get("hint", "Try a different angle!"))
 	hint_lbl.text = h_text
 	if result_panel.visible:
 		result_desc.text = h_text
@@ -592,11 +607,11 @@ func _on_draw_telegraphs() -> void:
 			var length: float = arr["len"]
 			var to: Vector2 = from + dir * length
 			telegraph_layer.draw_dashed_line(from, to, Color("#ef4444", 0.6), 4.0, 8.0)
-			var perp := Vector2(-dir.y, dir.x)
-			var tip := to + dir * 10.0
+			var perp: Vector2 = Vector2(-dir.y, dir.x)
+			var tip: Vector2 = to + dir * 10.0
 			telegraph_layer.draw_colored_polygon(PackedVector2Array([tip, to + perp * 7.0, to - perp * 7.0]), Color("#ef4444", 0.75))
 	elif _loss_pending and _loss_hit_pos != Vector2.ZERO:
-		var r := 36.0 + sin(Time.get_ticks_msec() * 0.025) * 6.0
+		var r: float = 36.0 + sin(float(Time.get_ticks_msec()) * 0.025) * 6.0
 		telegraph_layer.draw_arc(_loss_hit_pos, r, 0.0, TAU, 28, Color("#ef4444", 0.9), 4.0)
 
 func _toggle_pause() -> void:
