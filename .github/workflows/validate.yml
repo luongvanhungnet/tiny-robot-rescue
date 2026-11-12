@@ -17,10 +17,14 @@ jobs:
         run: godot --headless --import --quit
       - name: Smoke Boot All Scenes (Autoloads + UI + Gameplay)
         run: |
-          set -o pipefail
           for scene in res://scenes/home.tscn res://scenes/level_select.tscn res://scenes/gameplay.tscn; do
             echo "=== Booting $scene ==="
-            godot --headless --quit-after 5 "$scene" 2>&1 | tee /tmp/boot.log
+            if ! godot --headless --quit-after 5 "$scene" > /tmp/boot.log 2>&1; then
+              cat /tmp/boot.log
+              echo "Godot exited non-zero booting $scene"
+              exit 1
+            fi
+            cat /tmp/boot.log
             if grep -qE "SCRIPT ERROR|Parse Error|Failed to load script|Cannot call method|Invalid access|Invalid call|Invalid assignment" /tmp/boot.log; then
               echo "Detected script/scene error booting $scene"
               exit 1
@@ -28,8 +32,12 @@ jobs:
           done
       - name: Run Headless Unit Tests
         run: |
-          set -o pipefail
-          godot --headless --script res://tests/test_runner.gd 2>&1 | tee /tmp/test.log
+          if ! godot --headless --script res://tests/test_runner.gd > /tmp/test.log 2>&1; then
+            cat /tmp/test.log
+            echo "Headless unit tests exited non-zero"
+            exit 1
+          fi
+          cat /tmp/test.log
           if grep -qE "SCRIPT ERROR|Parse Error|Failed to load script" /tmp/test.log; then
             echo "Detected GDScript error in headless tests"
             exit 1
