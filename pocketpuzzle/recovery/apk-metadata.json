@@ -1,0 +1,14 @@
+{
+  "package": "org.pocketpuzzle.prototype",
+  "app_name": "PocketPuzzle",
+  "version_name": "0.9.0",
+  "version_code": 9,
+  "recovered_on": "2026-11-14",
+  "apk_sha256": "15c6ff26267198c7bb75ab2fe93f684c5dfe0f07b4c1abc20eddfb68858482e5",
+  "apk_bytes": 57934759,
+  "engine": "4.7.2.stable",
+  "recovery_tool": "GDRE Tools v2.7.4",
+  "scripts_recovered": 23,
+  "resources_converted": 28,
+  "lossy_resource_conversions": 2
+}

@@ -153,7 +153,7 @@ function shield(p) {
   });
   const path = p.solution;
   // Join the beam canopy to the main drawing below the cargo dock.
-  p.solution = [[60, 800], [140, 800], [140, 1020], ...path.toReversed()];
+  p.solution = [[60, 800], [140, 800], [140, 1020], ...path.slice().reverse()];
   p.objective.survive_until_end = true;
   return p;
 }

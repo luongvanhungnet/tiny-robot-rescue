@@ -1,5 +1,7 @@
 # Tiny Robot Rescue
 
+Also included: **[PocketPuzzle](pocketpuzzle/)**, a separate recovered Godot 4.7.2 game. Open `pocketpuzzle/source/project.godot`; see its README for recovery details.
+
 Draw one clever line to rescue Pip from a mischievous mechanical workshop.
 
 - **[web/](web/)** — the new Phaser 3 + Matter.js game for desktop and mobile browsers, with a Capacitor Android wrapper in `web/android/`.
