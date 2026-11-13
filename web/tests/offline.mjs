@@ -52,6 +52,15 @@ try {
     await page.getByRole("heading", { name: "First Shield" }).isVisible(),
     true,
   );
+  await page.locator(".hintbtn").click();
+  assert.equal(
+    await page.locator(".hintbtn").getAttribute("aria-pressed"),
+    "true",
+  );
+  assert.match(
+    await page.locator(".instruction").innerText(),
+    /draw the dashed path yourself/,
+  );
   const box = await page.locator("canvas").boundingBox();
   await page.mouse.move(
     box.x + (260 * box.width) / 720,
@@ -69,7 +78,7 @@ try {
     .waitFor({ timeout: 15000 });
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: production assets reload offline and a drawn level wins with no network.",
+    "PASS: production assets reload offline, show the example-line hint, and a drawn level wins with no network.",
   );
 } finally {
   await browser?.close();

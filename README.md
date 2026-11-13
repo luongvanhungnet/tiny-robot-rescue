@@ -83,3 +83,11 @@ Run `CAMPAIGN_START_LEVEL=37 npm run test:e2e` in `web/` to exercise the new cha
 The campaign now reaches exactly **50 levels**. The final ten puzzles add opposing cargo currents, three-stage inspection, laser-protected bridges, parallel inspected airlocks, robot-carrying fans, elevated landings, stacked receiving bays, asymmetric inspection trays, a three-beam cargo vault, and a two-robot/two-parcel finale. Earlier level content, saved progress, and earned paints are retained.
 
 From `web/`, run `CAMPAIGN_START_LEVEL=41 npm run test:e2e` for the targeted final-chapter playthrough and desktop/mobile regression suite. Default campaign testing still starts at level 1 and plays all 50 puzzles. Completing level 50 awards the Grand Circuit Hero badge.
+
+## Example-line hints
+
+Tap **Hint** to watch a cyan dashed example line appear alongside the written hint. It remains available for tracing and can be dismissed with **Hide example**. You still draw the physical stroke yourself; the preview uses no ink, attempts, or colliders. Reduced motion shows the complete guide immediately.
+
+During simulation, **Retry + hint** starts a fresh planning attempt with the example. The loss-screen hint does the same. Submitting a valid line or leaving/restarting the level clears the guide.
+
+Level 37's cargo fan now affects energy cores only. This fixes the late failure where wind could push Pip off the platform around 6.85 seconds despite successful delivery. Robot-lift fans in other levels retain their intended behavior.

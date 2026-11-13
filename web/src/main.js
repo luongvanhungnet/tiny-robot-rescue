@@ -1,3 +1,4 @@
+import { HintGuide, dashedPath } from "./hint.js";
 import { chapters, paints, paintUnlocked, chapterForLevel } from "./content.js";
 import Phaser from "phaser";
 import { Capacitor } from "@capacitor/core";
@@ -23,6 +24,7 @@ try {
 }
 const progress = new Progress(storage);
 const ui = document.querySelector("#ui");
+const hintGuide = new HintGuide();
 let scene,
   screen = "home",
   current =
@@ -98,6 +100,7 @@ function toast(message) {
   toastTimer = setTimeout(() => el.remove(), 4000);
 }
 function cleanup() {
+  hintGuide.hide();
   sim?.destroy();
   sim = null;
   points = [];
@@ -161,6 +164,46 @@ function startLevel(id) {
 }
 function renderHUD() {
   ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / ${LEVEL_COUNT}</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "delivery" ? (current.objective.require_goal ? "deliver the core and reach the charger" : "deliver every energy core") : current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span><button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
+}
+function hintInstruction() {
+  const goal =
+    current.objective.type === "delivery"
+      ? current.objective.require_goal
+        ? "deliver the core and reach the charger"
+        : "deliver every energy core"
+      : current.objective.type === "exit"
+        ? "reach the charger"
+        : current.objective.type === "switch"
+          ? "wake the switch"
+          : "keep Pip safe";
+  return hintGuide.active
+    ? `<strong>Example line — draw the dashed path yourself.</strong><br>${current.hint}`
+    : `${current.subtitle}<br><strong>Draw one continuous line to ${goal}.</strong>`;
+}
+function updateHintUI() {
+  const btn = $(".hintbtn"),
+    instruction = $(".instruction");
+  if (btn) {
+    const label = hintGuide.active
+      ? "Hide example"
+      : sim?.state === "SIMULATING"
+        ? "Retry + hint"
+        : "✦ Hint";
+    if (btn.textContent !== label) btn.textContent = label;
+    btn.setAttribute("aria-pressed", String(hintGuide.active));
+  }
+  if (instruction && instruction.dataset.example !== String(hintGuide.active)) {
+    instruction.innerHTML = hintInstruction();
+    instruction.dataset.example = String(hintGuide.active);
+    instruction.classList.toggle("hint-active", hintGuide.active);
+  }
+}
+function showHint() {
+  if (screen !== "game" || !sim) return;
+  if (["SIMULATING", "LOST"].includes(sim.state)) startLevel(current.id);
+  if (hintGuide.active) hintGuide.hide();
+  else hintGuide.show(current.solution, progress.data.settings.reducedMotion);
+  updateHintUI();
 }
 function modal(title, body, actions, tag = "", symbol = "") {
   ui.querySelector(".modal-wrap")?.remove();
@@ -271,7 +314,7 @@ ui.addEventListener("click", async (e) => {
       music();
       break;
     case "hint":
-      toast(current.hint);
+      showHint();
       break;
     case "paints":
       showPaints();
@@ -380,6 +423,8 @@ class Workshop extends Phaser.Scene {
         toast(startError);
         return;
       }
+      hintGuide.hide();
+      updateHintUI();
       points = [];
       sound(600);
       vibrate();
@@ -396,6 +441,8 @@ class Workshop extends Phaser.Scene {
     home();
   }
   update(time, delta) {
+    if (!paused) hintGuide.advance(delta, progress.data.settings.reducedMotion);
+    if (screen === "game") updateHintUI();
     sim?.state === "SIMULATING" && !paused && sim.step(delta);
     this.draw(time);
     if (screen === "game" && sim) {
@@ -453,6 +500,7 @@ class Workshop extends Phaser.Scene {
     sim.entities
       .filter((b) => !["fan", "laser"].includes(b.label))
       .forEach((b) => this.entity(b, time));
+    if (hintGuide.active && !paused) this.drawHint();
     this.stroke(sim.stroke, 0xb6f36d, 14);
     if (points.length) {
       const invalid =
@@ -461,6 +509,24 @@ class Workshop extends Phaser.Scene {
       const p = points.at(-1);
       g.lineStyle(2, 0xeaffc5, 0.7).strokeCircle(p[0], p[1], 17);
     }
+  }
+  drawHint() {
+    const g = this.g,
+      path = hintGuide.path,
+      start = hintGuide.points[0],
+      end = hintGuide.points.at(-1);
+    g.lineStyle(6, 0x7dd9ee, 0.65);
+    for (const [a, b] of dashedPath(path)) g.lineBetween(...a, ...b);
+    g.lineStyle(3, 0x7dd9ee, 0.95).strokeCircle(...start, 14);
+    g.fillStyle(0x7dd9ee, 0.3).fillCircle(...start, 5);
+    g.lineStyle(2, 0x7dd9ee, 0.65).beginPath();
+    g.moveTo(end[0], end[1] - 10);
+    g.lineTo(end[0] + 10, end[1]);
+    g.lineTo(end[0], end[1] + 10);
+    g.lineTo(end[0] - 10, end[1]);
+    g.closePath();
+    g.strokePath();
+    if (path.length > 1) g.fillStyle(0xdafaff).fillCircle(...path.at(-1), 6);
   }
   stroke(points, color, width) {
     if (points.length < 2) return;
@@ -870,6 +936,9 @@ if (import.meta.env.DEV)
     },
     get screen() {
       return screen;
+    },
+    get hint() {
+      return hintGuide;
     },
     get points() {
       return points;

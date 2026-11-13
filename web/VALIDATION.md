@@ -1,4 +1,21 @@
-# Grand Circuit: 50-level validation
+# Visual hints and level 37 wind regression
+
+Branch: `web/dev/codex`. Fetched and merged `origin/web/test/codex`; its head (`d2edf85`) is already an ancestor of the current history, so Git reported already up to date. The 50-level campaign remains in place.
+
+Changes and evidence:
+
+- Hint draws an animated cyan dashed example from each authored solution, with start/end markers and the written hint. It is nonphysical: ink, attempts, timers, and colliders are unaffected until the player draws. Guides support hide, retry/reset, loss recovery, navigation cleanup, and reduced motion.
+- Reproduced level 37 with a valid right-backstop-only stroke: delivery succeeded, but cargo wind moved Pip off the platform at approximately **6.85 seconds** of a seven-second survival goal. Restricting that fan to `affects: ["cell"]` keeps Pip on the platform while preserving cargo behavior and the full survival requirement.
+- `npm test`: **96 passed, 0 failed**, including all 50 reference solutions, guide geometry/animation, and the exact late-wind regression.
+- `npx playwright test tests/browser/hint.spec.js tests/browser/game.spec.js`: **24 passed, 0 skipped** across desktop and emulated mobile. Tests verify visible guide state, no auto-play or resource consumption, actual mouse/touch drawing, reduced motion, hide/retry/navigation, lost-result recovery, and a full successful level-37 deadline with the alternate stroke.
+- Production build, Capacitor asset sync, formatting, and `git diff --check` passed. The production offline test reloads without networking, opens the visual hint, and completes a player-drawn rescue.
+- The rendered mobile example was visually inspected. Physical-device testing and a fresh full-campaign browser run were not performed for this change. Native APK compilation remains unverified.
+
+No code was pushed or environment configuration published in this iteration.
+
+---
+
+# Grand Circuit: 50-level validation (historical)
 
 Branch: `web/dev/codex`. The campaign contains exactly 50 sequential level IDs. Grand Circuit (41–50) adds ten distinct mechanic combinations while preserving prior level definitions, progress, and paint choices.
 

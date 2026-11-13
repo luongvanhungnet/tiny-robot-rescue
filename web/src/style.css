@@ -582,3 +582,15 @@ button {
 .modal .paint-choice:last-of-type {
   margin-bottom: 4cqw;
 }
+
+.instruction.hint-active {
+  color: #c5e7ee;
+}
+.instruction.hint-active strong {
+  color: #7dd9ee;
+}
+.hintbtn[aria-pressed="true"] {
+  border-color: #7dd9ee;
+  color: #b9effb;
+  background: #204653;
+}

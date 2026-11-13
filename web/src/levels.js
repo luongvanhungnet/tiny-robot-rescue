@@ -1,4 +1,4 @@
-// Original authored layouts in a 720 × 1280 world. Solutions are test metadata only.
+// Original authored layouts in a 720 × 1280 world. Solutions provide tested hint examples.
 const platform = (x, y, w, h = 24) => ({ type: "platform", x, y, w, h });
 const robot = (x, y, walk = false) => ({ type: "robot", x, y, walk });
 const hazard = (type, x, y, extra = {}) => ({ type, x, y, ...extra });
@@ -877,7 +877,15 @@ export const levels = [
       platform(80, 950, 110, 28),
       robot(80, 910),
       { type: "cell", x: 200, y: 350, channel: "cyan" },
-      { type: "fan", x: 300, y: 700, w: 400, h: 600, force_x: 0.0025 },
+      {
+        type: "fan",
+        x: 300,
+        y: 700,
+        w: 400,
+        h: 600,
+        force_x: 0.0025,
+        affects: ["cell"],
+      },
       { type: "socket", x: 600, y: 990, w: 70, h: 50, accepts: "cyan" },
       {
         type: "laser",
