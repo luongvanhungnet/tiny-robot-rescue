@@ -149,7 +149,7 @@ test("Finished ten-level saves continue into the foundry with cornered mouse/tou
   );
   await page.reload();
   await page.getByRole("button", { name: /Levels/ }).click();
-  await expect(page.locator(".level-card")).toHaveCount(50);
+  await expect(page.locator(".level-card")).toHaveCount(100);
   await expect(
     page.getByRole("button", { name: "Level 11: Cross Traffic", exact: true }),
   ).toBeEnabled();
@@ -212,7 +212,7 @@ test("Skyworks migration keeps earned paints and opens the new chapter", async (
   );
   await page.getByRole("button", { name: "Back to home" }).click();
   await page.getByRole("button", { name: /Levels/ }).click();
-  await expect(page.locator(".level-card")).toHaveCount(50);
+  await expect(page.locator(".level-card")).toHaveCount(100);
   await page
     .getByRole("button", { name: "Level 21: Air Mail", exact: true })
     .click();
@@ -348,7 +348,7 @@ test("Grand Circuit unlocks from a completed Relay Hub save and plays by touch",
   );
   await page.reload();
   await page.getByRole("button", { name: /Levels/ }).click();
-  await expect(page.locator(".level-card")).toHaveCount(50);
+  await expect(page.locator(".level-card")).toHaveCount(100);
   await page
     .getByRole("button", { name: "Level 41: Opposing Currents", exact: true })
     .click();

@@ -326,10 +326,7 @@ button {
 }
 .instruction {
   text-align: center;
-  position: absolute;
-  top: 24cqw;
-  left: 8cqw;
-  right: 8cqw;
+  margin: 3cqw 3cqw 0;
   font-size: 3cqw;
   color: #aac2cb;
   line-height: 1.5;
@@ -359,6 +356,14 @@ button {
   padding: 2.4cqw 4cqw;
   font-size: 2.8cqw;
 }
+.machinebtn {
+  color: #c6a7ef;
+  background: #253145;
+  border: 1px solid #65557c;
+  border-radius: 9cqw;
+  padding: 2.4cqw 3cqw;
+  font-size: 2.8cqw;
+}
 .modal-wrap {
   position: absolute;
   inset: 0;
@@ -377,6 +382,8 @@ button {
   border: 1px solid #3b5262;
   border-radius: 5cqw;
   box-shadow: 0 5cqw 12cqw #0004;
+  max-height: 100%;
+  overflow-y: auto;
 }
 .modal h2 {
   font-size: 7cqw;

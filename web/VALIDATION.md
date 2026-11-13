@@ -1,3 +1,28 @@
+# 100-level machine expedition — November 14, 2026
+
+Branch: `web/dev/codex`, based on `a71834a`. The web campaign now has exactly 100 sequential levels. New levels 51–100 live in `src/expedition.js`; a direct data comparison against the branch base confirmed that levels 1–50 are unchanged.
+
+## Content and behavior
+
+- Five new chapters: Portal Post, Gravity Gardens, Magnetic Works, Launch Academy, and Counterweight Keep. Their machinery adds paired portals with exit momentum, cargo gravity replacement, attraction/repulsion and color-selective magnetic poles, directed launch pads, and sustained-load pressure gates.
+- Each new puzzle has an authored layout, title, written hint, visual example, objective and solution-derived ink budget. Dependencies include multi-hop transfers, pre/post-warp inspections, sideways/weightless corridors, pulsed launch feeds, opposed cargo channels, ballistic inspection routes, multiple live locks and independent cargo/escort tasks.
+- Every new level loses with ineffective ink. Removing each advertised new machine family independently also prevents its authored solution from winning. The finale requires all five families and both robots at the charger.
+- Five chapter badges and five earned paints were added. A completed level-50 save opens level 51 while retaining prior stars, badges and selected paint; level-100 rewards persist.
+- Machine symbols, gate links, a pausing Machines guide, pressure hold bars, and corrected hint spacing make the new rules visible. Final mobile layouts and example guides were visually inspected.
+
+## Verified on the final implementation
+
+- `npm test`: **253 passed, 0 failed, 0 skipped**. All 100 reference solutions run in the actual Matter.js simulation. New levels also exercise drawing perturbations, actual machine usage, independent machine-family removal, ineffective strokes, portal channel/cooldown/momentum, pressure hold/release and gate reinsertion, pulse expiry, invalid definitions, and save/reward continuity.
+- `CAMPAIGN_START_LEVEL=51 npx playwright test tests/browser/campaign.spec.js --project=desktop`: **1 passed**. All 50 new levels were completed in order using real mouse input, through the final result and persisted campaign progress.
+- `npx playwright test tests/browser/expedition.spec.js tests/browser/game.spec.js tests/browser/hint.spec.js`: **28 passed, 0 failed, 0 skipped** across desktop and emulated mobile. The new chapters and level 100 use actual mouse/touch drawing; help, hints, old-save continuation, retry/pause, settings, progression and prior hint regressions pass.
+- `npm run test:offline`: production build passed, then the installed service worker reloaded without networking and completed player-drawn levels **1, 51 and 100**, including hints and machine help. No DEV-only simulation hook is used in this production check.
+- `npx cap sync android`: passed; the new production assets were copied into the wrapper.
+- `npm run format:check` and `git diff --check`: passed. Dependency declarations and lockfiles are unchanged.
+
+Native APK compilation, a physical-device run and human difficulty/fairness playtesting were not performed. The original Godot edition was not changed. No code was pushed and no environment configuration was published.
+
+---
+
 # Visual hints and level 37 wind regression
 
 Branch: `web/dev/codex`. Fetched and merged `origin/web/test/codex`; its head (`d2edf85`) is already an ancestor of the current history, so Git reported already up to date. The 50-level campaign remains in place.

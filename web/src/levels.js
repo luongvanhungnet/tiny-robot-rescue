@@ -1,3 +1,4 @@
+import { createExpedition } from "./expedition.js";
 // Original authored layouts in a 720 × 1280 world. Solutions provide tested hint examples.
 const platform = (x, y, w, h = 24) => ({ type: "platform", x, y, w, h });
 const robot = (x, y, walk = false) => ({ type: "robot", x, y, walk });
@@ -1733,6 +1734,7 @@ export const levels = [
     },
   ),
 ];
+levels.push(...createExpedition(base));
 export const LEVEL_COUNT = levels.length;
 
 export function validateLevel(l) {
@@ -1772,6 +1774,38 @@ export function validateLevel(l) {
             Number.isFinite(o.force_y ?? 0))) &&
         (o.type !== "checkpoint" ||
           (typeof o.key === "string" && o.key.length > 0)) &&
+        (!["portal", "gravity", "magnet", "launcher", "plate"].includes(
+          o.type,
+        ) ||
+          (Number.isFinite(o.w) &&
+            o.w > 0 &&
+            Number.isFinite(o.h) &&
+            o.h > 0)) &&
+        (o.type !== "portal" ||
+          (Number.isFinite(o.to_x) &&
+            Number.isFinite(o.to_y) &&
+            Number.isFinite(o.vx ?? 0) &&
+            Number.isFinite(o.vy ?? 0))) &&
+        (o.type !== "gravity" ||
+          (Number.isFinite(o.gx ?? 0) && Number.isFinite(o.gy ?? -0.001))) &&
+        (o.type !== "magnet" ||
+          (Number.isFinite(o.radius) &&
+            o.radius > 0 &&
+            Number.isFinite(o.strength) &&
+            o.strength > 0 &&
+            (o.until === undefined ||
+              (Number.isFinite(o.until) && o.until > 0)))) &&
+        (o.type !== "launcher" ||
+          (Number.isFinite(o.vx) && Number.isFinite(o.vy))) &&
+        (o.type !== "plate" ||
+          (Number.isInteger(o.required ?? 1) &&
+            (o.required ?? 1) > 0 &&
+            Number.isFinite(o.hold_for ?? 0) &&
+            (o.hold_for ?? 0) >= 0 &&
+            typeof o.channel === "string" &&
+            l.objects.some(
+              (g) => g.type === "gate" && g.channel === o.channel,
+            ))) &&
         (!["cell", "socket"].includes(o.type) ||
           ["cyan", "amber"].includes(
             o.type === "cell" ? o.channel : o.accepts,

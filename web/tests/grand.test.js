@@ -4,16 +4,16 @@ import assert from "node:assert/strict";
 import { levels, LEVEL_COUNT } from "../src/levels.js";
 import { Simulation } from "../src/simulation.js";
 import { Progress } from "../src/save.js";
-const grand = levels.filter((l) => l.id >= 41),
+const grand = levels.filter((l) => l.id >= 41 && l.id <= 50),
   run = (s) => {
     for (let i = 0; i < 1100 && s.state === "SIMULATING"; i++)
       s.step(1000 / 60);
   };
-test("Campaign reaches exactly 50 ordered levels with ten distinct Grand Circuit challenges", () => {
-  assert.equal(LEVEL_COUNT, 50);
+test("Campaign reaches 100 ordered levels and preserves ten Grand Circuit challenges", () => {
+  assert.equal(LEVEL_COUNT, 100);
   assert.deepEqual(
     levels.map((l) => l.id),
-    Array.from({ length: 50 }, (_, i) => i + 1),
+    Array.from({ length: 100 }, (_, i) => i + 1),
   );
   assert.equal(grand.length, 10);
   assert.equal(new Set(grand.map((l) => l.mechanic_id)).size, 10);
@@ -156,7 +156,7 @@ test("Level 50 completes two deliveries, both robot rescues, and a persistent fi
   const p = new Progress(store);
   p.win(50, 900, 1050);
   const saved = new Progress(store);
-  assert.equal(saved.data.unlocked, 50);
+  assert.equal(saved.data.unlocked, 51);
   assert.ok(saved.data.cosmetics.includes("grand-circuit-hero"));
 });
 

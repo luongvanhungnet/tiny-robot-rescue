@@ -21,10 +21,10 @@ Open the Vite address in a desktop or mobile browser. On a phone on the same net
 Use the mouse or one finger to draw a continuous line, then release. Machines stay still while planning. Your fixed line becomes a Matter.js collider. Keep Pip safe, reach a charger, or activate a switch. Retry is always free. Keyboard: **R** retries, **Escape** pauses.
 
 ```sh
-npm test                 # actual Matter.js solutions for all 50 levels + game rules/saves
+npm test                 # actual Matter.js solutions for all 100 levels + game rules/saves
 npm run build            # standalone browser files in dist/
 npm run preview          # check the production build
-npm run test:e2e         # desktop mouse + emulated mobile touch + full campaign with 50 puzzles
+npm run test:e2e         # desktop mouse + emulated mobile touch + full campaign with 100 puzzles
 npm run test:offline     # production reload AND level completion with network disabled
 ```
 
@@ -46,9 +46,9 @@ The **Web game Android packages** GitHub Actions workflow builds a debug APK. A 
 
 ## Scope and validation
 
-This is the specification's **browser campaign with 50 puzzles**, with original procedural artwork and sound, progression, stars, hints, settings, local saves, browser offline support, pause/background handling, and no ads or purchases. All 50 levels contain authored solution metadata exercised against the same Matter.js module used in the browser. Browser input tests exercise a complete campaign too. Progress is versioned and backed up; browsers provide atomic localStorage replacement rather than file renames. Storage denial leaves a playable memory-only session.
+This is the specification's **browser campaign with 100 puzzles**, with original procedural artwork and sound, progression, stars, hints, settings, local saves, browser offline support, pause/background handling, and no ads or purchases. All 100 levels contain authored solution metadata exercised against the same Matter.js module used in the browser. Browser input tests exercise a complete campaign too. Progress is versioned and backed up; browsers provide atomic localStorage replacement rather than file renames. Storage denial leaves a playable memory-only session.
 
-The 60-level expansion, native advertising/billing SDKs, production purchase verification, store publication, human solvability review, and physical Android performance/touch certification are later milestones. No simulated purchase button grants entitlements. See [web/RELEASE_CHECKLIST.md](web/RELEASE_CHECKLIST.md) for remaining device/release checks.
+Native advertising/billing SDKs, production purchase verification, store publication, human solvability review, and physical Android performance/touch certification are later milestones. No simulated purchase button grants entitlements. See [web/RELEASE_CHECKLIST.md](web/RELEASE_CHECKLIST.md) for remaining device/release checks.
 
 ## Original Godot edition
 
@@ -64,25 +64,25 @@ Use Godot **4.3**. The original GitHub workflows now run from `android/`; their 
 
 Levels 21–30 add elevated bridges, two-robot charging objectives, stepped shelters, reverse catchers, and a gated team finale. Existing completed saves unlock the next chapter automatically. Settings → Robot paints lets you choose Aqua, Copper (complete Workshop), Violet (complete Foundry), or Rose (complete Skyworks). Paints are earned through play and saved locally.
 
-The default browser campaign test plays all 50 levels. To target the new chapter while retaining desktop/mobile UI regressions, run `CAMPAIGN_START_LEVEL=21 npm run test:e2e` from `web/`; earlier levels are seeded as completed in that test fixture.
+The default browser campaign test plays all 100 levels. To target the new chapter while retaining desktop/mobile UI regressions, run `CAMPAIGN_START_LEVEL=21 npm run test:e2e` from `web/`; earlier levels are seeded as completed in that test fixture.
 
 ## Power Lab: six new mechanical puzzles
 
 Levels 31–36 add energy-core deliveries, wind fields, polygon-occluded laser beams, color-matched docks, and per-core inspection stamps. This chapter has six distinct mechanical requirements; existing levels are preserved. Cores are safe cargo and use matching plus/triangle symbols as well as color. A core leaving the delivery area ends an impossible delivery promptly.
 
-See [the content guide](web/CONTENT.md) for each puzzle's new interaction. Run `CAMPAIGN_START_LEVEL=31 npm run test:e2e` in `web/` to play the new chapter through real input and run the desktop/mobile UI regressions. The default campaign starts at level 1 and covers all 50 puzzles.
+See [the content guide](web/CONTENT.md) for each puzzle's new interaction. Run `CAMPAIGN_START_LEVEL=31 npm run test:e2e` in `web/` to play the new chapter through real input and run the desktop/mobile UI regressions. The default campaign starts at level 1 and covers all 100 puzzles.
 
 ## Relay Hub (levels 37–40)
 
 Four additional challenges combine strong crosswinds and laser shields, ordered inspections during an upward cargo flight, two pulsing beam planes, and a cargo-linked gate that requires a bridge to the charger. Existing levels remain intact. Inspection rings show one/two dots for their order; cargo gates use cyan to match the receiving dock.
 
-Run `CAMPAIGN_START_LEVEL=37 npm run test:e2e` in `web/` to exercise the new chapter and existing desktop/mobile UI regressions. The default browser campaign covers all 50 levels.
+Run `CAMPAIGN_START_LEVEL=37 npm run test:e2e` in `web/` to exercise the new chapter and existing desktop/mobile UI regressions. The default browser campaign covers all 100 levels.
 
 ## Grand Circuit (levels 41–50)
 
-The campaign now reaches exactly **50 levels**. The final ten puzzles add opposing cargo currents, three-stage inspection, laser-protected bridges, parallel inspected airlocks, robot-carrying fans, elevated landings, stacked receiving bays, asymmetric inspection trays, a three-beam cargo vault, and a two-robot/two-parcel finale. Earlier level content, saved progress, and earned paints are retained.
+Levels **41–50** complete Grand Circuit. These ten puzzles add opposing cargo currents, three-stage inspection, laser-protected bridges, parallel inspected airlocks, robot-carrying fans, elevated landings, stacked receiving bays, asymmetric inspection trays, a three-beam cargo vault, and a two-robot/two-parcel finale. Earlier level content, saved progress, and earned paints are retained.
 
-From `web/`, run `CAMPAIGN_START_LEVEL=41 npm run test:e2e` for the targeted final-chapter playthrough and desktop/mobile regression suite. Default campaign testing still starts at level 1 and plays all 50 puzzles. Completing level 50 awards the Grand Circuit Hero badge.
+From `web/`, run `CAMPAIGN_START_LEVEL=41 npm run test:e2e` for the targeted final-chapter playthrough and desktop/mobile regression suite. Default campaign testing still starts at level 1 and plays all 100 puzzles. Completing level 50 awards the Grand Circuit Hero badge.
 
 ## Example-line hints
 
@@ -91,3 +91,19 @@ Tap **Hint** to watch a cyan dashed example line appear alongside the written hi
 During simulation, **Retry + hint** starts a fresh planning attempt with the example. The loss-screen hint does the same. Submitting a valid line or leaving/restarting the level clears the guide.
 
 Level 37's cargo fan now affects energy cores only. This fixes the late failure where wind could push Pip off the platform around 6.85 seconds despite successful delivery. Robot-lift fans in other levels retain their intended behavior.
+
+## 100-level expedition (levels 51–100)
+
+Five new chapters add new physical machinery rather than remapping the earlier shield/bridge puzzles:
+
+| Chapter | Levels | New content | Earned paint |
+| --- | --- | --- | --- |
+| Portal Post | 51–60 | Paired portals, exit momentum, multi-hop routes, channel sorting, pre/post-warp inspection | Periwinkle |
+| Gravity Gardens | 61–70 | Reversed, sideways and zero gravity; ceiling routing; bounded fields and gravity/portal relays | Mint |
+| Magnetic Works | 71–80 | Attraction, repulsion, color-selective poles, competing fields, pulsed launch feeds | Gold |
+| Launch Academy | 81–90 | Ballistic cargo, launch relays, opposing color-locked cannons, orbital transfer and a tractor-fed pressure lock | Coral |
+| Counterweight Keep | 91–100 | Sustained pressure loads, multi-core pads, independent live locks, ceiling counterweights and a five-machine finale | Starlight |
+
+The **Machines** button explains symbols and rules without revealing the solution. Pressure doors need 1.5 seconds of continuous weight and close when unloaded. Chapter challenges combine transport with inspection, beam protection, cargo sorting or robot escort; level 100 requires all five new machine systems and both robot rescues. Each new level has its own title, written hint, traceable example, layout and calibrated ink budget. Earlier levels and saves are retained; completing level 50 now unlocks level 51.
+
+From `web/`, run `CAMPAIGN_START_LEVEL=51 npm run test:e2e` to play all 50 additions with real mouse input and run desktop/mobile regressions. `npm test` also checks all 100 reference solutions, ineffective-stroke failures, new-machine dependency, drawing variations, pressure release, portal behavior, and save/reward continuity. Native Android compilation and human difficulty review remain separate release checks.

@@ -1,4 +1,6 @@
 import { HintGuide, dashedPath } from "./hint.js";
+import { drawMachine } from "./machine-art.js";
+import { machineTypes } from "./machines.js";
 import { chapters, paints, paintUnlocked, chapterForLevel } from "./content.js";
 import Phaser from "phaser";
 import { Capacitor } from "@capacitor/core";
@@ -142,7 +144,7 @@ function settings() {
 function showPaints() {
   modal(
     "A fresh coat.",
-    "Finish Workshop, Foundry, and Skyworks to earn the extra paints. Pick a color for every little Pip.",
+    "Finish chapters to earn new paints, from Copper to Starlight. Pick a color for every little Pip.",
     paints
       .map(
         (p) =>
@@ -163,7 +165,32 @@ function startLevel(id) {
   music();
 }
 function renderHUD() {
-  ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / ${LEVEL_COUNT}</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "delivery" ? (current.objective.require_goal ? "deliver the core and reach the charger" : "deliver every energy core") : current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span><button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
+  ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / ${LEVEL_COUNT}</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "delivery" ? (current.objective.require_goal ? "deliver the core and reach the charger" : "deliver every energy core") : current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span>${current.id > 50 ? '<button class="machinebtn" data-action="machines">Machines</button>' : ""}<button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
+}
+function showMachines() {
+  paused = true;
+  const descriptions = {
+    portal:
+      "<strong>◎ Portals</strong> — Thick rings are entrances; thin rings are exits. Matching pips link them. A core emerges with the exit arrow's momentum. Marked portals accept only their cargo color.",
+    gravity:
+      "<strong>↑ Gravity fields</strong> — Violet arrows replace gravity for cargo inside the rectangle. Hollow circles mean weightlessness. Pip keeps normal gravity.",
+    magnet:
+      "<strong>+ / − Magnetic poles</strong> — Plus attracts, minus repels. A faint circle shows range. Colored poles affect matching cargo only. A clock-ring pole pulses for 0.9 seconds, then turns off.",
+    launcher:
+      "<strong>↗ Launch pads</strong> — Crossing the orange pad fires cargo along its arrow. Marked pads launch only their matching cargo color. Catch the flight with ink.",
+    plate:
+      "<strong>● Pressure pads</strong> — Hold the indicated number of cores inside the rectangle for 1.5 seconds. The bar fills, then the linked door opens. Removing weight closes it again.",
+  };
+  const kinds = [...new Set(current.objects.map((o) => o.type))].filter(
+    (type) => machineTypes.includes(type),
+  );
+  modal(
+    "Meet the machines.",
+    kinds.map((type) => descriptions[type]).join("<br><br>"),
+    button("Back to the rescue", "resume", "primary"),
+    chapterForLevel(current.id).name,
+  );
+  music();
 }
 function hintInstruction() {
   const goal =
@@ -315,6 +342,9 @@ ui.addEventListener("click", async (e) => {
       break;
     case "hint":
       showHint();
+      break;
+    case "machines":
+      showMachines();
       break;
     case "paints":
       showPaints();
@@ -495,10 +525,10 @@ class Workshop extends Phaser.Scene {
         g.lineBetween(x + dx, y + 8, x + Math.max(0, dx - 12), y + 24);
     }
     sim.entities
-      .filter((b) => ["fan", "laser"].includes(b.label))
+      .filter((b) => ["fan", "laser", "gravity", "magnet"].includes(b.label))
       .forEach((b) => this.entity(b, time));
     sim.entities
-      .filter((b) => !["fan", "laser"].includes(b.label))
+      .filter((b) => !["fan", "laser", "gravity", "magnet"].includes(b.label))
       .forEach((b) => this.entity(b, time));
     if (hintGuide.active && !paused) this.drawHint();
     this.stroke(sim.stroke, 0xb6f36d, 14);
@@ -626,6 +656,7 @@ class Workshop extends Phaser.Scene {
     const g = this.g,
       { x, y } = b.position,
       o = b.plugin;
+    if (drawMachine(g, b, sim)) return;
     switch (b.label) {
       case "cell":
       case "delivered": {

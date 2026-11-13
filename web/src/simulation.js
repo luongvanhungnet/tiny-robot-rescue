@@ -1,5 +1,6 @@
 import Matter from "matter-js";
 import { traceBeam } from "./optics.js";
+import { applyMachines, updateMachines, machineTypes } from "./machines.js";
 import { validateStroke, distance } from "./stroke.js";
 const { Engine, Bodies, Body, Composite, Events } = Matter;
 export class Simulation {
@@ -13,6 +14,7 @@ export class Simulation {
     this.goals = new Set();
     this.delivered = new Set();
     this.stamps = new Map();
+    this.usedMachines = new Set();
     this.reason = "";
     this.stroke = [];
     this.entities = [];
@@ -25,24 +27,21 @@ export class Simulation {
   }
   build() {
     this.level.objects.forEach((o, i) => {
-      const fixed = [
-          "platform",
-          "goal",
-          "switch",
-          "gate",
-          "fan",
-          "laser",
-          "socket",
-          "checkpoint",
-        ].includes(o.type),
-        sensor = [
-          "goal",
-          "switch",
-          "fan",
-          "laser",
-          "socket",
-          "checkpoint",
-        ].includes(o.type);
+      const fixed =
+          [
+            "platform",
+            "goal",
+            "switch",
+            "gate",
+            "fan",
+            "laser",
+            "socket",
+            "checkpoint",
+          ].includes(o.type) || machineTypes.includes(o.type),
+        sensor =
+          ["goal", "switch", "fan", "laser", "socket", "checkpoint"].includes(
+            o.type,
+          ) || machineTypes.includes(o.type);
       const opts = {
         isStatic: fixed,
         isSensor: sensor,
@@ -63,6 +62,11 @@ export class Simulation {
               fan: 256,
               laser: 256,
               checkpoint: 128,
+              portal: 256,
+              gravity: 256,
+              magnet: 256,
+              launcher: 256,
+              plate: 256,
             }[o.type] ?? 8,
           mask: 0xffff,
         },
@@ -261,8 +265,10 @@ export class Simulation {
         }
       }
     }
+    applyMachines(this);
     Engine.update(this.engine, 1000 / 60);
     this.elapsed += 1 / 60;
+    updateMachines(this);
     if (
       robots.some(
         (b) => b.position.y > 1120 || b.position.x < -30 || b.position.x > 750,
