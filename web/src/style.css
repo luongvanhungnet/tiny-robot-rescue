@@ -544,3 +544,41 @@ button {
 .hintbtn {
   min-height: 44px;
 }
+
+.chapter-label {
+  font-size: 2cqw;
+  color: #86a5b4;
+  margin-bottom: 1cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.settings-screen {
+  overflow-y: auto;
+  pointer-events: auto;
+}
+.settings-screen > .secondary {
+  flex-shrink: 0;
+  margin-bottom: 2cqw;
+}
+.settings-screen .settings-foot {
+  padding-top: 4cqw;
+}
+.settings-screen .settings-list {
+  margin: 5cqw 0;
+}
+.paint-dot {
+  width: 5cqw;
+  height: 5cqw;
+  border-radius: 50%;
+  border: 2px solid #ffffff66;
+  display: inline-block;
+}
+.paint-choice:disabled {
+  opacity: 0.4;
+}
+.paint-choice {
+  font-size: 3cqw;
+}
+.modal .paint-choice:last-of-type {
+  margin-bottom: 4cqw;
+}

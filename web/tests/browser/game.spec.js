@@ -149,7 +149,7 @@ test("Finished ten-level saves continue into the foundry with cornered mouse/tou
   );
   await page.reload();
   await page.getByRole("button", { name: /Levels/ }).click();
-  await expect(page.locator(".level-card")).toHaveCount(20);
+  await expect(page.locator(".level-card")).toHaveCount(50);
   await expect(
     page.getByRole("button", { name: "Level 11: Cross Traffic", exact: true }),
   ).toBeEnabled();
@@ -181,4 +181,198 @@ test("Finished ten-level saves continue into the foundry with cornered mouse/tou
   expect(
     await page.evaluate(() => window.__rescue.progress.data.stars[10]),
   ).toBe(3);
+});
+
+test("Skyworks migration keeps earned paints and opens the new chapter", async ({
+  page,
+}, info) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      "tiny-robot-rescue.v1",
+      JSON.stringify({
+        version: 1,
+        unlocked: 20,
+        lastLevel: 20,
+        stars: { 10: 3, 20: 2 },
+        settings: { sound: false },
+      }),
+    ),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: /Settings/ }).click();
+  await page.getByRole("button", { name: "Robot paints" }).click();
+  await expect(page.getByRole("button", { name: /Rose/ })).toBeDisabled();
+  await page.getByRole("button", { name: "Violet", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Violet · Selected", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
+  expect(await page.evaluate(() => window.__rescue.progress.data.paint)).toBe(
+    "violet",
+  );
+  await page.getByRole("button", { name: "Back to home" }).click();
+  await page.getByRole("button", { name: /Levels/ }).click();
+  await expect(page.locator(".level-card")).toHaveCount(50);
+  await page
+    .getByRole("button", { name: "Level 21: Air Mail", exact: true })
+    .click();
+  await draw(
+    page,
+    [
+      [210, 700],
+      [510, 700],
+    ],
+    info.project.name === "mobile",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Little robot. Big relief." }),
+  ).toBeVisible({ timeout: 30000 });
+  await page.getByRole("button", { name: "Next little adventure" }).click();
+  await expect(page.getByRole("heading", { name: "Sky Bridge" })).toBeVisible();
+  expect(
+    await page.evaluate(() => window.__rescue.progress.data.stars[20]),
+  ).toBe(2);
+  expect(await page.evaluate(() => window.__rescue.progress.data.paint)).toBe(
+    "violet",
+  );
+});
+
+test("Power Lab continues an old save and explains the new cargo objective", async ({
+  page,
+}, info) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      "tiny-robot-rescue.v1",
+      JSON.stringify({
+        version: 1,
+        unlocked: 30,
+        lastLevel: 30,
+        stars: { 30: 3 },
+        paint: "rose",
+        settings: { sound: false },
+      }),
+    ),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: /Levels/ }).click();
+  await page
+    .getByRole("button", { name: "Level 31: Special Delivery", exact: true })
+    .click();
+  await expect(
+    page.getByText("Draw one continuous line to deliver every energy core."),
+  ).toBeVisible();
+  await draw(
+    page,
+    [
+      [215, 645],
+      [585, 805],
+    ],
+    info.project.name === "mobile",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Little robot. Big relief." }),
+  ).toBeVisible({ timeout: 30000 });
+  await page.getByRole("button", { name: "Next little adventure" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Air Freight" }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => window.__rescue.progress.data.paint)).toBe(
+    "rose",
+  );
+  expect(
+    await page.evaluate(() => window.__rescue.progress.data.stars[30]),
+  ).toBe(3);
+});
+
+test("Relay Hub continues a completed lab save with a real cargo cradle", async ({
+  page,
+}, info) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      "tiny-robot-rescue.v1",
+      JSON.stringify({
+        version: 1,
+        unlocked: 36,
+        lastLevel: 36,
+        stars: { 30: 3, 36: 2 },
+        paint: "rose",
+        settings: { sound: false },
+      }),
+    ),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: /Levels/ }).click();
+  await page
+    .getByRole("button", { name: "Level 37: Crosswind Cradle", exact: true })
+    .click();
+  await draw(
+    page,
+    [
+      [180, 730],
+      [180, 1020],
+      [630, 1020],
+      [630, 680],
+    ],
+    info.project.name === "mobile",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Little robot. Big relief." }),
+  ).toBeVisible({ timeout: 30000 });
+  await page.getByRole("button", { name: "Next little adventure" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Upward Clearance" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() => window.__rescue.progress.data.stars[36]),
+  ).toBe(2);
+  expect(await page.evaluate(() => window.__rescue.progress.data.paint)).toBe(
+    "rose",
+  );
+});
+
+test("Grand Circuit unlocks from a completed Relay Hub save and plays by touch", async ({
+  page,
+}, info) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      "tiny-robot-rescue.v1",
+      JSON.stringify({
+        version: 1,
+        unlocked: 40,
+        lastLevel: 40,
+        stars: { 30: 3, 40: 2 },
+        paint: "rose",
+        settings: { sound: false },
+      }),
+    ),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: /Levels/ }).click();
+  await expect(page.locator(".level-card")).toHaveCount(50);
+  await page
+    .getByRole("button", { name: "Level 41: Opposing Currents", exact: true })
+    .click();
+  await draw(
+    page,
+    [
+      [55, 500],
+      [55, 1020],
+      [665, 1020],
+      [665, 500],
+    ],
+    info.project.name === "mobile",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Little robot. Big relief." }),
+  ).toBeVisible({ timeout: 30000 });
+  await page.getByRole("button", { name: "Next little adventure" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Triple Clearance" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() => window.__rescue.progress.data.stars[40]),
+  ).toBe(2);
+  expect(await page.evaluate(() => window.__rescue.progress.data.paint)).toBe(
+    "rose",
+  );
 });

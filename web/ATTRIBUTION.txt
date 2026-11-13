@@ -13,3 +13,5 @@ Prettier — MIT — https://github.com/prettier/prettier
 
 System fonts only. No external font, art, music, or analytics requests.
 Dependencies include their full license text in node_modules. Verify all rights and naming before store publication.
+
+Power Lab wind-field arrows, fan rotors, laser emitters, cargo/dock symbols, and inspection-ring graphics are original source-drawn assets created for this project.

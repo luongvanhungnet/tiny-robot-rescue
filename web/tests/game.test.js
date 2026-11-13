@@ -19,7 +19,13 @@ for (const level of levels)
     assert.ok(s.elapsed > 0);
     if (level.objective.type === "switch")
       assert.equal(s.activated.size, level.objective.required_switches);
-    if (level.objective.type === "exit") assert.equal(s.goals.size, 1);
+    if (level.objective.type === "delivery")
+      assert.equal(s.delivered.size, level.objective.required_cells);
+    if (level.objective.type === "exit")
+      assert.equal(
+        s.goals.size,
+        level.objects.filter((o) => o.type === "robot").length,
+      );
     s.destroy();
   });
 test("Unprotected robots are hit: failure is real, not an automatic countdown win", () => {
@@ -34,7 +40,10 @@ test("Unprotected robots are hit: failure is real, not an automatic countdown wi
     );
     run(s);
     assert.equal(s.state, "LOST", `Level ${id} should lose`);
-    assert.match(s.reason, /Hit|fell|waiting|switch/);
+    assert.match(
+      s.reason,
+      /Hit|fell|waiting|switch|laser|dock|inspection|core/,
+    );
     s.destroy();
   }
 });
@@ -220,7 +229,7 @@ test("Existing completed campaigns unlock new content without losing progress", 
   assert.ok(reload.data.stars[11] > 0);
   p.win(20, 423, 470);
   assert.ok(p.data.cosmetics.includes("foundry-hero"));
-  assert.equal(new Progress(store).data.unlocked, 20);
+  assert.equal(new Progress(store).data.unlocked, 21);
 });
 
 test("Foundry finale tolerates small pointer sampling differences", () => {
@@ -237,4 +246,51 @@ test("Foundry finale tolerates small pointer sampling differences", () => {
     assert.equal(sim.state, "WON", `Sample variant ${i}: ${sim.reason}`);
     sim.destroy();
   }
+});
+
+test("Skyworks solutions tolerate small drawing differences", () => {
+  for (const level of levels.filter((l) => l.id >= 21 && l.id <= 30))
+    for (let i = 0; i < 12; i++) {
+      const shift = ((i % 4) - 1.5) * 0.6;
+      const points = level.solution.map(([x, y]) => [
+        x + shift,
+        y + Math.floor(i / 4) * 0.3,
+      ]);
+      const s = new Simulation(level);
+      assert.equal(s.start(points), null);
+      run(s);
+      assert.equal(s.state, "WON", `${level.id}, variant ${i}: ${s.reason}`);
+      s.destroy();
+    }
+});
+test("Chapter paints are earned, selectable, and preserved across old-save migration", () => {
+  const store = memory(),
+    p = new Progress(store);
+  assert.equal(p.selectPaint("violet"), false);
+  assert.equal(p.selectPaint("unknown"), false);
+  p.win(10, 100, 500);
+  assert.equal(p.selectPaint("copper"), true);
+  p.win(20, 100, 500);
+  assert.equal(p.selectPaint("violet"), true);
+  const reloaded = new Progress(store);
+  assert.equal(reloaded.data.unlocked, 21);
+  assert.equal(reloaded.data.paint, "violet");
+  p.win(30, 100, 500);
+  assert.ok(p.data.cosmetics.includes("skyworks-hero"));
+  assert.equal(p.selectPaint("rose"), true);
+  assert.equal(new Progress(store).data.paint, "rose");
+  store.setItem(
+    SAVE_KEY,
+    JSON.stringify({
+      version: 1,
+      unlocked: 20,
+      lastLevel: 20,
+      stars: { 10: 3, 20: 2 },
+      paint: "rose",
+    }),
+  );
+  const old = new Progress(store);
+  assert.equal(old.data.unlocked, 21);
+  assert.equal(old.data.paint, "aqua");
+  assert.ok(old.data.cosmetics.includes("foundry-hero"));
 });

@@ -21,10 +21,10 @@ Open the Vite address in a desktop or mobile browser. On a phone on the same net
 Use the mouse or one finger to draw a continuous line, then release. Machines stay still while planning. Your fixed line becomes a Matter.js collider. Keep Pip safe, reach a charger, or activate a switch. Retry is always free. Keyboard: **R** retries, **Escape** pauses.
 
 ```sh
-npm test                 # actual Matter.js solutions for all twenty levels + game rules/saves
+npm test                 # actual Matter.js solutions for all 50 levels + game rules/saves
 npm run build            # standalone browser files in dist/
 npm run preview          # check the production build
-npm run test:e2e         # desktop mouse + emulated mobile touch + full twenty-level campaign
+npm run test:e2e         # desktop mouse + emulated mobile touch + full campaign with 50 puzzles
 npm run test:offline     # production reload AND level completion with network disabled
 ```
 
@@ -46,7 +46,7 @@ The **Web game Android packages** GitHub Actions workflow builds a debug APK. A 
 
 ## Scope and validation
 
-This is the specification's **twenty-level browser campaign**, with original procedural artwork and sound, progression, stars, hints, settings, local saves, browser offline support, pause/background handling, and no ads or purchases. All twenty levels contain authored solution metadata exercised against the same Matter.js module used in the browser. Browser input tests exercise a complete campaign too. Progress is versioned and backed up; browsers provide atomic localStorage replacement rather than file renames. Storage denial leaves a playable memory-only session.
+This is the specification's **browser campaign with 50 puzzles**, with original procedural artwork and sound, progression, stars, hints, settings, local saves, browser offline support, pause/background handling, and no ads or purchases. All 50 levels contain authored solution metadata exercised against the same Matter.js module used in the browser. Browser input tests exercise a complete campaign too. Progress is versioned and backed up; browsers provide atomic localStorage replacement rather than file renames. Storage denial leaves a playable memory-only session.
 
 The 60-level expansion, native advertising/billing SDKs, production purchase verification, store publication, human solvability review, and physical Android performance/touch certification are later milestones. No simulated purchase button grants entitlements. See [web/RELEASE_CHECKLIST.md](web/RELEASE_CHECKLIST.md) for remaining device/release checks.
 
@@ -59,3 +59,27 @@ godot --headless --script res://tests/test_runner.gd
 ```
 
 Use Godot **4.3**. The original GitHub workflows now run from `android/`; their APK/AAB artifact paths were adjusted to match the move.
+
+## Skyworks and earned robot paints
+
+Levels 21–30 add elevated bridges, two-robot charging objectives, stepped shelters, reverse catchers, and a gated team finale. Existing completed saves unlock the next chapter automatically. Settings → Robot paints lets you choose Aqua, Copper (complete Workshop), Violet (complete Foundry), or Rose (complete Skyworks). Paints are earned through play and saved locally.
+
+The default browser campaign test plays all 50 levels. To target the new chapter while retaining desktop/mobile UI regressions, run `CAMPAIGN_START_LEVEL=21 npm run test:e2e` from `web/`; earlier levels are seeded as completed in that test fixture.
+
+## Power Lab: six new mechanical puzzles
+
+Levels 31–36 add energy-core deliveries, wind fields, polygon-occluded laser beams, color-matched docks, and per-core inspection stamps. This chapter has six distinct mechanical requirements; existing levels are preserved. Cores are safe cargo and use matching plus/triangle symbols as well as color. A core leaving the delivery area ends an impossible delivery promptly.
+
+See [the content guide](web/CONTENT.md) for each puzzle's new interaction. Run `CAMPAIGN_START_LEVEL=31 npm run test:e2e` in `web/` to play the new chapter through real input and run the desktop/mobile UI regressions. The default campaign starts at level 1 and covers all 50 puzzles.
+
+## Relay Hub (levels 37–40)
+
+Four additional challenges combine strong crosswinds and laser shields, ordered inspections during an upward cargo flight, two pulsing beam planes, and a cargo-linked gate that requires a bridge to the charger. Existing levels remain intact. Inspection rings show one/two dots for their order; cargo gates use cyan to match the receiving dock.
+
+Run `CAMPAIGN_START_LEVEL=37 npm run test:e2e` in `web/` to exercise the new chapter and existing desktop/mobile UI regressions. The default browser campaign covers all 50 levels.
+
+## Grand Circuit (levels 41–50)
+
+The campaign now reaches exactly **50 levels**. The final ten puzzles add opposing cargo currents, three-stage inspection, laser-protected bridges, parallel inspected airlocks, robot-carrying fans, elevated landings, stacked receiving bays, asymmetric inspection trays, a three-beam cargo vault, and a two-robot/two-parcel finale. Earlier level content, saved progress, and earned paints are retained.
+
+From `web/`, run `CAMPAIGN_START_LEVEL=41 npm run test:e2e` for the targeted final-chapter playthrough and desktop/mobile regression suite. Default campaign testing still starts at level 1 and plays all 50 puzzles. Completing level 50 awards the Grand Circuit Hero badge.

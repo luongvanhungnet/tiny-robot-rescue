@@ -41,7 +41,10 @@ export function validateStroke(points, level) {
       if (
         !level.draw_zones.some(
           ([x, y, w, h]) =>
-            p[0] >= x && p[0] <= x + w && p[1] >= y && p[1] <= y + h,
+            p[0] >= x - 1e-6 &&
+            p[0] <= x + w + 1e-6 &&
+            p[1] >= y - 1e-6 &&
+            p[1] <= y + h + 1e-6,
         )
       )
         return "Draw inside the workshop.";

@@ -1,3 +1,4 @@
+import { chapters, paints, paintUnlocked } from "./content.js";
 import { LEVEL_COUNT } from "./levels.js";
 export const SAVE_KEY = "tiny-robot-rescue.v1";
 export const defaults = () => ({
@@ -8,6 +9,7 @@ export const defaults = () => ({
   bestInk: {},
   attempts: {},
   cosmetics: [],
+  paint: "aqua",
   settings: {
     sound: true,
     music: false,
@@ -58,8 +60,17 @@ function sanitize(raw) {
       fresh.settings[key] = raw.settings[key];
   if (Array.isArray(raw.cosmetics))
     fresh.cosmetics = raw.cosmetics.filter((v) =>
-      ["workshop-hero", "foundry-hero"].includes(v),
+      chapters.some((c) => c.badge === v),
     );
+  for (const chapter of chapters) {
+    if (
+      fresh.stars[chapter.last] > 0 &&
+      !fresh.cosmetics.includes(chapter.badge)
+    )
+      fresh.cosmetics.push(chapter.badge);
+  }
+  const paint = paints.find((p) => p.id === raw.paint);
+  if (paint && paintUnlocked(paint, fresh)) fresh.paint = paint.id;
   return fresh;
 }
 export class Progress {
@@ -104,6 +115,13 @@ export class Progress {
     }
     return this.persistent;
   }
+  selectPaint(id) {
+    const paint = paints.find((p) => p.id === id);
+    if (!paint || !paintUnlocked(paint, this.data)) return false;
+    this.data.paint = id;
+    this.save();
+    return true;
+  }
   attempt(id) {
     this.data.lastLevel = id;
     this.data.attempts[id] = (this.data.attempts[id] ?? 0) + 1;
@@ -117,10 +135,9 @@ export class Progress {
       LEVEL_COUNT,
       Math.max(this.data.unlocked, id + 1),
     );
-    if (id === 10 && !this.data.cosmetics.includes("workshop-hero"))
-      this.data.cosmetics.push("workshop-hero");
-    if (id === 20 && !this.data.cosmetics.includes("foundry-hero"))
-      this.data.cosmetics.push("foundry-hero");
+    const chapter = chapters.find((c) => c.last === id);
+    if (chapter && !this.data.cosmetics.includes(chapter.badge))
+      this.data.cosmetics.push(chapter.badge);
     this.save();
     return stars;
   }

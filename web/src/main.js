@@ -1,3 +1,4 @@
+import { chapters, paints, paintUnlocked, chapterForLevel } from "./content.js";
 import Phaser from "phaser";
 import { Capacitor } from "@capacitor/core";
 import { App } from "@capacitor/app";
@@ -105,18 +106,23 @@ function cleanup() {
 function home() {
   cleanup();
   screen = "home";
-  ui.innerHTML = `<section class="screen"><div class="brand"><div class="eyebrow">Little machine. Big adventure.</div><div class="pill"><span class="dot"></span>OFFLINE READY</div></div><div class="home-title"><h1>TINY ROBOT<br><span>RESCUE.</span></h1><p>A falling gear. A tiny friend.<br>All that stands between them is your line.</p></div><div class="hero-space"></div><div class="home-bottom"><div class="chapter"><span>01 — WORKSHOP & FOUNDRY</span><span>${Object.keys(progress.data.stars).length} / ${LEVEL_COUNT} rescued</span></div>${button("▶ &nbsp; LET’S RESCUE PIP", "play", "primary")}<div class="two">${button("▦ &nbsp; Levels", "levels")}${button("⚙ &nbsp; Settings", "settings")}</div><div class="footer"><span>ONE LINE</span><span>·</span><span>ENDLESS POSSIBILITIES</span></div></div></section>`;
+  ui.innerHTML = `<section class="screen"><div class="brand"><div class="eyebrow">Little machine. Big adventure.</div><div class="pill"><span class="dot"></span>OFFLINE READY</div></div><div class="home-title"><h1>TINY ROBOT<br><span>RESCUE.</span></h1><p>A falling gear. A tiny friend.<br>All that stands between them is your line.</p></div><div class="hero-space"></div><div class="home-bottom"><div class="chapter"><span>${chapters.length} LITTLE WORLDS</span><span>${Object.keys(progress.data.stars).length} / ${LEVEL_COUNT} rescued</span></div>${button("▶ &nbsp; LET’S RESCUE PIP", "play", "primary")}<div class="two">${button("▦ &nbsp; Levels", "levels")}${button("⚙ &nbsp; Settings", "settings")}</div><div class="footer"><span>ONE LINE</span><span>·</span><span>ENDLESS POSSIBILITIES</span></div></div></section>`;
   music();
 }
 function levelSelect() {
   cleanup();
   screen = "levels";
-  ui.innerHTML = `<section class="screen"><div class="toprow">${icon("Back to home", "home", "‹")}<div><div class="eyebrow">WORKSHOP & FOUNDRY</div><h2>Small steps. Big saves.</h2><p>${LEVEL_COUNT} puzzles. One clever line each.</p></div></div><div class="grid">${levels.map((l) => `<button class="level-card ${l.id === progress.data.unlocked ? "current" : ""}" data-level="${l.id}" ${l.id > progress.data.unlocked ? "disabled" : ""} aria-label="Level ${l.id}: ${l.title}${l.id > progress.data.unlocked ? ", locked" : ""}"><div class="level-number">${l.id > progress.data.unlocked ? "⌑" : String(l.id).padStart(2, "0")}</div><div class="level-name">${l.title}</div><div class="stars">${"★".repeat(progress.data.stars[l.id] ?? 0)}${"☆".repeat(3 - (progress.data.stars[l.id] ?? 0))}</div></button>`).join("")}</div><p class="chapter-note">Rescue Pip to unlock the next puzzle.<br>Use less ink to earn more stars. Every rescue counts.</p><div class="settings-foot">${progress.data.cosmetics.includes("foundry-hero") ? "✦ Foundry Hero earned — all twenty puzzles rescued!" : progress.data.cosmetics.includes("workshop-hero") ? "✦ Workshop Hero earned — the foundry awaits!" : "Made for curious minds. Take your time."}</div></section>`;
+  ui.innerHTML = `<section class="screen"><div class="toprow">${icon("Back to home", "home", "‹")}<div><div class="eyebrow">CHOOSE YOUR NEXT RESCUE</div><h2>Small steps. Big saves.</h2><p>${LEVEL_COUNT} puzzles. One clever line each.</p></div></div><div class="grid">${levels.map((l) => `<button class="level-card ${l.id === progress.data.unlocked ? "current" : ""}" data-level="${l.id}" ${l.id > progress.data.unlocked ? "disabled" : ""} aria-label="Level ${l.id}: ${l.title}${l.id > progress.data.unlocked ? ", locked" : ""}"><div class="level-number">${l.id > progress.data.unlocked ? "⌑" : String(l.id).padStart(2, "0")}</div><div class="level-name">${l.title}</div><div class="chapter-label">${chapterForLevel(l.id).name}</div><div class="stars">${"★".repeat(progress.data.stars[l.id] ?? 0)}${"☆".repeat(3 - (progress.data.stars[l.id] ?? 0))}</div></button>`).join("")}</div><p class="chapter-note">Rescue Pip to unlock the next puzzle.<br>Use less ink to earn more stars. Every rescue counts.</p><div class="settings-foot">${
+    chapters
+      .filter((c) => progress.data.cosmetics.includes(c.badge))
+      .map((c) => `✦ ${c.name} Hero earned`)
+      .join(" · ") || "Made for curious minds. Take your time."
+  }</div></section>`;
 }
 function settings() {
   cleanup();
   screen = "settings";
-  ui.innerHTML = `<section class="screen"><div class="toprow">${icon("Back to home", "home", "‹")}<div><div class="eyebrow">MAKE YOURSELF AT HOME</div><h2>Your workshop.</h2></div></div><div class="settings-list">${[
+  ui.innerHTML = `<section class="screen settings-screen"><div class="toprow">${icon("Back to home", "home", "‹")}<div><div class="eyebrow">MAKE YOURSELF AT HOME</div><h2>Your workshop.</h2></div></div><div class="settings-list">${[
     ["sound", "Sound effects"],
     ["music", "Ambient music"],
     ["vibration", "Haptics (Android)"],
@@ -128,7 +134,20 @@ function settings() {
     )
     .join(
       "",
-    )}</div>${button("Privacy & credits", "privacy")}${button("Restore purchases", "restore")}<div class="settings-foot">Progress lives on this device. Clearing browser/app data or uninstalling removes it. No account, tracking, ads, or purchases in this edition.<br><br>VERSION 0.1 · TWENTY-LEVEL EDITION</div></section>`;
+    )}</div>${button("Robot paints", "paints")}${button("Privacy & credits", "privacy")}${button("Restore purchases", "restore")}<div class="settings-foot">Progress lives on this device. Clearing browser/app data or uninstalling removes it. No account, tracking, ads, or purchases in this edition.<br><br>VERSION 0.1 · ${LEVEL_COUNT}-LEVEL EDITION</div></section>`;
+}
+function showPaints() {
+  modal(
+    "A fresh coat.",
+    "Finish Workshop, Foundry, and Skyworks to earn the extra paints. Pick a color for every little Pip.",
+    paints
+      .map(
+        (p) =>
+          `<button class="secondary paint-choice" data-paint="${p.id}" ${paintUnlocked(p, progress.data) ? "" : "disabled"}><span class="paint-dot" style="background:#${p.color.toString(16).padStart(6, "0")}"></span>${p.name}${progress.data.paint === p.id ? " · Selected" : paintUnlocked(p, progress.data) ? "" : " · Finish " + chapters.find((c) => c.badge === p.requires).name}</button>`,
+      )
+      .join("") + button("Done", "close", "primary"),
+    "EARNED THROUGH PLAY",
+  );
 }
 function startLevel(id) {
   cleanup();
@@ -141,7 +160,7 @@ function startLevel(id) {
   music();
 }
 function renderHUD() {
-  ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / ${LEVEL_COUNT}</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span><button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
+  ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / ${LEVEL_COUNT}</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "delivery" ? (current.objective.require_goal ? "deliver the core and reach the charger" : "deliver every energy core") : current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span><button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
 }
 function modal(title, body, actions, tag = "", symbol = "") {
   ui.querySelector(".modal-wrap")?.remove();
@@ -179,11 +198,16 @@ function finish(won, reason) {
   vibrate();
   if (won) {
     const stars = progress.win(current.id, ink, current.max_stroke_length);
+    const chapter = chapterForLevel(current.id);
+    const paintReward =
+      current.id === chapter.last
+        ? paints.find((p) => p.requires === chapter.badge)
+        : null;
     modal(
       current.id === LEVEL_COUNT
         ? "Workshop rescued!"
         : "Little robot. Big relief.",
-      `<span class="stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span><br>${current.id === LEVEL_COUNT ? "You earned the Foundry Hero badge. Twenty clever lines. Twenty happy endings." : `Pip is safe. You used ${Math.round(ink)} of ${current.max_stroke_length} ink.`}`,
+      `<span class="stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span><br>${current.id === LEVEL_COUNT ? `You earned the ${chapterForLevel(current.id).name} Hero badge. ${LEVEL_COUNT} clever lines. A whole world of happy endings.` : `Pip is safe. You used ${Math.round(ink)} of ${current.max_stroke_length} ink.`}${paintReward ? `<br>${paintReward.name} paint unlocked! Find it in Settings → Robot paints.` : ""}`,
       button(
         current.id === LEVEL_COUNT
           ? "Back to the workshop"
@@ -212,6 +236,13 @@ ui.addEventListener("click", async (e) => {
   if (!el || el.disabled) return;
   sound(420);
   if (el.dataset.level) return startLevel(+el.dataset.level);
+  if (el.dataset.paint) {
+    if (progress.selectPaint(el.dataset.paint)) {
+      showPaints();
+      sound(600, true);
+    }
+    return;
+  }
   switch (el.dataset.action) {
     case "home":
       home();
@@ -241,6 +272,9 @@ ui.addEventListener("click", async (e) => {
       break;
     case "hint":
       toast(current.hint);
+      break;
+    case "paints":
+      showPaints();
       break;
     case "privacy":
       modal(
@@ -378,7 +412,7 @@ class Workshop extends Phaser.Scene {
       if ($("#phase"))
         $("#phase").textContent =
           sim.state === "SIMULATING"
-            ? `◷ ${Math.max(0, current.simulation_duration - sim.elapsed).toFixed(1)}s · ${sim.level.objective.type === "survival" ? "STAY SAFE" : "LET’S GO"}`
+            ? `◷ ${Math.max(0, current.simulation_duration - sim.elapsed).toFixed(1)}s · ${sim.level.objective.type === "delivery" ? `${sim.delivered.size}/${current.objective.required_cells} DELIVERED` : sim.level.objective.type === "survival" ? "STAY SAFE" : "LET’S GO"}`
             : sim.state === "DRAWING"
               ? "● RELEASE TO RESCUE"
               : sim.state === "WON"
@@ -413,7 +447,12 @@ class Workshop extends Phaser.Scene {
       for (let dx = 12; dx < w; dx += 24)
         g.lineBetween(x + dx, y + 8, x + Math.max(0, dx - 12), y + 24);
     }
-    sim.entities.forEach((b) => this.entity(b, time));
+    sim.entities
+      .filter((b) => ["fan", "laser"].includes(b.label))
+      .forEach((b) => this.entity(b, time));
+    sim.entities
+      .filter((b) => !["fan", "laser"].includes(b.label))
+      .forEach((b) => this.entity(b, time));
     this.stroke(sim.stroke, 0xb6f36d, 14);
     if (points.length) {
       const invalid =
@@ -456,8 +495,12 @@ class Workshop extends Phaser.Scene {
     g.fillStyle(0x477e8a)
       .fillRoundedRect(-32, -6, 10, 22, 4)
       .fillRoundedRect(22, -6, 10, 22, 4);
-    g.fillStyle(0x79d8db).fillRoundedRect(-23, -27, 46, 50, 12);
-    g.fillStyle(0xa3f0eb).fillRoundedRect(-20, -26, 40, 9, 5);
+    g.fillStyle(
+      paints.find((p) => p.id === progress.data.paint).color,
+    ).fillRoundedRect(-23, -27, 46, 50, 12);
+    g.fillStyle(
+      paints.find((p) => p.id === progress.data.paint).highlight,
+    ).fillRoundedRect(-20, -26, 40, 9, 5);
     g.fillStyle(0x142b3b).fillRoundedRect(-17, -15, 34, 23, 7);
     g.lineStyle(4, 0x69b4bd).lineBetween(0, -27, 0, -37);
     g.fillStyle(0xb6f36d).fillCircle(0, -39, 5);
@@ -501,11 +544,142 @@ class Workshop extends Phaser.Scene {
     g.fillStyle(0xf4c49b).fillCircle(0, 0, r * 0.23);
     g.restore();
   }
+  cargoMark(x, y, channel, color) {
+    const g = this.g;
+    g.lineStyle(3, color);
+    if (channel === "amber") {
+      g.beginPath();
+      g.moveTo(x, y - 9);
+      g.lineTo(x - 9, y + 7);
+      g.lineTo(x + 9, y + 7);
+      g.closePath();
+      g.strokePath();
+    } else g.lineBetween(x - 8, y, x + 8, y).lineBetween(x, y - 8, x, y + 8);
+  }
   entity(b, time) {
     const g = this.g,
       { x, y } = b.position,
       o = b.plugin;
     switch (b.label) {
+      case "cell":
+      case "delivered": {
+        const color = o.channel === "amber" ? 0xf6c675 : 0x70ddea;
+        g.fillStyle(color, 0.14).fillCircle(x, y, 25);
+        g.fillStyle(0x142b3b).fillCircle(x, y, 18);
+        g.lineStyle(3, color).strokeCircle(x, y, 18);
+        this.cargoMark(x, y, o.channel, color);
+        if (b.label === "delivered")
+          g.lineStyle(2, 0xb6f36d).strokeCircle(x, y, 23);
+        break;
+      }
+      case "socket": {
+        const color = o.filled
+          ? 0xb6f36d
+          : o.accepts === "amber"
+            ? 0xf6c675
+            : 0x70ddea;
+        g.fillStyle(color, 0.1).fillRoundedRect(
+          x - o.w / 2,
+          y - o.h / 2,
+          o.w,
+          o.h,
+          8,
+        );
+        g.lineStyle(4, color).beginPath();
+        g.moveTo(x - o.w / 2, y - o.h / 2);
+        g.lineTo(x - o.w / 2, y + o.h / 2);
+        g.lineTo(x + o.w / 2, y + o.h / 2);
+        g.lineTo(x + o.w / 2, y - o.h / 2);
+        g.strokePath();
+        if (!o.filled) this.cargoMark(x, y, o.accepts, color);
+        if (o.requires_checkpoint)
+          g.lineStyle(2, 0xc2a1f0).strokeCircle(x, y - o.h / 2 - 12, 7);
+        break;
+      }
+      case "checkpoint":
+        g.fillStyle(0xc2a1f0, 0.07).fillCircle(x, y, o.w / 2);
+        g.lineStyle(4, o.active ? 0xb6f36d : 0xc2a1f0).strokeCircle(
+          x,
+          y,
+          o.w / 2,
+        );
+        g.lineStyle(2, 0xc2a1f0, 0.45).strokeCircle(x, y, o.w / 2 - 9);
+        if (o.active)
+          g.lineStyle(4, 0xb6f36d)
+            .lineBetween(x - 12, y, x - 3, y + 9)
+            .lineBetween(x - 3, y + 9, x + 16, y - 12);
+        else
+          g.lineStyle(3, 0xc2a1f0)
+            .lineBetween(x - 16, y, x + 16, y)
+            .lineBetween(x + 7, y - 9, x + 16, y)
+            .lineBetween(x + 7, y + 9, x + 16, y);
+        if (o.step)
+          for (let i = 0; i < o.step; i++)
+            g.fillStyle(0xc2a1f0).fillCircle(
+              x + (i - (o.step - 1) / 2) * 12,
+              y - o.w / 2 - 12,
+              4,
+            );
+        break;
+      case "fan": {
+        g.fillStyle(0x70ddea, 0.04).fillRect(
+          x - o.w / 2,
+          y - o.h / 2,
+          o.w,
+          o.h,
+        );
+        g.lineStyle(1, 0x70ddea, 0.25).strokeRect(
+          x - o.w / 2,
+          y - o.h / 2,
+          o.w,
+          o.h,
+        );
+        const angle = Math.atan2(o.force_y ?? 0, o.force_x ?? 0);
+        for (let fx = x - o.w / 2 + 35; fx < x + o.w / 2; fx += 65)
+          for (let fy = y - o.h / 2 + 40; fy < y + o.h / 2; fy += 90) {
+            g.save();
+            g.translateCanvas(fx, fy);
+            g.rotateCanvas(angle);
+            g.lineStyle(2, 0x70ddea, 0.3);
+            g.lineBetween(-12, 0, 12, 0)
+              .lineBetween(5, -6, 12, 0)
+              .lineBetween(5, 6, 12, 0);
+            g.restore();
+          }
+        g.fillStyle(0x294957).fillCircle(
+          x - o.w / 2 + 23,
+          y + o.h / 2 - 23,
+          17,
+        );
+        for (let n = 0; n < 4; n++) {
+          g.save();
+          g.translateCanvas(x - o.w / 2 + 23, y + o.h / 2 - 23);
+          g.rotateCanvas(
+            (n * Math.PI) / 2 +
+              (progress.data.settings.reducedMotion ? 0 : time / 300),
+          );
+          g.fillStyle(0x70ddea).fillEllipse(0, -8, 6, 13);
+          g.restore();
+        }
+        break;
+      }
+      case "laser": {
+        const end = o.beamEnd ?? { x: o.to_x, y: o.to_y };
+        g.lineStyle(
+          o.active ? 8 : 3,
+          0xff6e82,
+          o.active ? 0.16 : 0.18,
+        ).lineBetween(x, y, end.x, end.y);
+        g.lineStyle(o.active ? 3 : 1, 0xff6e82, o.active ? 1 : 0.5).lineBetween(
+          x,
+          y,
+          end.x,
+          end.y,
+        );
+        g.fillStyle(0x543141).fillRoundedRect(x - 12, y - 18, 24, 36, 5);
+        g.fillStyle(o.active ? 0xff6e82 : 0xf6c675).fillCircle(x, y, 6);
+        break;
+      }
       case "robot":
         this.robot(
           x,
@@ -616,7 +790,7 @@ class Workshop extends Phaser.Scene {
         break;
       case "gate":
         if (!o.open) {
-          g.fillStyle(0xf2bb6a, 0.8).fillRoundedRect(
+          g.fillStyle(o.channel ? 0x70ddea : 0xf2bb6a, 0.8).fillRoundedRect(
             x - o.w / 2,
             y - o.h / 2,
             o.w,

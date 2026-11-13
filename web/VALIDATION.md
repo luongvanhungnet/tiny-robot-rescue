@@ -1,4 +1,65 @@
-# Twenty-level expansion validation
+# Grand Circuit: 50-level validation
+
+Branch: `web/dev/codex`. The campaign contains exactly 50 sequential level IDs. Grand Circuit (41–50) adds ten distinct mechanic combinations while preserving prior level definitions, progress, and paint choices.
+
+Current checks:
+
+- `npm test`: **91 passed, 0 failed**. All 50 reference strokes win and ineffective strokes lose. New checks cover ten distinct mechanic signatures, pointer sampling variations, both cargo backstops, required robot lifts and shields, stacked receiver gate links, per-core inspection, two deliveries plus two robot arrivals in level 50, final badge persistence, and drawing-edge numeric tolerance.
+- `CAMPAIGN_START_LEVEL=41 npm run test:e2e`: **17 passed, 1 intentionally skipped**. Levels 41–50 complete through real mouse drawing. Desktop/mobile touch and UI tests also cover old 10/20/30/36/40-level saves, paints, progression, pause/retry, settings, and viewport changes. Earlier levels are seeded as completed in this targeted campaign; a full 50-level browser run was not performed. The duplicate mobile campaign remains skipped.
+- Production build, Capacitor sync, offline production reload and puzzle completion, formatting, and `git diff --check` passed.
+- Robot lift and finale artwork were visually inspected at a phone viewport without rendering errors.
+- Browser play caught an authored endpoint lying on the draw-zone boundary. The finale now leaves clearance for pointer quantization; a separate tiny epsilon handles floating-point noise without admitting genuinely outside strokes.
+
+Native APK compilation, physical-device performance, and human difficulty/fairness certification remain unrun. This iteration did not push code or publish environment configuration.
+
+---
+
+# Relay Hub validation (historical)
+
+Branch: `web/dev/codex`. Levels 37–40 bring the game to 40 puzzles. They add a strong-wind cargo cradle with laser protection, ordered upward inspection, dual-plane pulsing beams, and a cargo-linked gate/bridge exit. Existing level definitions are preserved.
+
+Current checks:
+
+- `npm test`: **73 passed, 0 failed**. All 40 reference solutions win and ineffective strokes lose. Relay tests also exercise small stroke variations, mandatory cradle/backstop pieces, inspection order and repeated visits, both beam planes and actual pulse timing, gate-channel isolation, and delivery plus robot-arrival requirements. Prior save, paint, and chapter regressions pass.
+- `CAMPAIGN_START_LEVEL=37 npm run test:e2e`: **15 passed, 1 intentionally skipped**. The four new levels win through real mouse input. Desktop and emulated-mobile touch tests also cover a full cargo cradle stroke, migration from a completed level-36 save, prior chapter migrations, paints, progression, pause/retry, settings, and responsive layout. Earlier levels are seeded as completed for the targeted campaign; a full 40-level browser playthrough was not run. The duplicate mobile campaign remains skipped.
+- Production build, Capacitor asset sync, offline production reload and puzzle completion, formatting, and `git diff --check` passed.
+- Ordered ring markers and the linked cyan gate were visually inspected in a phone viewport without browser rendering errors.
+
+Physical-device and human difficulty/fairness testing remain unrun. Native APK compilation remains unverified. This iteration did not push code or publish environment configuration.
+
+---
+
+# Power Lab validation (historical)
+
+Branch: `web/dev/codex`. The campaign now has 36 levels. Power Lab (31–36) introduces nonlethal cargo, delivery objectives, wind forces, beam occlusion, matching docks, and per-core inspection stamps. The earlier 30 level definitions are preserved.
+
+Current checks:
+
+- `npm test`: **60 passed, 0 failed**. Reference solutions win and ineffective strokes lose on all 36 levels. New tests cover distinct mechanical requirements, no exact layout reuse, small stroke variations, mandatory wind, closest-surface laser occlusion, planning/warmup timing, idempotent cargo delivery, wrong-color rejection, per-core stamp ownership, and required survival after delivery.
+- `CAMPAIGN_START_LEVEL=31 npm run test:e2e`: **13 passed, 1 intentionally skipped**. The six Power Lab puzzles win through real mouse input. Earlier levels are seeded as completed for this targeted run; a full 36-level browser playthrough was not run. Desktop and emulated-mobile tests also verify touch delivery, legacy 10/20/30-level saves, paints, progression, pause/retry, settings, and resizing. The duplicate mobile campaign is skipped.
+- Production build, Capacitor sync, offline production reload and puzzle completion, formatting, and `git diff --check` passed.
+- Fan fields, beam emitters, cargo docks, and the inspection ring were visually inspected in a phone viewport with no browser rendering errors.
+
+Physical-device testing and human puzzle-balancing review remain unrun. Native APK compilation remains unverified. This iteration did not push code or publish environment configuration.
+
+---
+
+# Skyworks and earned paints validation (historical)
+
+Branch: `web/dev/codex`. The game now contains 30 levels. Levels 21–30 introduce elevated bridges, two-robot charging runs, stepped shelters, reverse catchers, a paired-switch rescue, and a gated team finale. Four robot paints are available: Aqua by default, Copper after Workshop, Violet after Foundry, and Rose after Skyworks. Existing saves migrate without resetting progress or settings.
+
+Current checks:
+
+- `npm test`: **42 passed, 0 failed**. All 30 authored solutions win in real Matter.js; ineffective strokes lose on all 30. The ten new levels also pass small drawing variations. Save migration, multiple-robot objectives, paint unlock guards, selection, persistence, and the prior regressions pass.
+- `CAMPAIGN_START_LEVEL=21 npm run test:e2e`: **11 passed, 1 intentionally skipped**. Levels 21–30 were completed through real mouse drawing. Levels 1–20 are seeded as previously completed in this targeted campaign fixture; a complete 30-level browser playthrough was not run in this iteration. The suite also verifies desktop and emulated-mobile touch, legacy saves, progression, earned paints, settings, pause, retry, and resizing. The duplicate mobile campaign remains skipped.
+- Production build, Capacitor asset sync, offline production reload and puzzle completion, formatting, and `git diff --check` passed.
+- Paint selection and the recolored robot were visually checked at a 320×568 phone viewport.
+
+Native APK compilation and physical-device/Safari/Firefox testing remain unrun. The Godot edition is unchanged. No code was pushed or environment configuration published for this expansion.
+
+---
+
+# Twenty-level expansion validation (historical)
 
 Branch: `web/dev/codex`. Levels 11–20 add crossing hazards, a raised shelter, three robots, two-gap bridges, reversed launches, paired switches, visible no-draw zones, and a two-robot switch finale. Existing ten-level saves retain stars/settings and unlock level 11 when level 10 was completed.
 
