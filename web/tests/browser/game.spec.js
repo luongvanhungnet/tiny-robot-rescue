@@ -15,15 +15,20 @@ async function draw(page, points, touch = false) {
       type: "touchStart",
       touchPoints: [coords[0]],
     });
-    for (let i = 1; i <= 20; i++) {
-      const a = coords[0],
-        b = coords.at(-1);
-      await cdp.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [
-          { x: a.x + ((b.x - a.x) * i) / 20, y: a.y + ((b.y - a.y) * i) / 20 },
-        ],
-      });
+    for (let segment = 1; segment < coords.length; segment++) {
+      const a = coords[segment - 1],
+        b = coords[segment];
+      for (let i = 1; i <= 20; i++) {
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: [
+            {
+              x: a.x + ((b.x - a.x) * i) / 20,
+              y: a.y + ((b.y - a.y) * i) / 20,
+            },
+          ],
+        });
+      }
     }
     await cdp.send("Input.dispatchTouchEvent", {
       type: "touchEnd",
@@ -124,4 +129,56 @@ test("Resizing keeps canvas visible, and a failed rescue can be retried immediat
     expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
     expect(box.y + box.height).toBeLessThanOrEqual(height + 1);
   }
+});
+
+test("Finished ten-level saves continue into the foundry with cornered mouse/touch strokes", async ({
+  page,
+}, info) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      "tiny-robot-rescue.v1",
+      JSON.stringify({
+        version: 1,
+        unlocked: 10,
+        lastLevel: 10,
+        stars: { 10: 3 },
+        settings: { sound: false },
+        cosmetics: ["workshop-hero"],
+      }),
+    ),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: /Levels/ }).click();
+  await expect(page.locator(".level-card")).toHaveCount(20);
+  await expect(
+    page.getByRole("button", { name: "Level 11: Cross Traffic", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    page.getByRole("button", {
+      name: "Level 12: Pocket Roof, locked",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await page
+    .getByRole("button", { name: "Level 11: Cross Traffic", exact: true })
+    .click();
+  await draw(
+    page,
+    [
+      [320, 1020],
+      [320, 720],
+      [550, 720],
+    ],
+    info.project.name === "mobile",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Little robot. Big relief." }),
+  ).toBeVisible({ timeout: 30000 });
+  await page.getByRole("button", { name: "Next little adventure" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Pocket Roof" }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() => window.__rescue.progress.data.stars[10]),
+  ).toBe(3);
 });

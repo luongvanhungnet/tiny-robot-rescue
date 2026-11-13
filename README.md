@@ -21,10 +21,10 @@ Open the Vite address in a desktop or mobile browser. On a phone on the same net
 Use the mouse or one finger to draw a continuous line, then release. Machines stay still while planning. Your fixed line becomes a Matter.js collider. Keep Pip safe, reach a charger, or activate a switch. Retry is always free. Keyboard: **R** retries, **Escape** pauses.
 
 ```sh
-npm test                 # actual Matter.js solutions for all ten levels + game rules/saves
+npm test                 # actual Matter.js solutions for all twenty levels + game rules/saves
 npm run build            # standalone browser files in dist/
 npm run preview          # check the production build
-npm run test:e2e         # desktop mouse + emulated mobile touch + full ten-level campaign
+npm run test:e2e         # desktop mouse + emulated mobile touch + full twenty-level campaign
 npm run test:offline     # production reload AND level completion with network disabled
 ```
 
@@ -46,7 +46,7 @@ The **Web game Android packages** GitHub Actions workflow builds a debug APK. A 
 
 ## Scope and validation
 
-This is the specification's **ten-level vertical slice**, with original procedural artwork and sound, progression, stars, hints, settings, local saves, browser offline support, pause/background handling, and no ads or purchases. All ten levels contain authored solution metadata exercised against the same Matter.js module used in the browser. Browser input tests exercise a complete campaign too. Progress is versioned and backed up; browsers provide atomic localStorage replacement rather than file renames. Storage denial leaves a playable memory-only session.
+This is the specification's **twenty-level browser campaign**, with original procedural artwork and sound, progression, stars, hints, settings, local saves, browser offline support, pause/background handling, and no ads or purchases. All twenty levels contain authored solution metadata exercised against the same Matter.js module used in the browser. Browser input tests exercise a complete campaign too. Progress is versioned and backed up; browsers provide atomic localStorage replacement rather than file renames. Storage denial leaves a playable memory-only session.
 
 The 60-level expansion, native advertising/billing SDKs, production purchase verification, store publication, human solvability review, and physical Android performance/touch certification are later milestones. No simulated purchase button grants entitlements. See [web/RELEASE_CHECKLIST.md](web/RELEASE_CHECKLIST.md) for remaining device/release checks.
 

@@ -1,4 +1,19 @@
-# Validation in the cloud workspace
+# Twenty-level expansion validation
+
+Branch: `web/dev/codex`. Levels 11–20 add crossing hazards, a raised shelter, three robots, two-gap bridges, reversed launches, paired switches, visible no-draw zones, and a two-robot switch finale. Existing ten-level saves retain stars/settings and unlock level 11 when level 10 was completed.
+
+Current checks:
+
+- `npm test`: **30 passed, 0 failed**, including real Matter.js solutions for all twenty levels, ineffective strokes that lose on all twenty, old-save migration, and small pointer-sampling variations in the finale.
+- `npm run test:e2e`: **9 passed, 1 intentionally skipped**. The complete twenty-level campaign wins through real mouse drawing. Desktop and emulated-mobile touch tests validate the new cornered-stroke rescue, migration from an old completed save, progression, settings, retry, pause, and responsive layout. The duplicate mobile full-campaign test remains skipped.
+- Final `npm run build`, `npx cap sync android`, `node tests/offline.mjs`, `npm run format:check`, and `git diff --check` passed. The built app reloads and completes a puzzle with networking disabled.
+- The twenty-card selector was also checked at a phone-sized viewport, including scrolling to level 20 and opening the visibly marked no-draw puzzle.
+
+Native APK compilation, physical-device performance, and human difficulty/fairness review were not run for this expansion. The original Godot project is unchanged. The earlier native build limitation below remains unresolved.
+
+---
+
+# Initial ten-level validation (historical, before first push)
 
 Branch: `codex2`.
 

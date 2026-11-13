@@ -17,12 +17,13 @@ for (const level of levels)
     run(s);
     assert.equal(s.state, "WON", s.reason);
     assert.ok(s.elapsed > 0);
-    if (level.objective.type === "switch") assert.equal(s.activated.size, 1);
+    if (level.objective.type === "switch")
+      assert.equal(s.activated.size, level.objective.required_switches);
     if (level.objective.type === "exit") assert.equal(s.goals.size, 1);
     s.destroy();
   });
 test("Unprotected robots are hit: failure is real, not an automatic countdown win", () => {
-  for (const id of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+  for (const id of levels.map((level) => level.id)) {
     const s = new Simulation(levels[id - 1]);
     assert.equal(
       s.start([
@@ -33,7 +34,7 @@ test("Unprotected robots are hit: failure is real, not an automatic countdown wi
     );
     run(s);
     assert.equal(s.state, "LOST", `Level ${id} should lose`);
-    assert.match(s.reason, /Hit|fell/);
+    assert.match(s.reason, /Hit|fell|waiting|switch/);
     s.destroy();
   }
 });
@@ -192,4 +193,48 @@ test("No monetization path invents purchases or blocks play offline", async () =
   assert.equal(await ads.showInterstitial(), false);
   assert.equal((await billing.purchase()).purchased, false);
   assert.deepEqual(await billing.restore(), []);
+});
+
+test("Existing completed campaigns unlock new content without losing progress", () => {
+  const store = memory();
+  store.setItem(
+    SAVE_KEY,
+    JSON.stringify({
+      version: 1,
+      unlocked: 10,
+      lastLevel: 10,
+      stars: { 1: 3, 10: 2 },
+      bestInk: { 10: 423 },
+      settings: { sound: false },
+      cosmetics: ["workshop-hero"],
+    }),
+  );
+  const p = new Progress(store);
+  assert.equal(p.data.unlocked, 11);
+  assert.equal(p.data.stars[1], 3);
+  assert.equal(p.data.bestInk[10], 423);
+  assert.equal(p.data.settings.sound, false);
+  p.win(11, 300, 580);
+  const reload = new Progress(store);
+  assert.equal(reload.data.unlocked, 12);
+  assert.ok(reload.data.stars[11] > 0);
+  p.win(20, 423, 470);
+  assert.ok(p.data.cosmetics.includes("foundry-hero"));
+  assert.equal(new Progress(store).data.unlocked, 20);
+});
+
+test("Foundry finale tolerates small pointer sampling differences", () => {
+  const l = levels[19];
+  for (let i = 0; i < 40; i++) {
+    const shift = ((i % 10) - 5) * 0.4;
+    const stroke = l.solution.map(([x, y], j) => [
+      x + shift,
+      y + ((i % 4) - 2) * 0.3 * (j ? 1 : -1),
+    ]);
+    const sim = new Simulation(l);
+    assert.equal(sim.start(stroke), null);
+    run(sim);
+    assert.equal(sim.state, "WON", `Sample variant ${i}: ${sim.reason}`);
+    sim.destroy();
+  }
 });

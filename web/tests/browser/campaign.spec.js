@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { levels } from "../../src/levels.js";
-test("All ten puzzles can be rescued in sequence through real pointer input", async ({
+test("All campaign puzzles can be rescued in sequence through real pointer input", async ({
   page,
 }, info) => {
   test.skip(
     info.project.name !== "desktop",
     "Touch input is covered by the first-rescue test.",
   );
-  test.setTimeout(300000);
+  test.setTimeout(600000);
   await page.goto("/");
   await page.getByRole("button", { name: /LET’S RESCUE/ }).click();
   for (const level of levels) {
@@ -27,20 +27,24 @@ test("All ten puzzles can be rescued in sequence through real pointer input", as
     await page
       .getByRole("heading", {
         name:
-          level.id === 10 ? "Workshop rescued!" : "Little robot. Big relief.",
+          level.id === levels.length
+            ? "Workshop rescued!"
+            : "Little robot. Big relief.",
       })
       .waitFor({ timeout: 30000 });
     await page
       .getByRole("button", {
         name:
-          level.id === 10 ? "Back to the workshop" : "Next little adventure",
+          level.id === levels.length
+            ? "Back to the workshop"
+            : "Next little adventure",
       })
       .click();
   }
-  await expect(page.getByText(/Workshop Hero earned/)).toBeVisible();
+  await expect(page.getByText(/Foundry Hero earned/)).toBeVisible();
   expect(
     await page.evaluate(
       () => Object.keys(window.__rescue.progress.data.stars).length,
     ),
-  ).toBe(10);
+  ).toBe(levels.length);
 });

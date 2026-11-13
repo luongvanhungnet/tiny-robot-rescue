@@ -1,3 +1,4 @@
+import { LEVEL_COUNT } from "./levels.js";
 export const SAVE_KEY = "tiny-robot-rescue.v1";
 export const defaults = () => ({
   version: 1,
@@ -25,7 +26,7 @@ function sanitize(raw) {
   const fresh = defaults();
   const int = (n, min, max) =>
     Number.isInteger(n) ? Math.max(min, Math.min(max, n)) : min;
-  fresh.unlocked = int(raw.unlocked ?? raw.unlocked_level, 1, 10);
+  fresh.unlocked = int(raw.unlocked ?? raw.unlocked_level, 1, LEVEL_COUNT);
   fresh.lastLevel = int(
     raw.lastLevel ?? raw.last_selected_level,
     1,
@@ -33,15 +34,32 @@ function sanitize(raw) {
   );
   for (const key of ["stars", "bestInk", "attempts"]) {
     for (const [id, value] of Object.entries(raw[key] ?? {})) {
-      if (+id >= 1 && +id <= 10 && Number.isFinite(value) && value >= 0)
+      if (
+        +id >= 1 &&
+        +id <= LEVEL_COUNT &&
+        Number.isFinite(value) &&
+        value >= 0
+      )
         fresh[key][id] = key === "stars" ? int(value, 0, 3) : value;
     }
   }
+  const highestWon = Math.max(
+    0,
+    ...Object.keys(fresh.stars)
+      .filter((id) => fresh.stars[id] > 0)
+      .map(Number),
+  );
+  fresh.unlocked = Math.min(
+    LEVEL_COUNT,
+    Math.max(fresh.unlocked, highestWon + 1),
+  );
   for (const key of Object.keys(fresh.settings))
     if (typeof raw.settings?.[key] === "boolean")
       fresh.settings[key] = raw.settings[key];
   if (Array.isArray(raw.cosmetics))
-    fresh.cosmetics = raw.cosmetics.filter((v) => v === "workshop-hero");
+    fresh.cosmetics = raw.cosmetics.filter((v) =>
+      ["workshop-hero", "foundry-hero"].includes(v),
+    );
   return fresh;
 }
 export class Progress {
@@ -95,9 +113,14 @@ export class Progress {
     const stars = ink <= max * 0.65 ? 3 : ink <= max * 0.9 ? 2 : 1;
     this.data.stars[id] = Math.max(stars, this.data.stars[id] ?? 0);
     this.data.bestInk[id] = Math.min(ink, this.data.bestInk[id] ?? Infinity);
-    this.data.unlocked = Math.min(10, Math.max(this.data.unlocked, id + 1));
+    this.data.unlocked = Math.min(
+      LEVEL_COUNT,
+      Math.max(this.data.unlocked, id + 1),
+    );
     if (id === 10 && !this.data.cosmetics.includes("workshop-hero"))
       this.data.cosmetics.push("workshop-hero");
+    if (id === 20 && !this.data.cosmetics.includes("foundry-hero"))
+      this.data.cosmetics.push("foundry-hero");
     this.save();
     return stars;
   }

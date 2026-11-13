@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { Capacitor } from "@capacitor/core";
 import { App } from "@capacitor/app";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
-import { levels } from "./levels.js";
+import { levels, LEVEL_COUNT } from "./levels.js";
 import { Progress } from "./save.js";
 import { Simulation } from "./simulation.js";
 import { distance, length, simplify, validateStroke } from "./stroke.js";
@@ -105,13 +105,13 @@ function cleanup() {
 function home() {
   cleanup();
   screen = "home";
-  ui.innerHTML = `<section class="screen"><div class="brand"><div class="eyebrow">Little machine. Big adventure.</div><div class="pill"><span class="dot"></span>OFFLINE READY</div></div><div class="home-title"><h1>TINY ROBOT<br><span>RESCUE.</span></h1><p>A falling gear. A tiny friend.<br>All that stands between them is your line.</p></div><div class="hero-space"></div><div class="home-bottom"><div class="chapter"><span>01 — THE LITTLE WORKSHOP</span><span>${Object.keys(progress.data.stars).length} / 10 rescued</span></div>${button("▶ &nbsp; LET’S RESCUE PIP", "play", "primary")}<div class="two">${button("▦ &nbsp; Levels", "levels")}${button("⚙ &nbsp; Settings", "settings")}</div><div class="footer"><span>ONE LINE</span><span>·</span><span>ENDLESS POSSIBILITIES</span></div></div></section>`;
+  ui.innerHTML = `<section class="screen"><div class="brand"><div class="eyebrow">Little machine. Big adventure.</div><div class="pill"><span class="dot"></span>OFFLINE READY</div></div><div class="home-title"><h1>TINY ROBOT<br><span>RESCUE.</span></h1><p>A falling gear. A tiny friend.<br>All that stands between them is your line.</p></div><div class="hero-space"></div><div class="home-bottom"><div class="chapter"><span>01 — WORKSHOP & FOUNDRY</span><span>${Object.keys(progress.data.stars).length} / ${LEVEL_COUNT} rescued</span></div>${button("▶ &nbsp; LET’S RESCUE PIP", "play", "primary")}<div class="two">${button("▦ &nbsp; Levels", "levels")}${button("⚙ &nbsp; Settings", "settings")}</div><div class="footer"><span>ONE LINE</span><span>·</span><span>ENDLESS POSSIBILITIES</span></div></div></section>`;
   music();
 }
 function levelSelect() {
   cleanup();
   screen = "levels";
-  ui.innerHTML = `<section class="screen"><div class="toprow">${icon("Back to home", "home", "‹")}<div><div class="eyebrow">THE LITTLE WORKSHOP</div><h2>Small steps. Big saves.</h2><p>10 puzzles. One clever line each.</p></div></div><div class="grid">${levels.map((l) => `<button class="level-card ${l.id === progress.data.unlocked ? "current" : ""}" data-level="${l.id}" ${l.id > progress.data.unlocked ? "disabled" : ""} aria-label="Level ${l.id}: ${l.title}${l.id > progress.data.unlocked ? ", locked" : ""}"><div class="level-number">${l.id > progress.data.unlocked ? "⌑" : String(l.id).padStart(2, "0")}</div><div class="level-name">${l.title}</div><div class="stars">${"★".repeat(progress.data.stars[l.id] ?? 0)}${"☆".repeat(3 - (progress.data.stars[l.id] ?? 0))}</div></button>`).join("")}</div><p class="chapter-note">Rescue Pip to unlock the next puzzle.<br>Use less ink to earn more stars. Every rescue counts.</p><div class="settings-foot">${progress.data.cosmetics.includes("workshop-hero") ? "✦ Workshop Hero earned — all ten puzzles rescued!" : "Made for curious minds. Take your time."}</div></section>`;
+  ui.innerHTML = `<section class="screen"><div class="toprow">${icon("Back to home", "home", "‹")}<div><div class="eyebrow">WORKSHOP & FOUNDRY</div><h2>Small steps. Big saves.</h2><p>${LEVEL_COUNT} puzzles. One clever line each.</p></div></div><div class="grid">${levels.map((l) => `<button class="level-card ${l.id === progress.data.unlocked ? "current" : ""}" data-level="${l.id}" ${l.id > progress.data.unlocked ? "disabled" : ""} aria-label="Level ${l.id}: ${l.title}${l.id > progress.data.unlocked ? ", locked" : ""}"><div class="level-number">${l.id > progress.data.unlocked ? "⌑" : String(l.id).padStart(2, "0")}</div><div class="level-name">${l.title}</div><div class="stars">${"★".repeat(progress.data.stars[l.id] ?? 0)}${"☆".repeat(3 - (progress.data.stars[l.id] ?? 0))}</div></button>`).join("")}</div><p class="chapter-note">Rescue Pip to unlock the next puzzle.<br>Use less ink to earn more stars. Every rescue counts.</p><div class="settings-foot">${progress.data.cosmetics.includes("foundry-hero") ? "✦ Foundry Hero earned — all twenty puzzles rescued!" : progress.data.cosmetics.includes("workshop-hero") ? "✦ Workshop Hero earned — the foundry awaits!" : "Made for curious minds. Take your time."}</div></section>`;
 }
 function settings() {
   cleanup();
@@ -128,7 +128,7 @@ function settings() {
     )
     .join(
       "",
-    )}</div>${button("Privacy & credits", "privacy")}${button("Restore purchases", "restore")}<div class="settings-foot">Progress lives on this device. Clearing browser/app data or uninstalling removes it. No account, tracking, ads, or purchases in this edition.<br><br>VERSION 0.1 · TEN-LEVEL VERTICAL SLICE</div></section>`;
+    )}</div>${button("Privacy & credits", "privacy")}${button("Restore purchases", "restore")}<div class="settings-foot">Progress lives on this device. Clearing browser/app data or uninstalling removes it. No account, tracking, ads, or purchases in this edition.<br><br>VERSION 0.1 · TWENTY-LEVEL EDITION</div></section>`;
 }
 function startLevel(id) {
   cleanup();
@@ -141,7 +141,7 @@ function startLevel(id) {
   music();
 }
 function renderHUD() {
-  ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / 10</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span><button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
+  ui.innerHTML = `<div class="game-hud"><div class="hud-top">${icon("Level select", "levels", "‹")}<div class="level-info"><small>PUZZLE ${String(current.id).padStart(2, "0")} / ${LEVEL_COUNT}</small><h2>${current.title}</h2></div><div class="hud-tools">${icon("Retry level", "retry", "↻")}${icon("Pause game", "pause", "II")}</div></div><div class="ink-row"><span>INK</span><div class="ink-track"><div class="ink-fill" style="width:100%"></div></div><span id="ink-value">100%</span></div><div class="instruction" aria-live="polite">${current.subtitle}<br><strong>Draw one continuous line to ${current.objective.type === "exit" ? "reach the charger" : current.objective.type === "switch" ? "wake the switch" : "keep Pip safe"}.</strong></div></div><div class="game-bottom"><span class="status" id="phase">● TAKE YOUR TIME</span><button class="hintbtn" data-action="hint">✦ Hint</button></div>${current.id === 1 && !progress.data.stars[1] ? '<div class="tutorial"><span>1.</span> Draw a roof &nbsp; <span>2.</span> Release &nbsp; <span>3.</span> Watch the rescue</div>' : ""}`;
 }
 function modal(title, body, actions, tag = "", symbol = "") {
   ui.querySelector(".modal-wrap")?.remove();
@@ -180,11 +180,15 @@ function finish(won, reason) {
   if (won) {
     const stars = progress.win(current.id, ink, current.max_stroke_length);
     modal(
-      current.id === 10 ? "Workshop rescued!" : "Little robot. Big relief.",
-      `<span class="stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span><br>${current.id === 10 ? "You earned the Workshop Hero badge. Ten clever lines. Ten happy endings." : `Pip is safe. You used ${Math.round(ink)} of ${current.max_stroke_length} ink.`}`,
+      current.id === LEVEL_COUNT
+        ? "Workshop rescued!"
+        : "Little robot. Big relief.",
+      `<span class="stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span><br>${current.id === LEVEL_COUNT ? "You earned the Foundry Hero badge. Twenty clever lines. Twenty happy endings." : `Pip is safe. You used ${Math.round(ink)} of ${current.max_stroke_length} ink.`}`,
       button(
-        current.id === 10 ? "Back to the workshop" : "Next little adventure →",
-        current.id === 10 ? "levels" : "next",
+        current.id === LEVEL_COUNT
+          ? "Back to the workshop"
+          : "Next little adventure →",
+        current.id === LEVEL_COUNT ? "levels" : "next",
         "primary",
       ) + button("Try another line", "retry"),
       "RESCUE COMPLETE",
@@ -225,7 +229,7 @@ ui.addEventListener("click", async (e) => {
       startLevel(current.id);
       break;
     case "next":
-      startLevel(Math.min(10, current.id + 1));
+      startLevel(Math.min(LEVEL_COUNT, current.id + 1));
       break;
     case "pause":
       pause();
@@ -403,6 +407,12 @@ class Workshop extends Phaser.Scene {
     g.lineStyle(2, 0x345366, 0.6);
     g.strokeRoundedRect(35, 280, 650, 840, 18);
     g.fillStyle(0x122b3c).fillRoundedRect(40, 1110, 640, 15, 7);
+    for (const [x, y, w, h] of current.forbidden_zones) {
+      g.fillStyle(0xf2bb6a, 0.12).fillRect(x, y, w, h);
+      g.lineStyle(2, 0xf2bb6a, 0.7).strokeRect(x, y, w, h);
+      for (let dx = 12; dx < w; dx += 24)
+        g.lineBetween(x + dx, y + 8, x + Math.max(0, dx - 12), y + 24);
+    }
     sim.entities.forEach((b) => this.entity(b, time));
     this.stroke(sim.stroke, 0xb6f36d, 14);
     if (points.length) {
